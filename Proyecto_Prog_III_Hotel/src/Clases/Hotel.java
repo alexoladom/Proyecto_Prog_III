@@ -21,7 +21,7 @@ public class Hotel {
 	protected List<Cliente> listaClientes;
 	protected List<Habitacion> listaHabitaciones;
 	protected List<Reserva> listaReservas;
-	//protected Cocina cocina;
+	protected Cocina cocina;
 	//protected Parking parking
 	//protected SalaEventos salaEventos;
 	

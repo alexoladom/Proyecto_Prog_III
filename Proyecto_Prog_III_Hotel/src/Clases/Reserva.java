@@ -7,6 +7,8 @@ public class Reserva {
 	
 	//TODO metodo sacarFactura()
 	
+	//Atributos
+	
 	protected static int numId;
 	protected int id;
 	protected Cliente cliente;
@@ -15,7 +17,8 @@ public class Reserva {
 	protected double precioCobrar;
 	protected boolean estaPagado;
 	
-	
+	//Constructores
+	 
 	public Reserva( Cliente cliente, LocalDate fechaInicio, LocalDate fechaFinal, double precioCobrar,
 			boolean estaPagado) {
 		super();
@@ -40,6 +43,8 @@ public class Reserva {
 		this.estaPagado = false;
 	}
 
+	
+	//Getters y setters
 
 	public static int getNumId() {
 		return numId;
@@ -100,6 +105,8 @@ public class Reserva {
 		this.estaPagado = estaPagado;
 	}
 
+	
+	//Metodo toString
 
 	@Override
 	public String toString() {

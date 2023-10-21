@@ -3,6 +3,10 @@ package Clases;
 public class Tarea {
 
 	
+	
+	//Atributos 
+	
+	
 	protected static int numId;
 	protected int id;
 	protected Rol rol;
@@ -10,6 +14,9 @@ public class Tarea {
 	protected boolean estaCompletada;
 	protected String descripcion;
 
+	
+	//Constructores
+	
 	
 	public Tarea(Rol rol, int numHoras, boolean estaCompletada, String descripcion) {
 		super();
@@ -31,6 +38,10 @@ public class Tarea {
 		this.descripcion = "";
 	}
 
+	
+	//Getters y setters
+	
+	
 	public static int getNumId() {
 		return numId;
 	}
@@ -75,6 +86,9 @@ public class Tarea {
 		this.descripcion = descripcion;
 	}
 
+	
+	//Metdo tostring
+	
 	@Override
 	public String toString() {
 		return String.format("Tarea id=%s, %s, %s horas, %s, descripcion: %s", id, rol, numHoras,

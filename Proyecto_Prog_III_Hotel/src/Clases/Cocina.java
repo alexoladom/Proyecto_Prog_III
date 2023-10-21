@@ -11,6 +11,7 @@ public class Cocina {
 	
 	protected static int numId;
 	protected int id;
+	protected boolean completo;
 	protected int numSitiosDisponibles = 40;
 	protected List<Plato> listaPlatosAPreparar;
 	protected List<Plato> listaPlatosPreparados;
@@ -20,13 +21,15 @@ public class Cocina {
 	//Constructores
 	
 	public Cocina(int numSitiosDisponibles, List<Plato> listaPlatosAPreparar,
-			List<Plato> listaPlatosPreparados) {
+			List<Plato> listaPlatosPreparados,boolean completo) {
 		super();
 		numId++;
 		this.id =numId;
 		this.numSitiosDisponibles = numSitiosDisponibles;
 		this.listaPlatosAPreparar = listaPlatosAPreparar;
 		this.listaPlatosPreparados = listaPlatosPreparados;
+		this.completo=completo;
+		
 	}
 	
 	public Cocina() {
@@ -35,6 +38,7 @@ public class Cocina {
 		this.id =numId;
 		this.listaPlatosAPreparar = new ArrayList<Plato>();
 		this.listaPlatosPreparados = new ArrayList<Plato>();
+		this.completo=false;
 	}
 
 	
@@ -75,9 +79,17 @@ public class Cocina {
 	public void setListaPlatosPreparados(List<Plato> listaPlatosPreparados) {
 		this.listaPlatosPreparados = listaPlatosPreparados;
 	}
+	public boolean isCompleto() {
+		return completo;
+	}
 
+	public void setCompleto(boolean completo) {
+		this.completo = completo;
+	}
 	//Metodo toString
 	
+	
+
 	@Override
 	public String toString() {
 		return String.format(
