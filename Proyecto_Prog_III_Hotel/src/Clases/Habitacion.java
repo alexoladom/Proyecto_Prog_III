@@ -3,8 +3,6 @@ package Clases;
 import java.io.Serializable;
 
 public abstract class Habitacion implements Serializable{
-
-	//TODO Implementa reservable
 	
 	//Clase principal para cualquier habitacion
 	private static final long serialVersionUID = 1L;

@@ -2,6 +2,8 @@ package Clases;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reserva implements Serializable{
 
@@ -15,13 +17,14 @@ public class Reserva implements Serializable{
 	protected Cliente cliente;
 	protected LocalDate fechaInicio;
 	protected LocalDate fechaFinal;
+	protected List<Habitacion> listaHabitacionesReservadas;
 	protected double precioCobrar;
 	protected boolean estaPagado;
 	
 	//Constructores
 	 
 	public Reserva( Cliente cliente, LocalDate fechaInicio, LocalDate fechaFinal, double precioCobrar,
-			boolean estaPagado) {
+			boolean estaPagado, List<Habitacion> listaHabitacions) {
 		super();
 		numId++;
 		this.id = numId;
@@ -30,6 +33,7 @@ public class Reserva implements Serializable{
 		this.fechaFinal = fechaFinal;
 		this.precioCobrar = precioCobrar;
 		this.estaPagado = estaPagado;
+		this.listaHabitacionesReservadas = listaHabitacions;
 	}
 	
 	
@@ -42,6 +46,7 @@ public class Reserva implements Serializable{
 		this.fechaFinal = null;
 		this.precioCobrar = 0;
 		this.estaPagado = false;
+		this.listaHabitacionesReservadas = new ArrayList<Habitacion>();
 	}
 
 	
@@ -106,8 +111,19 @@ public class Reserva implements Serializable{
 		this.estaPagado = estaPagado;
 	}
 
+
+	public List<Habitacion> getListaHabitacionesReservadas() {
+		return listaHabitacionesReservadas;
+	}
+
+
+	public void setListaHabitacionesReservadas(List<Habitacion> listaHabitacionesReservadas) {
+		this.listaHabitacionesReservadas = listaHabitacionesReservadas;
+	}
+	
 	
 	//Metodo toString
+
 
 	@Override
 	public String toString() {

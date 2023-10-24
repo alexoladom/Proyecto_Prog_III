@@ -9,6 +9,7 @@ public class Trabajador extends Persona{
 	//Clase trabajador que hereda de persona
 	
 	//protected Cargo cargo;
+	private static final long serialVersionUID = 1L;
 	protected double salario;
 	protected int numHorasTrabajadas;
 	
@@ -19,11 +20,11 @@ public class Trabajador extends Persona{
 	protected List<Tarea> listaTareasPorHacer;
 	
 	
-	public Trabajador(String dni, String nombre, String apellido1, String apellido2, String email, String direccion,
+	public Trabajador(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, double salario, int numHorasTrabajadas,
 			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer) {
 		
-		super(dni, nombre, apellido1, apellido2, email, direccion, fNacimiento, contraseña, telefono);
+		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono);
 		
 		this.salario = salario;
 		this.numHorasTrabajadas = numHorasTrabajadas;

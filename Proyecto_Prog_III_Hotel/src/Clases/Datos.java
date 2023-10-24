@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Datos {
 	
@@ -17,14 +19,18 @@ public class Datos {
 	protected List<Habitacion> listaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
+	protected Map<String, Cliente> mapaClientesPorDNI;
+	
+	
 	
 	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
-			List<Reserva> listaReservas, List<Tarea> listaTareas) {
+			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
 		this.listaHabitaciones = listaHabitaciones;
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
+		this.mapaClientesPorDNI = mapaClientesPorDNI;
 	}
 	
 	public Datos() {
@@ -33,6 +39,7 @@ public class Datos {
 		this.listaHabitaciones = new ArrayList<Habitacion>();
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
+		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
 
 	}
 
@@ -80,8 +87,14 @@ public class Datos {
 		return FICHERO;
 	}
 	
-	
-	
+	public Map<String, Cliente> getMapaClientesPorDNI() {
+		return mapaClientesPorDNI;
+	}
+
+	public void setMapaClientesPorDNI(Map<String, Cliente> mapaClientesPorDNI) {
+		this.mapaClientesPorDNI = mapaClientesPorDNI;
+	}
+
 	public void guardarDatos() {
 		
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);
@@ -92,6 +105,7 @@ public class Datos {
 				oos.writeObject(listaReservas);
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
+				oos.writeObject(mapaClientesPorDNI);
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
 			}catch (IOException e) {
@@ -109,7 +123,7 @@ public class Datos {
 			this.listaReservas = (List<Reserva>) ois.readObject();
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
-			
+			this.mapaClientesPorDNI = (Map<String, Cliente>) ois.readObject();
 			
 		} catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");

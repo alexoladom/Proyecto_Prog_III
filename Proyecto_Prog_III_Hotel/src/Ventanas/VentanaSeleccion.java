@@ -9,13 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Clases.Datos;
+
 public class VentanaSeleccion extends JFrame{
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
 	protected JTextField textoIdentificacion;
 	protected JLabel lblIdentificacion;
 	
-	public VentanaSeleccion() {
+	public VentanaSeleccion(Datos datos) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ns porque pero me ha mandado añadir varios metodos que estan abajo
 		setBounds(100, 100, 450, 300);
 
@@ -48,7 +50,7 @@ public class VentanaSeleccion extends JFrame{
 		});
 
 		botonCliente.addActionListener((e) -> { //Igual pero con cliente
-			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente();
+			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente(datos);
             dispose();
 		});
 		pack();

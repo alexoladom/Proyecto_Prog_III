@@ -54,7 +54,7 @@ public class VentanaInicioTrabajador extends JFrame{
 
 		botonCerrar.addActionListener((e) -> {
 			dispose();
-			new VentanaSeleccion();
+			//new VentanaSeleccion();
 		});
 		botonIniSesion.addActionListener((e) -> {
 			String nom = textoNombre.getText();
