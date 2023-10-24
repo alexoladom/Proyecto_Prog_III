@@ -72,8 +72,4 @@ public class VentanaSeleccion {
 		return null;
 	}
 
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		VentanaSeleccion v = new VentanaSeleccion();
-	}
 }
