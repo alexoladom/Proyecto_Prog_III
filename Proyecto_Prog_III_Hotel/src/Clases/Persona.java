@@ -1,14 +1,19 @@
 package Clases;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class Persona {
+public abstract class Persona implements Serializable{
 
 	//Clase principal persona de donde heredaran cliente y trabajador
 	
 	//El DNI solo puede tener 9 letras (8 int y un string)
 	//La fNacimiento es un LocalDate
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String dni;
 	protected String nombre;
 	protected String apellido1;

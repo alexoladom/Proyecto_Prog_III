@@ -1,11 +1,12 @@
 package Main;
 
+import Clases.Cliente;
+import Clases.Datos;
 import Ventanas.VentanaSeleccion;
 
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("hola mundo!");
-		new VentanaSeleccion();
-		
+		Datos datos = new Datos();			
 	}
 }

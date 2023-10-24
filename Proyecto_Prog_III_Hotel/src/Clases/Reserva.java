@@ -1,14 +1,15 @@
 package Clases;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Reserva {
+public class Reserva implements Serializable{
 
 	
 	//TODO metodo sacarFactura()
 	
 	//Atributos
-	
+	private static final long serialVersionUID = 1L;
 	protected static int numId;
 	protected int id;
 	protected Cliente cliente;

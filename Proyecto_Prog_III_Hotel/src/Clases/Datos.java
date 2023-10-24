@@ -1,5 +1,11 @@
 package Clases;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +17,6 @@ public class Datos {
 	protected List<Habitacion> listaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
-	protected Cocina cocina;
-	protected Parking parking;
-	protected SalaEventos salaEventos;
-	
 	
 	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
 			List<Reserva> listaReservas, List<Tarea> listaTareas) {
@@ -80,11 +82,43 @@ public class Datos {
 	
 	
 	
+	public void guardarDatos() {
+		
+		try (FileOutputStream fos = new FileOutputStream (FICHERO);
+			ObjectOutputStream oos = new ObjectOutputStream(fos)){
+			
+				oos.writeObject(listaClientes);
+				oos.writeObject(listaHabitaciones);
+				oos.writeObject(listaReservas);
+				oos.writeObject(listaTareas);
+				oos.writeObject(listaTrabajadores);
+			}catch (FileNotFoundException e) {
+			System.err.println("No se encontro el fichero");
+			}catch (IOException e) {
+			System.err.println("Error al guardal los datos");
+		}
+	}
 	
 	
-	
-	
-	
+	public void cargarDatos() {
+		try(FileInputStream fis = new FileInputStream(FICHERO);
+			ObjectInputStream ois = new ObjectInputStream(fis)){
+			
+			this.listaClientes= (List<Cliente>) ois.readObject();
+			this.listaHabitaciones= (List<Habitacion>) ois.readObject();
+			this.listaReservas = (List<Reserva>) ois.readObject();
+			this.listaTareas = (List<Tarea>) ois.readObject();
+			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
+			
+			
+		} catch (FileNotFoundException e) {
+			System.err.println("No se encontro el fichero");
+		} catch (IOException e) {
+			System.err.println("Error al guardal los datos");
+		} catch (ClassNotFoundException e) {
+			System.err.println("Clase no encontrada");
+		}
+	}
 	
 	
 }
