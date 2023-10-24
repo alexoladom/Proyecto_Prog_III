@@ -14,20 +14,20 @@ import javax.swing.JTextField;
 
 import Clases.Trabajador;
 
-public class VentanaInicioTrabajador {
+public class VentanaInicioTrabajador extends JFrame{
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra;
 	protected JPanel pBotones, pCentro, pArriba;
 	protected JTextField textoNombre, textoContra;
-	protected Map<String, Trabajador> mapaTrabajadores = new HashMap();
+	protected Map<String, Trabajador> mapaTrabajadoresPorNombre;
 
 	public VentanaInicioTrabajador() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
-
-		botonCerrar = new JButton("CERRAR");
-		botonRegistro = new JButton("REGISTRO");
+		mapaTrabajadoresPorNombre = new HashMap<String, Trabajador>();
+		botonCerrar = new JButton("ATRAS");
+		//botonRegistro = new JButton("REGISTRO");
 		botonIniSesion = new JButton("INICIO DE SESION");
 
 		lblNombre = new JLabel("Introduce tu nombre: ");
@@ -41,7 +41,7 @@ public class VentanaInicioTrabajador {
 		textoContra = new JTextField(20);
 
 		pBotones.add(botonIniSesion);
-		pBotones.add(botonRegistro);
+		//pBotones.add(botonRegistro);
 		pArriba.add(botonCerrar);
 		pCentro.add(lblNombre);
 		pCentro.add(textoNombre);
@@ -53,52 +53,24 @@ public class VentanaInicioTrabajador {
 		getContentPane().add(pCentro, BorderLayout.CENTER);
 
 		botonCerrar.addActionListener((e) -> {
-			System.exit(0);
+			dispose();
+			new VentanaSeleccion();
 		});
-
-		botonRegistro.addActionListener((e) -> {
-			String nom = textoNombre.getText();
-			String contra = textoContra.getText();
-			Trabajador t = new Trabajador();//Falta añadir los datos de los trabajadores
-			if (mapaTrabajadores.containsKey(nom)) {
-				JOptionPane.showMessageDialog(null, "Ese nombre de usuario ya existe");
-			} else {
-				mapaTrabajadores.put(nom, t);
-			}
-		});
-
 		botonIniSesion.addActionListener((e) -> {
 			String nom = textoNombre.getText();
 			String contra = textoContra.getText();
-			if (!mapaTrabajadores.containsKey(nom)) {
-				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
+			if (!mapaTrabajadoresPorNombre.containsKey(nom)) {
+				JOptionPane.showMessageDialog(null, "No existe el trabajador");
 			} else {
-				Trabajador t1 = mapaTrabajadores.get(nom);
+				Trabajador t1 = mapaTrabajadoresPorNombre.get(nom);
 				if (!t1.getContraseña().equals(contra)) {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 				} else {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 				}
 			}
-		});
+		}); 
 		setVisible(true);
-	}
-
-	private void setBounds(int i, int j, int k, int l) {
-	}
-
-	private void setDefaultCloseOperation(int exitOnClose) {		
-	}
-
-	private Container getContentPane() {
-		return null;
-	}
-
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		VentanaInicioTrabajador v = new VentanaInicioTrabajador();
-	}
-	public static void setVisible(boolean b) {
 	}
 
 }

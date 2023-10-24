@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class VentanaSeleccion {
+public class VentanaSeleccion extends JFrame{
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
 	protected JTextField textoIdentificacion;
@@ -23,7 +23,7 @@ public class VentanaSeleccion {
 		botonCliente = new JButton("SOY CLIENTE");
 		botonTrabajador = new JButton("SOY TRABAJADOR");
 
-		lblIdentificacion = new JLabel("Introduce quien eres: ");
+		lblIdentificacion = new JLabel("Introduce que eres: ");
 
 		pAbajo = new JPanel();
 		pCentro = new JPanel();
@@ -44,32 +44,16 @@ public class VentanaSeleccion {
 
 		botonTrabajador.addActionListener((e) -> { //Ns si funciona bien, la idea es pulsar y qu ete lleve a la ventana de Trabajador
 			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador();
-			VentanaInicioTrabajador.setVisible(true);
             dispose();
 		});
 
 		botonCliente.addActionListener((e) -> { //Igual pero con cliente
 			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente();
-			VentanaInicioCliente.setVisible(true);
             dispose();
 		});
+		pack();
 		setVisible(true);
 	}
-
-	private void dispose() {	
-	}
-
-	private void setBounds(int i, int j, int k, int l) {		
-	}
-
-	private void setDefaultCloseOperation(int exitOnClose) {		
-	}
-
-	private void setVisible(boolean b) {		
-	}
-
-	private Container getContentPane() {
-		return null;
-	}
-
 }
+
+
