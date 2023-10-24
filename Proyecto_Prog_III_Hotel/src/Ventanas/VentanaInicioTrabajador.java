@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import Clases.Trabajador;
 
-public class VentanaInicioTrabajador {
+public class VentanaInicioTrabajador extends JFrame{
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra;
 	protected JPanel pBotones, pCentro, pArriba;
@@ -82,23 +82,6 @@ public class VentanaInicioTrabajador {
 			}
 		});
 		setVisible(true);
-	}
-
-	private void setBounds(int i, int j, int k, int l) {
-	}
-
-	private void setDefaultCloseOperation(int exitOnClose) {		
-	}
-
-	private Container getContentPane() {
-		return null;
-	}
-
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		VentanaInicioTrabajador v = new VentanaInicioTrabajador();
-	}
-	public static void setVisible(boolean b) {
 	}
 
 }
