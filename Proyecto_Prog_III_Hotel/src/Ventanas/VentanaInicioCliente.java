@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import Clases.Cliente;
 
-public class VentanaInicioCliente {
+public class VentanaInicioCliente extends JFrame {
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra;
 	protected JPanel pBotones, pCentro, pArriba;
@@ -24,7 +24,6 @@ public class VentanaInicioCliente {
 	public VentanaInicioCliente() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-
 
 		botonCerrar = new JButton("CERRAR");
 		botonRegistro = new JButton("REGISTRO");
@@ -59,7 +58,7 @@ public class VentanaInicioCliente {
 		botonRegistro.addActionListener((e) -> {
 			String nom = textoNombre.getText();
 			String contra = textoContra.getText();
-			Cliente c = new Cliente();//Falta añadir los datos de los clientes
+			Cliente c = new Cliente();// Falta añadir los datos de los clientes
 			if (mapaClientes.containsKey(nom)) {
 				JOptionPane.showMessageDialog(null, "Ese nombre de usuario ya existe");
 			} else {
@@ -83,22 +82,4 @@ public class VentanaInicioCliente {
 		});
 		setVisible(true);
 	}
-
-	private void setBounds(int i, int j, int k, int l) {
-	}
-
-	private void setDefaultCloseOperation(int exitOnClose) {		
-	}
-
-	private Container getContentPane() {
-		return null;
-	}
-
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		VentanaInicioCliente v = new VentanaInicioCliente();
-	}
-	public static void setVisible(boolean b) {		
-	}
-
 }
