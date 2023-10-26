@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class VentanaSeleccion extends JFrame{
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
@@ -42,12 +43,14 @@ public class VentanaSeleccion extends JFrame{
 			System.exit(0);
 		});
 
-		botonTrabajador.addActionListener((e) -> { //Ns si funciona bien, la idea es pulsar y qu ete lleve a la ventana de Trabajador
+		botonTrabajador.addActionListener((e) -> {
+			@SuppressWarnings("unused")
 			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador();
             dispose();
 		});
 
-		botonCliente.addActionListener((e) -> { //Igual pero con cliente
+		botonCliente.addActionListener((e) -> {
+			@SuppressWarnings("unused")
 			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente();
             dispose();
 		});

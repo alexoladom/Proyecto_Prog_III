@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import Clases.Cliente;
 
+@SuppressWarnings("serial")
 public class VentanaInicioCliente extends JFrame {
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra;
@@ -58,7 +59,7 @@ public class VentanaInicioCliente extends JFrame {
 		botonRegistro.addActionListener((e) -> {
 			String nom = textoNombre.getText();
 			String contra = textoContra.getText();
-			Cliente c = new Cliente();// Falta añadir los datos de los clientes
+			Cliente c = new Cliente();
 			if (mapaClientes.containsKey(nom)) {
 				JOptionPane.showMessageDialog(null, "Ese nombre de usuario ya existe");
 			} else {

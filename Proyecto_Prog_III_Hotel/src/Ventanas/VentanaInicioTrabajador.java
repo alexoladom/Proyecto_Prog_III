@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import Clases.Trabajador;
 
+@SuppressWarnings("serial")
 public class VentanaInicioTrabajador extends JFrame{
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra;
@@ -59,7 +60,7 @@ public class VentanaInicioTrabajador extends JFrame{
 		botonRegistro.addActionListener((e) -> {
 			String nom = textoNombre.getText();
 			String contra = textoContra.getText();
-			Trabajador t = new Trabajador();//Falta añadir los datos de los trabajadores
+			Trabajador t = new Trabajador();
 			if (mapaTrabajadores.containsKey(nom)) {
 				JOptionPane.showMessageDialog(null, "Ese nombre de usuario ya existe");
 			} else {
