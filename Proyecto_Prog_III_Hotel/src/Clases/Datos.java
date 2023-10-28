@@ -95,11 +95,22 @@ public class Datos {
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 	}
 
+	
+	public boolean comprobarContraseña(String dni, String contraseña) {
+		if (mapaClientesPorDNI.containsKey(dni)){
+			if(mapaClientesPorDNI.get(dni).getContraseña().equals(contraseña)){
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
 	public void guardarDatos() {
 		
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)){
-			
 				oos.writeObject(listaClientes);
 				oos.writeObject(listaHabitaciones);
 				oos.writeObject(listaReservas);
