@@ -167,16 +167,14 @@ public class VentanaInicioCliente extends JFrame {
 		
 		botonIniSesion.addActionListener((e) -> {
 			String dni = textoDNI.getText();
-			String contra = textoContra.getText();
-			if (!mapaClientesPorDNI.containsKey(dni)) {
-				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
-			} else {
-				Cliente cl = mapaClientesPorDNI.get(dni);
-				if (!cl.getContraseña().equals(contra)) {
-					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
-				} else {
+			if (datos.getMapaClientesPorDNI().containsKey(dni)) {
+				if(datos.comprobarContraseña(dni, textoContra.getText())) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
+				}else {
+					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
 			}
 		});
 		
