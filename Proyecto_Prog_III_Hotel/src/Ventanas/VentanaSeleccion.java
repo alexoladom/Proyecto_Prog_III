@@ -9,14 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-@SuppressWarnings("serial")
+import Clases.Datos;
+
 public class VentanaSeleccion extends JFrame{
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
 	protected JTextField textoIdentificacion;
 	protected JLabel lblIdentificacion;
 	
-	public VentanaSeleccion() {
+	public VentanaSeleccion(Datos datos) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ns porque pero me ha mandado añadir varios metodos que estan abajo
 		setBounds(100, 100, 450, 300);
 
@@ -24,7 +25,7 @@ public class VentanaSeleccion extends JFrame{
 		botonCliente = new JButton("SOY CLIENTE");
 		botonTrabajador = new JButton("SOY TRABAJADOR");
 
-		lblIdentificacion = new JLabel("Introduce quien eres: ");
+		lblIdentificacion = new JLabel("Introduce que eres: ");
 
 		pAbajo = new JPanel();
 		pCentro = new JPanel();
@@ -43,22 +44,17 @@ public class VentanaSeleccion extends JFrame{
 			System.exit(0);
 		});
 
-		botonTrabajador.addActionListener((e) -> {
-			@SuppressWarnings("unused")
+		botonTrabajador.addActionListener((e) -> { //Ns si funciona bien, la idea es pulsar y qu ete lleve a la ventana de Trabajador
 			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador();
             dispose();
 		});
 
-		botonCliente.addActionListener((e) -> {
-			@SuppressWarnings("unused")
-			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente();
+		botonCliente.addActionListener((e) -> { //Igual pero con cliente
+			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente(datos);
             dispose();
 		});
+		pack();
 		setVisible(true);
 	}
-
-	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		VentanaSeleccion v = new VentanaSeleccion();
-	}
 }
+

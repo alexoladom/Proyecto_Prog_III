@@ -1,11 +1,11 @@
 package Clases;
 
-public abstract class Habitacion {
+import java.io.Serializable;
 
-	//TODO Implementa reservable
+public abstract class Habitacion implements Serializable{
 	
 	//Clase principal para cualquier habitacion
-	
+	private static final long serialVersionUID = 1L;
 	protected static int numId;
 	protected int id;
 	protected boolean ocupado;

@@ -1,18 +1,22 @@
 package Clases;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class Persona {
+public abstract class Persona implements Serializable{
 
 	//Clase principal persona de donde heredaran cliente y trabajador
 	
 	//El DNI solo puede tener 9 letras (8 int y un string)
 	//La fNacimiento es un LocalDate
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String dni;
 	protected String nombre;
 	protected String apellido1;
-	protected String apellido2;
 	protected String email;
 	protected String direccion;
 	protected LocalDate fNacimiento;
@@ -20,13 +24,12 @@ public abstract class Persona {
 	protected String telefono;
 	
 	
-	public Persona(String dni, String nombre, String apellido1, String apellido2, String email, String direccion,
+	public Persona(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono) {
 		super();
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
-		this.apellido2 = apellido2;
 		this.email = email;
 		this.direccion = direccion;
 		this.fNacimiento = fNacimiento;
@@ -39,7 +42,6 @@ public abstract class Persona {
 		this.dni = "";
 		this.nombre = "";
 		this.apellido1 = "";
-		this.apellido2 = "";
 		this.email = "";
 		this.direccion = "";
 		this.fNacimiento = null;
@@ -52,12 +54,7 @@ public abstract class Persona {
 	}
 
 	public void setDni(String dni) {
-		if (dni.length()!=9) {
-			System.err.println("Introduzca un dni valido");
-		}else {
-			this.dni = dni;
-		}
-		
+		this.dni = dni;
 	}
 
 	public String getNombre() {
@@ -74,14 +71,6 @@ public abstract class Persona {
 
 	public void setApellido1(String apellido1) {
 		this.apellido1 = apellido1;
-	}
-
-	public String getApellido2() {
-		return apellido2;
-	}
-
-	public void setApellido2(String apellido2) {
-		this.apellido2 = apellido2;
 	}
 
 	public String getEmail() {
@@ -121,18 +110,14 @@ public abstract class Persona {
 	}
 
 	public void setTelefono(String telefono) {
-		if (telefono.length()!=9) {
-			System.err.println("Introduzca un telefono valido");
-		}else {
-			this.telefono = telefono;
-		}
+		this.telefono = telefono;
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
-				"Persona %s, %s, %s, %s, %s, %s, %s, %s",
-				dni, nombre, apellido1, apellido2, email, direccion, fNacimiento, telefono);
+				"Persona %s, %s, %s, %s, %s, %s, %s",
+				dni, nombre, apellido1, email, direccion, fNacimiento, telefono);
 	}
 	
 	

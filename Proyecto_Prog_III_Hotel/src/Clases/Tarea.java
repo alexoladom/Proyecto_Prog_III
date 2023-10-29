@@ -1,12 +1,12 @@
 package Clases;
 
-public class Tarea {
+import java.io.Serializable;
 
-	
-	
+public class Tarea implements Serializable{
+
 	//Atributos 
 	
-	
+	private static final long serialVersionUID = 1L;
 	protected static int numId;
 	protected int id;
 	protected Rol rol;

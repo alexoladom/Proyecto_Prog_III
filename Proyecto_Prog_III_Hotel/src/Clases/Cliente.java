@@ -10,15 +10,16 @@ public class Cliente extends Persona{
 	//Clase cliente que hereda de persona
 	
 	//Lista de las reservas hechas a lo largo del tiempo
+	private static final long serialVersionUID = 1L;
 	protected List<Reserva> listaReservasCliente;
 	protected LocalDate ultimoLogin;
 	
 	
-	public Cliente(String dni, String nombre, String apellido1, String apellido2, String email, String direccion,
+	public Cliente(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, List<Reserva> listaReservasCliente,
 			LocalDate ultimoLogin) {
 		
-		super(dni, nombre, apellido1, apellido2, email, direccion, fNacimiento, contraseña, telefono);
+		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono);
 		
 		this.listaReservasCliente = listaReservasCliente;
 		this.ultimoLogin = ultimoLogin;
@@ -61,8 +62,8 @@ public class Cliente extends Persona{
 	@Override
 	public String toString() {
 		return String.format(
-				"Cliente  ultimoLogin=%s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
-				 ultimoLogin, dni, nombre, apellido1, apellido2, email, direccion, fNacimiento,
+				"Cliente  ultimoLogin=%s, %s, %s, %s, %s, %s, %s, %s, %s",
+				 ultimoLogin, dni, nombre, apellido1,  email, direccion, fNacimiento,
 				contraseña, telefono);
 	}
 

@@ -2,6 +2,7 @@ package Clases;
 
 public class HabitacionSuite extends Habitacion{
 
+	private static final long serialVersionUID = 1L;
 	protected static final int numCamas = 4;
 	protected final static double precioPorNoche = 100;
 	
