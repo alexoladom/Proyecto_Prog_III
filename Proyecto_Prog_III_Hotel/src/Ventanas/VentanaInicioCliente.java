@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import Clases.Cliente;
@@ -35,8 +36,6 @@ public class VentanaInicioCliente extends JFrame {
 
 		
 		this.datos = datos;
-		
-		mapaClientesPorDNI = datos.getMapaClientesPorDNI();
 		botonAtras1 = new JButton("ATRAS");
 		botonAtras2 = new JButton("ATRAS");
 		botonAtras2.setVisible(false);
@@ -65,8 +64,8 @@ public class VentanaInicioCliente extends JFrame {
 		pArriba = new JPanel();
 
 		textoNombre = new JTextField(20);
-		textoContra = new JTextField(20);
-		textoContra2 = new JTextField(20);
+		textoContra = new JPasswordField(20);
+		textoContra2 = new JPasswordField(20);
 		textoDNI = new JTextField(20);
 		textoDNI2 = new JTextField(20);
 		textoApellido = new JTextField(20);
@@ -137,9 +136,9 @@ public class VentanaInicioCliente extends JFrame {
 		});
 
 		botonRegistro.addActionListener(e -> {
-			if(mapaClientesPorDNI.containsKey(textoDNI.getText())){
+			if(datos.getMapaClientesPorDNI().containsKey(textoDNI2.getText())){
 				JOptionPane.showMessageDialog(null, "El DNI introducido ya esta en uso");
-			}else if(mapaClientesPorDNI.containsKey(textoEmail.getText())) {
+			}else if(datos.getMapaClientesPorDNI().containsKey(textoEmail.getText())) {
 				JOptionPane.showMessageDialog(null, "El e-mail introducido ya esta en uso");
 			}else {
 				Cliente cliente = new Cliente();
@@ -155,28 +154,22 @@ public class VentanaInicioCliente extends JFrame {
 				cliente.setTelefono(textoTelefono.getText());
 				datos.getListaClientes().add(cliente);
 				datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
-				mapaClientesPorDNI.put(cliente.getDni(), cliente);
 				datos.guardarDatos();
 				new VentanaInicioCliente(datos);
-				for (String dni : mapaClientesPorDNI.keySet()) {
-					System.out.println(mapaClientesPorDNI.get(dni));
-				}
 				dispose();
 			}
 		});
 		
 		botonIniSesion.addActionListener((e) -> {
 			String dni = textoDNI.getText();
-			String contra = textoContra.getText();
-			if (!mapaClientesPorDNI.containsKey(dni)) {
-				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
-			} else {
-				Cliente cl = mapaClientesPorDNI.get(dni);
-				if (!cl.getContraseña().equals(contra)) {
-					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
-				} else {
+			if (datos.getMapaClientesPorDNI().containsKey(dni)) {
+				if(datos.comprobarContraseña(dni, textoContra.getText())) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
+				}else {
+					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
 			}
 		});
 		
@@ -190,9 +183,6 @@ public class VentanaInicioCliente extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				datos.guardarDatos();
-				for (String dni : mapaClientesPorDNI.keySet()) {
-					System.out.println(mapaClientesPorDNI.get(dni));
-				}
 			}
 			
 			
