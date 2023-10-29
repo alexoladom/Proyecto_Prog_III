@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +25,7 @@ import Clases.Datos;
 
 public class VentanaInicioCliente extends JFrame {
 	protected JButton botonAtras1, botonRegistrarme, botonRegistro,  botonIniSesion,botonAtras2;
-	protected JLabel lblNombre, lblContra,lblContra2, lblDNI,lblDNI2,lblApellido,lblEmail,lblDireccion,lblFechaNacimiento,lblTelefono;
+	protected JLabel lblNombre, lblContra,lblContra2, lblDNI,lblDNI2,lblApellido,lblEmail,lblDireccion,lblFechaNacimiento,lblTelefono, lblCliente;
 	protected JPanel pBotones, pCentro, pArriba, pCentroRegistro;
 	protected JTextField textoNombre, textoContra,textoContra2,textoDNI,textoDNI2,textoApellido,textoEmail,textoDireccion,textoFechaNacimiento,textoTelefono;
 	protected Map<String, Cliente> mapaClientesPorDNI;
@@ -43,6 +44,7 @@ public class VentanaInicioCliente extends JFrame {
 		botonRegistro = new JButton("REGISTRO");
 		botonRegistro.setVisible(false);
 		botonIniSesion = new JButton("INICIO DE SESION");
+		ImageIcon imCliente = new ImageIcon("src\\Imagenes\\Clientes.jpeg");
 
 		lblNombre = new JLabel("Introduzca su Nombre: ");
 		lblContra = new JLabel("Introduzca su contraseña: ");
@@ -54,6 +56,7 @@ public class VentanaInicioCliente extends JFrame {
 		lblDireccion = new JLabel("Introduzca su direccion: ");
 		lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento(dd/mm/aaaa): ");
 		lblTelefono = new JLabel("Introduzca su teléfono: ");
+		lblCliente = new JLabel(new ImageIcon("src\\Imagenes\\Clientes.jpeg"));
 
 		
 
@@ -106,6 +109,7 @@ public class VentanaInicioCliente extends JFrame {
 		pCentro.add(textoDNI);
 		pCentro.add(lblContra);
 		pCentro.add(textoContra);
+		pCentro.add(lblCliente);
 
 		getContentPane().add(pBotones, BorderLayout.SOUTH);
 		getContentPane().add(pArriba, BorderLayout.NORTH);

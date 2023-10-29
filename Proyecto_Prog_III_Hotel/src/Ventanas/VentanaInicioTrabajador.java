@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,7 +17,7 @@ import Clases.Trabajador;
 
 public class VentanaInicioTrabajador extends JFrame{
 	protected JButton botonCerrar, botonRegistro, botonIniSesion;
-	protected JLabel lblNombre, lblContra;
+	protected JLabel lblNombre, lblContra, lblTrabajador;
 	protected JPanel pBotones, pCentro, pArriba;
 	protected JTextField textoNombre, textoContra;
 	protected Map<String, Trabajador> mapaTrabajadoresPorNombre;
@@ -29,9 +30,11 @@ public class VentanaInicioTrabajador extends JFrame{
 		botonCerrar = new JButton("ATRAS");
 		//botonRegistro = new JButton("REGISTRO");
 		botonIniSesion = new JButton("INICIO DE SESION");
+		ImageIcon imTrabajador = new ImageIcon("src\\Imagenes\\Trabajadores.jpeg");
 
 		lblNombre = new JLabel("Introduce tu nombre: ");
 		lblContra = new JLabel("Introduce tu contraseña: ");
+		lblTrabajador = new JLabel(new ImageIcon("src\\Imagenes\\Trabajadores.jpeg"));
 
 		pBotones = new JPanel();
 		pCentro = new JPanel();
@@ -47,6 +50,7 @@ public class VentanaInicioTrabajador extends JFrame{
 		pCentro.add(textoNombre);
 		pCentro.add(lblContra);
 		pCentro.add(textoContra);
+		pCentro.add(lblTrabajador);
 
 		getContentPane().add(pBotones, BorderLayout.SOUTH);
 		getContentPane().add(pArriba, BorderLayout.NORTH);
