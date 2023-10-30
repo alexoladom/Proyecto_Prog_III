@@ -20,6 +20,7 @@ public class Datos {
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
 	protected Map<String, Cliente> mapaClientesPorDNI;
+	protected Parking parking;
 	
 	
 	
@@ -40,6 +41,7 @@ public class Datos {
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
+		this.parking= new Parking();
 
 	}
 
@@ -87,6 +89,14 @@ public class Datos {
 		return FICHERO;
 	}
 	
+	public Parking getParking() {
+		return parking;
+	}
+
+	public void setParking(Parking parking) {
+		this.parking = parking;
+	}
+
 	public Map<String, Cliente> getMapaClientesPorDNI() {
 		return mapaClientesPorDNI;
 	}
@@ -117,6 +127,7 @@ public class Datos {
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
 				oos.writeObject(mapaClientesPorDNI);
+				oos.writeObject(parking);
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
 			}catch (IOException e) {
@@ -135,6 +146,7 @@ public class Datos {
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
 			this.mapaClientesPorDNI = (Map<String, Cliente>) ois.readObject();
+			this.parking= (Parking) ois.readObject();
 			
 		} catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
