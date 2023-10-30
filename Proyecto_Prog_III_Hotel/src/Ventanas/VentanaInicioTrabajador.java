@@ -13,21 +13,24 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Clases.Datos;
 import Clases.Trabajador;
 
 public class VentanaInicioTrabajador extends JFrame{
-	protected JButton botonCerrar, botonRegistro, botonIniSesion;
+	protected JButton botonAtras, botonRegistro, botonIniSesion;
 	protected JLabel lblNombre, lblContra, lblTrabajador;
 	protected JPanel pBotones, pCentro, pArriba;
 	protected JTextField textoNombre, textoContra;
 	protected Map<String, Trabajador> mapaTrabajadoresPorNombre;
+	protected Datos datos;
 
-	public VentanaInicioTrabajador() {
+	public VentanaInicioTrabajador(Datos datos) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
+		this.datos= datos;
 		mapaTrabajadoresPorNombre = new HashMap<String, Trabajador>();
-		botonCerrar = new JButton("ATRAS");
+		botonAtras = new JButton("ATRAS");
 		//botonRegistro = new JButton("REGISTRO");
 		botonIniSesion = new JButton("INICIO DE SESION");
 		ImageIcon imTrabajador = new ImageIcon("src\\Imagenes\\Trabajadores.jpeg");
@@ -45,7 +48,7 @@ public class VentanaInicioTrabajador extends JFrame{
 
 		pBotones.add(botonIniSesion);
 		//pBotones.add(botonRegistro);
-		pArriba.add(botonCerrar);
+		pArriba.add(botonAtras);
 		pCentro.add(lblNombre);
 		pCentro.add(textoNombre);
 		pCentro.add(lblContra);
@@ -56,9 +59,9 @@ public class VentanaInicioTrabajador extends JFrame{
 		getContentPane().add(pArriba, BorderLayout.NORTH);
 		getContentPane().add(pCentro, BorderLayout.CENTER);
 
-		botonCerrar.addActionListener((e) -> {
+		botonAtras.addActionListener((e) -> {
 			dispose();
-			//new VentanaSeleccion();
+			new VentanaSeleccion(datos);
 		});
 		botonIniSesion.addActionListener((e) -> {
 			String nom = textoNombre.getText();
