@@ -20,12 +20,16 @@ public class Datos {
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
 	protected Map<String, Cliente> mapaClientesPorDNI;
+
 	protected Parking parking;
+
+	protected Map<String, Trabajador> mapaTrabajadoresPorDNI;
+
 	
 	
 	
 	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
-			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI) {
+			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI, Map<String, Trabajador> mapaTrabajadoresPorDNI) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
 		this.listaHabitaciones = listaHabitaciones;
@@ -41,8 +45,20 @@ public class Datos {
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
+
 		this.parking= new Parking();
 
+		this.mapaTrabajadoresPorDNI = new HashMap<String, Trabajador> ();
+
+
+	}
+	
+	public Map<String, Trabajador> getMapaTrabajadoresPorDNI() {
+		return mapaTrabajadoresPorDNI;
+	}
+
+	public void setMapaTrabajadoresPorDNI(Map<String, Trabajador> mapaTrabajadoresPorDNI) {
+		this.mapaTrabajadoresPorDNI = mapaTrabajadoresPorDNI;
 	}
 
 	public List<Trabajador> getListaTrabajadores() {
@@ -106,9 +122,21 @@ public class Datos {
 	}
 
 	
-	public boolean comprobarContraseña(String dni, String contraseña) {
+	public boolean comprobarContraseñaCliente(String dni, String contraseña) {
 		if (mapaClientesPorDNI.containsKey(dni)){
 			if(mapaClientesPorDNI.get(dni).getContraseña().equals(contraseña)){
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
+	
+	public boolean comprobarContraseñaTrabajador(String dni, String contraseña) {
+		if (mapaTrabajadoresPorDNI.containsKey(dni)){
+			if(mapaTrabajadoresPorDNI.get(dni).getContraseña().equals(contraseña)){
 				return true;
 			}else {
 				return false;
@@ -127,7 +155,11 @@ public class Datos {
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
 				oos.writeObject(mapaClientesPorDNI);
+
 				oos.writeObject(parking);
+
+				oos.writeObject(mapaTrabajadoresPorDNI);
+
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
 			}catch (IOException e) {
@@ -146,7 +178,10 @@ public class Datos {
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
 			this.mapaClientesPorDNI = (Map<String, Cliente>) ois.readObject();
+
 			this.parking= (Parking) ois.readObject();
+			this.mapaTrabajadoresPorDNI = (Map<String, Trabajador>) ois.readObject();
+
 			
 		} catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");

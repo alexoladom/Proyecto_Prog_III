@@ -32,6 +32,30 @@ public class VentanaTrabajador extends JFrame {
 		pBotones = new JPanel();
 
 		// crear los textfields
+		textDni = new JTextField(15);
+		textNombre = new JTextField(15);
+		textApellido1 = new JTextField(15);
+		textApellido2 = new JTextField(15);
+		textEmail = new JTextField(15);
+		textDireccion = new JTextField(15);
+		textfNacimiento = new JTextField(15);
+		textContraseña = new JTextField(15);
+		textTelefono = new JTextField(15);
+		textSalario = new JTextField(15);
+		textHorasTrabajadas = new JTextField(15);
+		
+		lblDatos.add(textDni);
+		lblDatos.add(textNombre);
+		lblDatos.add(textApellido1);
+		lblDatos.add(textApellido2);
+		lblDatos.add(textEmail);
+		lblDatos.add(textDireccion);
+		lblDatos.add(textfNacimiento);
+		lblDatos.add(textContraseña);
+		lblDatos.add(textTelefono);
+		lblDatos.add(textSalario);
+		lblDatos.add(textHorasTrabajadas);
+		
 
 		pBotones.add(botonCerrar);
 		pDatos.add(lblDatos);

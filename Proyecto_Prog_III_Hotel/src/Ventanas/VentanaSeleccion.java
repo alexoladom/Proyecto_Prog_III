@@ -3,6 +3,7 @@ package Ventanas;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,17 +16,21 @@ public class VentanaSeleccion extends JFrame{
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
 	protected JTextField textoIdentificacion;
-	protected JLabel lblIdentificacion;
+	protected JLabel lblIdentificacion, lblImagenTrabajador, lblImagenCliente;
 	
 	public VentanaSeleccion(Datos datos) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ns porque pero me ha mandado añadir varios metodos que estan abajo
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
 		botonCerrar = new JButton("CERRAR");
 		botonCliente = new JButton("SOY CLIENTE");
 		botonTrabajador = new JButton("SOY TRABAJADOR");
+		ImageIcon imTrabajador = new ImageIcon("src\\Imagenes\\imagenTrabajador.jpeg");
+		ImageIcon imCliente = new ImageIcon("src\\Imagenes\\ImagenCliente.jpeg");
 
 		lblIdentificacion = new JLabel("Introduce que eres: ");
+		lblImagenTrabajador = new JLabel(new ImageIcon("src\\Imagenes\\imagenTrabajador.jpeg"));
+		lblImagenCliente = new JLabel(new ImageIcon("src\\Imagenes\\ImagenCliente.jpeg"));
 
 		pAbajo = new JPanel();
 		pCentro = new JPanel();
@@ -34,7 +39,9 @@ public class VentanaSeleccion extends JFrame{
 
 		pCentro.add(lblIdentificacion);
 		pCentro.add(botonTrabajador);
+		pCentro.add(lblImagenTrabajador);
 		pCentro.add(botonCliente);
+		pCentro.add(lblImagenCliente);
 		pAbajo.add(botonCerrar);
 
 		getContentPane().add(pAbajo, BorderLayout.SOUTH);
@@ -44,12 +51,12 @@ public class VentanaSeleccion extends JFrame{
 			System.exit(0);
 		});
 
-		botonTrabajador.addActionListener((e) -> { //Ns si funciona bien, la idea es pulsar y qu ete lleve a la ventana de Trabajador
-			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador();
+		botonTrabajador.addActionListener((e) -> {
+			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador(datos);
             dispose();
 		});
 
-		botonCliente.addActionListener((e) -> { //Igual pero con cliente
+		botonCliente.addActionListener((e) -> {
 			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente(datos);
             dispose();
 		});
@@ -57,5 +64,4 @@ public class VentanaSeleccion extends JFrame{
 		setVisible(true);
 	}
 }
-
 
