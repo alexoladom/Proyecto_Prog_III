@@ -9,6 +9,7 @@ import Clases.Trabajador;
 import Ventanas.VentanaInicioCliente;
 import Ventanas.VentanaParking;
 import Ventanas.VentanaSeleccion;
+import Ventanas.VentanaTrabajador;
 
 public class Main {
 	public static void main(String[] args) {

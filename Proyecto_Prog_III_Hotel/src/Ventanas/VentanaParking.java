@@ -1,18 +1,38 @@
 package Ventanas;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.GregorianCalendar;
+
+import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.constraints.DateSelectionConstraint;
 
 import Clases.Datos;
 import Clases.Parking;
 
 public class VentanaParking extends JFrame {
-	protected JButton botonReserva, botonCancelarReserva;
-	protected JPanel pBotones;
-	protected JLabel lblParking;
+	protected JButton botonReserva, botonTerminarReserva;
+	protected JPanel pBotones, pTabla;
+	protected JTable tabla;
 	protected Datos datos;
+	protected JDatePicker datePicker;
 	protected boolean reserva = false;
 
 	// Para mostrarle al usuario las plazas libres podemos hacerlo
@@ -21,48 +41,161 @@ public class VentanaParking extends JFrame {
 	public VentanaParking(Datos datos) {
 		
 		this.datos=datos;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setSize(900,800);
+		setTitle("Parking");
+		//creo mi modelo de tabla
+        
+        class MiModelo extends AbstractTableModel{
 
-		botonReserva = new JButton("Reserva");
-		botonCancelarReserva = new JButton("Cancelar Reserva");
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public int getRowCount() {
+				return 6;
+			}
 
-		lblParking = new JLabel("Parking");
+			@Override
+			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+				if (columnIndex!=0) {
+					datos.getParking().getParking()[rowIndex-1][columnIndex-1]=(boolean)aValue;
+				}
+				fireTableCellUpdated(rowIndex, columnIndex);
+			}
+
+			@Override
+			public int getColumnCount() {
+				return 6;
+			}
+
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex>0;
+			}
+
+			@Override
+			public Object getValueAt(int row, int column) {
+				switch(column) {
+				
+				case 0: 
+					return row ;
+				case 1,2,3,4,5,6:
+					return datos.getParking().getParking()[row-1][column-1];
+					
+				}
+				return null;
+			}
+        }
+        
+        class MiRenderer extends JLabel implements TableCellRenderer{
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				setText(value.toString());
+				setOpaque(true);
+				if((boolean) value==true) {
+					setBackground(Color.red);
+				}else if((boolean) value == false) {
+					setBackground(Color.green);
+				}
+				return this;
+			}  	
+        }
+        
+        class MiCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
+
+			private static final long serialVersionUID = 1L;
+			private boolean ocupado = false;
+        	private JCheckBox box ;
+			
+        	@Override
+			public Object getCellEditorValue() {
+				return ocupado;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (ocupado == true) {
+					ocupado = false;
+				}else {
+					ocupado=true;
+				}
+				fireEditingStopped();
+			}
+
+			@Override
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+					int column) {
+				box = new JCheckBox();
+				box.addActionListener(this);
+				return box;
+			}
+        	
+        }
+        
+        MiModelo modelo = new MiModelo();
+        
+		botonReserva = new JButton("Empezar Reserva");
+		botonTerminarReserva = new JButton("Terminar Reserva");
+		datePicker = new JDatePicker();
+		tabla = new JTable(modelo);
+		tabla.setCellEditor(new MiCellEditor());
+
 
 		pBotones = new JPanel();
+		pTabla = new JPanel();
 
-		pBotones.add(lblParking);
 		pBotones.add(botonReserva);
-		pBotones.add(botonCancelarReserva);
-
-		botonReserva.addActionListener((e) -> {
-			if (reserva == false) {
-				if (datos.getParking().isCompleto()) {
-					// el parking esta lleno
-				} else {
-					// el parking esta libre y se haria la reserva
-					// se ocuparia una de las 100 plazas quedando 99
-					// mirar si solo dejamos hacer solo una reserva
-					// por ahora lo he hecho solo permitiendo una reserva
-					reserva = true;
+		pBotones.add(datePicker);
+		pBotones.add(botonTerminarReserva);
+		
+		pTabla.add(tabla);
+		
+		add(pBotones,BorderLayout.NORTH);
+		add(pTabla, BorderLayout.CENTER);
+		tabla.repaint();
+		
+		
+		//Configuracion del datepicker
+		
+		datePicker.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
+				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+				if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isAfter(LocalDate.now().plusWeeks(1))) {
+					datePicker.getModel().setValue(null);
 				}
 			}
 		});
-		botonCancelarReserva.addActionListener((e) -> {
-			if (reserva == true) {
-				if (datos.getParking().getNumPlazasDisponibles() < 100) {
-					// hay que sumarle 1 solo si antes se habia hecho una reserva
-					// hay que mirar si permitimos hacer mas de una reserva, se puede hacer con un
-					// bool de reserva
-					reserva = false;// volvemos a permitir que se haga una reserva
-				} else {
-					// no hay ninguna plaza ocupada
-				}
-			} else {
-				// no se ha hecho ninguna reserva
+        datePicker.addDateSelectionConstraint(new DateSelectionConstraint() {
+			
+			@Override
+			public boolean isValidSelection(DateModel<?> arg0) {
+				
+				GregorianCalendar calendar = (GregorianCalendar) arg0.getValue();
+		        if(calendar!=null) {
+		        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        	if(fechaLocal.isBefore(LocalDate.now())||fechaLocal.isAfter(LocalDate.now().plusWeeks(1))) {
+			        	 return false;
+			         }else {
+			        	 return true;
+			         }
+		        }else{
+		        	return true;
+		        }		         
 			}
 		});
+        pack();
 		setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new VentanaParking(new Datos());
 	}
 
 }

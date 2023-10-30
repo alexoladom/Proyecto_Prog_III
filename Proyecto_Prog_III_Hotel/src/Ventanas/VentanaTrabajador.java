@@ -19,7 +19,7 @@ public class VentanaTrabajador extends JFrame {
 	protected JButton botonCerrar;
 
 	public VentanaTrabajador() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
 		botonCerrar = new JButton("CERRAR");
