@@ -45,6 +45,16 @@ public class VentanaCliente extends JFrame{
 		textContraseña = new JTextField(15);
 		textTelefono = new JTextField(15);
 		
+		lblDatos.add(textDni);
+		lblDatos.add(textNombre);
+		lblDatos.add(textApellido1);
+		lblDatos.add(textApellido2);
+		lblDatos.add(textEmail);
+		lblDatos.add(textDireccion);
+		lblDatos.add(textfNacimiento);
+		lblDatos.add(textContraseña);
+		lblDatos.add(textTelefono);
+		
 		
 		botonCerrar.addActionListener((e) -> {
 			System.exit(0);
