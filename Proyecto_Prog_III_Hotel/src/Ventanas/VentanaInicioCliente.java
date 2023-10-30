@@ -7,7 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import org.jdatepicker.JDatePicker;
 
 import Clases.Cliente;
 import Clases.Datos;
@@ -71,7 +75,7 @@ public class VentanaInicioCliente extends JFrame {
 		textoApellido = new JTextField(20);
 		textoEmail = new JTextField(20);
 		textoDireccion = new JTextField(20);
-		textoFechaNacimiento= new JTextField(20);
+		JDatePicker date = new JDatePicker();
 		textoTelefono= new JTextField(20);
 		
 		
@@ -91,7 +95,7 @@ public class VentanaInicioCliente extends JFrame {
 		pCentroRegistro.add(lblDireccion);
 		pCentroRegistro.add(textoDireccion);
 		pCentroRegistro.add(lblFechaNacimiento);
-		pCentroRegistro.add(textoFechaNacimiento);
+		pCentroRegistro.add(date);
 		pCentroRegistro.add(lblTelefono);
 		pCentroRegistro.add(textoTelefono);
 		
@@ -148,9 +152,10 @@ public class VentanaInicioCliente extends JFrame {
 				cliente.setEmail(textoEmail.getText());
 				cliente.setContraseña(textoContra2.getText());
 				cliente.setDireccion(textoDireccion.getText());
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				LocalDate date = LocalDate.parse(textoFechaNacimiento.getText(), formatter);
-				cliente.setfNacimiento(date);
+				GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
+				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+				cliente.setfNacimiento(fechaLocal);
 				cliente.setTelefono(textoTelefono.getText());
 				datos.getListaClientes().add(cliente);
 				datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);

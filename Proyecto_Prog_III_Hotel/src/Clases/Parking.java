@@ -1,9 +1,14 @@
 package Clases;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Parking {
+public class Parking implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//Atributos
 	//El parking es un array bidimensional de 10x10
 	protected static int numId;

@@ -131,7 +131,7 @@ public class Datos {
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
 			}catch (IOException e) {
-			System.err.println("Error al guardal los datos");
+			System.err.println("Error al guardar los datos");
 		}
 	}
 	

@@ -10,7 +10,6 @@ public class Main {
 	public static void main(String[] args) {
 		System.out.println("hola mundo!");
 		Datos datos = new Datos();
-//		new VentanaSeleccion(datos);
-		new VentanaParking(datos);
+		new VentanaSeleccion(datos);
 	}
 }
