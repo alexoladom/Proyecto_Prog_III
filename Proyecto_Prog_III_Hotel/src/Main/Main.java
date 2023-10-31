@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Clases.Cliente;
 import Clases.Datos;
 import Clases.Trabajador;
+//import Ventanas.VentanaDeCarga;
 import Ventanas.VentanaInicioCliente;
 import Ventanas.VentanaParking;
 import Ventanas.VentanaSeleccion;
@@ -33,9 +34,11 @@ public class Main {
 		datos.getListaTrabajadores().add(t4);
 		datos.getListaTrabajadores().add(t5);
 		datos.getListaTrabajadores().add(t6);
+
 		for (Trabajador trabajador : datos.getListaTrabajadores()) {
 			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
-		new VentanaSeleccion(datos);
+//		new VentanaDeCarga(datos);
+
 	}
 }
