@@ -35,9 +35,6 @@ public class VentanaParking extends JFrame {
 	protected JDatePicker datePicker;
 	protected boolean reserva = false;
 
-	// Para mostrarle al usuario las plazas libres podemos hacerlo
-	// por el numero de plazas libres o mostrandole un menu
-
 	public VentanaParking(Datos datos) {
 		
 		this.datos=datos;
@@ -61,6 +58,7 @@ public class VentanaParking extends JFrame {
 					datos.getParking().getParking()[rowIndex-1][columnIndex-1]=(boolean)aValue;
 				}
 				fireTableCellUpdated(rowIndex, columnIndex);
+				tabla.repaint();
 			}
 
 			@Override
@@ -79,14 +77,14 @@ public class VentanaParking extends JFrame {
 				
 				case 0: 
 					return row ;
-				case 1,2,3,4,5,6:
+				case 1,2,3,4,5:
 					return datos.getParking().getParking()[row-1][column-1];
 					
 				}
 				return null;
 			}
         }
-        
+        /*
         class MiRenderer extends JLabel implements TableCellRenderer{
 
 			@Override
@@ -133,24 +131,25 @@ public class VentanaParking extends JFrame {
 			}
         	
         }
-        
+        */
         MiModelo modelo = new MiModelo();
         
 		botonReserva = new JButton("Empezar Reserva");
 		botonTerminarReserva = new JButton("Terminar Reserva");
 		datePicker = new JDatePicker();
 		tabla = new JTable(modelo);
-		tabla.setCellEditor(new MiCellEditor());
+//		tabla.setCellEditor(new MiCellEditor());
 
 
 		pBotones = new JPanel();
 		pTabla = new JPanel();
+		pTabla.setLayout(new BorderLayout());
 
 		pBotones.add(botonReserva);
 		pBotones.add(datePicker);
 		pBotones.add(botonTerminarReserva);
 		
-		pTabla.add(tabla);
+		pTabla.add(tabla,BorderLayout.NORTH);
 		
 		add(pBotones,BorderLayout.NORTH);
 		add(pTabla, BorderLayout.CENTER);
