@@ -36,6 +36,7 @@ public class Datos {
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
+		this.mapaTrabajadoresPorDNI = mapaTrabajadoresPorDNI;
 	}
 	
 	public Datos() {
