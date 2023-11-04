@@ -72,7 +72,7 @@ public class VentanaDeCarga extends JFrame{
                 @Override
                 protected void done() {
                     botonEntrar.setEnabled(true); // Habilitar el botón nuevamente
-                    VentanaSeleccion ventanaSeleccion = new VentanaSeleccion(null);
+                    new VentanaSeleccion(datos);
                     dispose();
                 }
             };

@@ -52,12 +52,12 @@ public class VentanaSeleccion extends JFrame{
 		});
 
 		botonTrabajador.addActionListener((e) -> {
-			VentanaInicioTrabajador ventanaInicioTrabajador = new VentanaInicioTrabajador(datos);
+			new VentanaInicioTrabajador(datos);
             dispose();
 		});
 
 		botonCliente.addActionListener((e) -> {
-			VentanaInicioCliente ventanaInicioCliente = new VentanaInicioCliente(datos);
+			new VentanaInicioCliente(datos);
             dispose();
 		});
 		pack();
