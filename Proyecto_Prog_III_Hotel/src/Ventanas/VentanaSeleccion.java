@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import Clases.Datos;
 
@@ -52,12 +53,23 @@ public class VentanaSeleccion extends JFrame{
 		});
 
 		botonTrabajador.addActionListener((e) -> {
-			new VentanaInicioTrabajador(datos);
+			SwingUtilities.invokeLater(new Runnable() {
+			    @Override
+				public void run() {
+					new VentanaInicioTrabajador(datos);	
+				}
+			});	
             dispose();
 		});
 
 		botonCliente.addActionListener((e) -> {
-			new VentanaInicioCliente(datos);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					new VentanaInicioCliente(datos);
+				}
+			});
+			
             dispose();
 		});
 		pack();

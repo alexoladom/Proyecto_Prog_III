@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import Clases.Datos;
 import Clases.Trabajador;
@@ -59,19 +60,26 @@ public class VentanaInicioTrabajador extends JFrame{
 
 		botonAtras.addActionListener((e) -> {
 			dispose();
-			new VentanaSeleccion(datos);
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					new VentanaSeleccion(datos);					
+				}
+			});
+			
 		});
 		
 		botonIniSesion.addActionListener((e) -> {
 			String dni = textoNombre.getText();
 			if (datos.getMapaTrabajadoresPorDNI().containsKey(dni)) {
-				if(datos.comprobarContraseñaTrabajador(dni, textoContra.getText())) {
+				if(datos.comprobarContraseñaTrabajador(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
+				JOptionPane.showMessageDialog(null, "No existe el trabajador con ese DNI");
 			}
 		}); 
 		setVisible(true);

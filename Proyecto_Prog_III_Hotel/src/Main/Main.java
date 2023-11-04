@@ -3,6 +3,8 @@ package Main;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import Clases.Cliente;
 import Clases.Datos;
 import Clases.Trabajador;
@@ -39,7 +41,15 @@ public class Main {
 		for (Trabajador trabajador : datos.getListaTrabajadores()) {
 			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
-		new VentanaDeCarga(datos);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new VentanaDeCarga(datos);
+				
+			}
+		});
+		
 
 	}
 }
