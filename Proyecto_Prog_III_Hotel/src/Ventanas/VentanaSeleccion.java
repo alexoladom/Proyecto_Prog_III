@@ -1,7 +1,7 @@
 package Ventanas;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
+
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import Clases.Datos;
 
 public class VentanaSeleccion extends JFrame{
+
+	private static final long serialVersionUID = 1L;
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
 	protected JPanel pAbajo, pCentro;
 	protected JTextField textoIdentificacion;
@@ -26,8 +28,7 @@ public class VentanaSeleccion extends JFrame{
 		botonCerrar = new JButton("CERRAR");
 		botonCliente = new JButton("SOY CLIENTE");
 		botonTrabajador = new JButton("SOY TRABAJADOR");
-		ImageIcon imTrabajador = new ImageIcon("src\\Imagenes\\imagenTrabajador.jpeg");
-		ImageIcon imCliente = new ImageIcon("src\\Imagenes\\ImagenCliente.jpeg");
+
 
 		lblIdentificacion = new JLabel("Introduce que eres: ");
 		lblImagenTrabajador = new JLabel(new ImageIcon("src\\Imagenes\\imagenTrabajador.jpeg"));

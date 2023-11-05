@@ -17,7 +17,7 @@ public class Parking implements Serializable{
 	protected boolean completo;
 	protected int numPlazasDisponibles = 100;
 	protected LocalDate fecha;
-	protected boolean[][] parking = new boolean[5][5];
+	protected boolean[][] distribucion = new boolean[5][5];
 	
 	//Constructores
 	public Parking( boolean completo, int numPlazasDisponibles, boolean[][] parking, LocalDate fecha) {
@@ -26,7 +26,7 @@ public class Parking implements Serializable{
 		this.id = numId;
 		this.completo = completo;
 		this.numPlazasDisponibles = numPlazasDisponibles;
-		this.parking = parking;
+		this.distribucion = parking;
 		this.fecha=fecha;
 	} 
 	public Parking() {
@@ -37,7 +37,7 @@ public class Parking implements Serializable{
 		this.numPlazasDisponibles = 100;
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				parking[i][j]= false;
+				distribucion[i][j]= false;
 			}
 		}
 		this.fecha= LocalDate.now();
@@ -69,11 +69,11 @@ public class Parking implements Serializable{
 		}
 		
 	}
-	public boolean[][] getParking() {
-		return parking;
+	public boolean[][] getDistribucion() {
+		return distribucion;
 	}
-	public void setParking(boolean[][] parking) {
-		this.parking = parking;
+	public void setDistribucion(boolean[][] parking) {
+		this.distribucion = parking;
 	}
 	
 	public LocalDate getFecha() {
@@ -97,7 +97,7 @@ public class Parking implements Serializable{
 	public String parkinigToString() {
 		String a = "";
 		for (int i = 0; i < 5; i++) {
-			a = a+ Arrays.toString(parking[i])+ "\n";	
+			a = a+ Arrays.toString(distribucion[i])+ "\n";	
 			}
 		return a;
 	}

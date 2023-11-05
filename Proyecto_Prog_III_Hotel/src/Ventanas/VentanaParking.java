@@ -3,37 +3,42 @@ package Ventanas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Enumeration;
+
 import java.util.GregorianCalendar;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.TableColumnModelListener;
+import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
+
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+
 
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
 import Clases.Datos;
-import Clases.Parking;
 
 public class VentanaParking extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 	protected JButton botonReserva, botonTerminarReserva;
 	protected JPanel pBotones, pTabla;
 	protected JTable tabla;
@@ -45,8 +50,9 @@ public class VentanaParking extends JFrame {
 		
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(900,800);
+		setSize(800,220);
 		setTitle("Parking");
+		setLocationRelativeTo(null);
 		//creo mi modelo de tabla
         
         class MiModelo extends AbstractTableModel{
@@ -61,7 +67,10 @@ public class VentanaParking extends JFrame {
 			@Override
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 				if (columnIndex!=0&&rowIndex!=0) {
-					datos.getParking().getParking()[rowIndex-1][columnIndex-1]=(boolean)aValue;
+					GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
+					ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+					datos.getMapaParkingPorFecha().get(fechaLocal).getDistribucion()[rowIndex-1][columnIndex-1]=(boolean)aValue;
 				}
 				fireTableCellUpdated(rowIndex, columnIndex);
 				tabla.repaint();
@@ -87,13 +96,21 @@ public class VentanaParking extends JFrame {
 					case 0:
 						return column;
 					case 1,2,3,4,5:
-						return datos.getParking().getParking()[row-1][column-1];
-
+						GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
+						if(calendar!=null) {
+							ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+							LocalDate fechaLocal = zonedDateTime.toLocalDate();
+							return datos.getMapaParkingPorFecha().get(fechaLocal).getDistribucion()[row-1][column-1];
+						}else {
+							return datos.getMapaParkingPorFecha().get(LocalDate.now()).getDistribucion()[row-1][column-1];
+						}
 					}
 				}
 				return null;
 			}
-        }
+        }      
+        
+        // Renderer de las celdas
         
         class MiRenderer extends JLabel implements TableCellRenderer{
 			private static final long serialVersionUID = 1L;
@@ -101,22 +118,26 @@ public class VentanaParking extends JFrame {
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int column) {
-				setText(value.toString());
+				
 				setOpaque(true);
 				if(row!=0) {
 					if((boolean) value== true) {
+						setText("OCUPADO");
 						setBackground(Color.red);
 					}else if((boolean) value == false) {
+						setText("LIBRE");
 						setBackground(Color.green);
 					
 					}
 				}else {
+					setText(value.toString());
 					setBackground(Color.LIGHT_GRAY);
 				}
 				return this;
 			}  	
         }
         
+        //Editor en forma de checkbox
         class MiCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
 
 			private static final long serialVersionUID = 1L;
@@ -130,12 +151,20 @@ public class VentanaParking extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (ocupado == true) {
-					ocupado = false;
+				GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
+				if(calendar!=null) {
+					if (ocupado == true) {
+						ocupado = false;
+					}else {
+						ocupado=true;
+					}
+					fireEditingStopped();
 				}else {
-					ocupado=true;
+					JOptionPane.showMessageDialog(tabla, "Primero seleccione una fecha", "ERROR", JOptionPane.ERROR_MESSAGE);
+					this.fireEditingCanceled();
 				}
-				fireEditingStopped();
+				
+				
 			}
 
 			@Override
@@ -148,10 +177,16 @@ public class VentanaParking extends JFrame {
         	
         }
         
+        // Creacion de la tabla y asignacion del modelo, renderer y editor
+        
         MiModelo modelo = new MiModelo();
 		botonReserva = new JButton("Empezar Reserva");
+		botonReserva.setToolTipText("Haz click aqui para empezar a editar la tabla");
 		botonTerminarReserva = new JButton("Terminar Reserva");
+		botonTerminarReserva.setToolTipText("Haz click aqui para terminar de editar la tabla del parking");
 		datePicker = new JDatePicker();
+		LocalDate fechaDeHoy = LocalDate.now();
+		datePicker.getModel().setDate(fechaDeHoy.getYear(), fechaDeHoy.getMonthValue(), fechaDeHoy.getDayOfMonth());
 		tabla = new JTable(modelo);
 		tabla.getColumnModel().getColumn(1).setCellRenderer(new MiRenderer());
 		tabla.getColumnModel().getColumn(2).setCellRenderer(new MiRenderer());
@@ -168,15 +203,50 @@ public class VentanaParking extends JFrame {
 
 
 		pBotones = new JPanel();
+		pBotones.setBackground(Color.BLUE);
 		pTabla = new JPanel();
+		pTabla.setVisible(false);
 		pTabla.setLayout(new BorderLayout());
-
+		tabla.setEnabled(false);
+		Border lineBorder = BorderFactory.createLineBorder(Color.BLUE);
+		Border titledBorder = BorderFactory.createTitledBorder(lineBorder, "Distribucion del parking");
+		pTabla.setBorder(titledBorder);
+		
 		pBotones.add(botonReserva);
 		pBotones.add(datePicker);
 		pBotones.add(botonTerminarReserva);
 		
-		pTabla.add(tabla,BorderLayout.NORTH);
+		ImageIcon imagenPregunta = new ImageIcon("src/Imagenes/preguntaAzul.png");
+		Image pregunta = imagenPregunta.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		ImageIcon imagenRedimensionada = new ImageIcon(pregunta);
+		JButton botonAyuda = new JButton(imagenRedimensionada);
+		botonAyuda.setBackground(Color.red);
+		botonAyuda.setBorder(BorderFactory.createEmptyBorder());
+		botonAyuda.setOpaque(false);
+		botonAyuda.setToolTipText("Ayuda");
+		botonAyuda.addActionListener((e) -> {
+			JOptionPane.showMessageDialog(pTabla, "Para empezar la reserva, seleccione una fecha y pulse 'Empezar reserva', para finalizar, "
+				+ "pulse el boton 'Terminar reserva'");
+		});
+		pBotones.add(botonAyuda);
 		
+		botonReserva.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabla.setEnabled(true);
+				botonReserva.setEnabled(false);
+			}
+		});
+		botonTerminarReserva.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabla.setEnabled(false);
+				datos.guardarDatos();
+				dispose();
+			}
+		});
+		pTabla.add(tabla,BorderLayout.NORTH);
 		add(pBotones,BorderLayout.NORTH);
 		add(pTabla, BorderLayout.CENTER);
 		tabla.repaint();
@@ -194,6 +264,8 @@ public class VentanaParking extends JFrame {
 				if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isAfter(LocalDate.now().plusWeeks(1))) {
 					datePicker.getModel().setValue(null);
 				}
+				pTabla.setVisible(true);
+				tabla.repaint();
 			}
 		});
         datePicker.addDateSelectionConstraint(new DateSelectionConstraint() {
@@ -215,12 +287,23 @@ public class VentanaParking extends JFrame {
 		        }		         
 			}
 		});
-        pack();
+        addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				datos.cargarDatos();
+				tabla.repaint();
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				datos.guardarDatos();
+			}
+		});
+        ImageIcon icono = new ImageIcon("src/Imagenes/parkingIcono.png");
+        setIconImage(icono.getImage());
 		setVisible(true);
 	}
-	public static void main(String[] args) {
-		
-		new VentanaParking(new Datos());
-	}
+	
 
 }

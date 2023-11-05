@@ -1,16 +1,13 @@
 package Ventanas;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
+
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -29,6 +26,8 @@ import Clases.Cliente;
 import Clases.Datos;
 
 public class VentanaInicioCliente extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 	protected JButton botonAtras1, botonRegistrarme, botonRegistro,  botonIniSesion,botonAtras2;
 	protected JLabel lblNombre, lblContra,lblContra2, lblDNI,lblDNI2,lblApellido,lblEmail,lblDireccion,lblFechaNacimiento,lblTelefono, lblCliente;
 	protected JPanel pBotones, pCentro, pArriba, pCentroRegistro;
@@ -50,7 +49,6 @@ public class VentanaInicioCliente extends JFrame {
 		botonRegistro = new JButton("REGISTRO");
 		botonRegistro.setVisible(false);
 		botonIniSesion = new JButton("INICIO DE SESION");
-		ImageIcon imCliente = new ImageIcon("src\\Imagenes\\Clientes.jpeg");
 
 		lblNombre = new JLabel("Introduzca su Nombre: ");
 		lblContra = new JLabel("Introduzca su contraseña: ");
