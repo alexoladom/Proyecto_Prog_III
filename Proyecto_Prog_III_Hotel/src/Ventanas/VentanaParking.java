@@ -349,14 +349,6 @@ public class VentanaParking extends JFrame {
 		setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		Datos datos = new Datos();
-		datos.inicializarDatos();
-		Reserva reserva = new Reserva();
-		Cliente cliente = new Cliente();
-		cliente.getListaReservasCliente().add(reserva);
-		new VentanaParking(datos,reserva,cliente );
-		
-	}
+	
 
 }

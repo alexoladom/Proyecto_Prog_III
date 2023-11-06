@@ -1,19 +1,47 @@
 package Ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.GregorianCalendar;
+
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.constraints.DateSelectionConstraint;
+
+import Clases.Cliente;
+import Clases.Datos;
+import Clases.Reserva;
 
 public class VentanaCliente extends JFrame{
 	protected JProgressBar reservasHabitaciones;
@@ -22,16 +50,266 @@ public class VentanaCliente extends JFrame{
 	protected JLabel lblDatoslblDatos, lblDni, lblNombre, lblApellido1, lblApellido2, lblEmail, lblDireccion, lblfNacimiento,
     lblContraseña, lblTelefono;
 	protected JPanel pDatos, pBotones, pReservas, pHabitaciones, pFecha;
-	protected JButton botonCerrar, botonReserva;
+	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pCambiarPerfil,pBotonesVerReservas;
+	protected JList<Reserva> listaReservas;
+	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva;
 	protected JComboBox comboBoxHoteles;
 	protected JSpinner numeroDeHabitaciones;
 	
 	
-	public VentanaCliente() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		setTitle("Hotel");
+	public VentanaCliente(Datos datos, Cliente cliente) {
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setSize(900,350);
+		setLocationRelativeTo(null);
+		setTitle("Cliente "+ cliente.getNombre()+" "+cliente.getApellido1());
 		
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		JMenu menuCrearReservas = new JMenu();
+		menuBar.add(menuCrearReservas);
+		JMenu menuVerReservas = new JMenu();
+		menuBar.add(menuVerReservas);
+		JMenuItem verReservas = new JMenuItem("VER RESERVAS");
+		menuVerReservas.add(verReservas);
+		JMenu menuPerfil = new JMenu();
+		menuBar.add(menuPerfil);
+		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
+		menuPerfil.add(cambiarFotoPerfil);
+		JMenuItem informacionCliente = new JMenuItem("VER/EDITAR MIS DATOS");
+		menuPerfil.add(informacionCliente);
+		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
+		menuPerfil.add(cerrarSesion);
+		
+		
+	
+		ImageIcon imagenReserva = new ImageIcon("src/Imagenes/button_reserva-ahora.png");
+		Image imagenReservaEscala = imagenReserva.getImage().getScaledInstance(100, 45,Image.SCALE_SMOOTH);
+		menuCrearReservas.setIcon(new ImageIcon(imagenReservaEscala));
+		
+		ImageIcon imagenVerReserva = new ImageIcon("src/Imagenes/button_ver-reservas.png");
+		Image imagenVerReservaEscala = imagenVerReserva.getImage().getScaledInstance(100, 45,Image.SCALE_SMOOTH);
+		menuVerReservas.setIcon(new ImageIcon(imagenVerReservaEscala));
+		
+		ImageIcon imagenPerfil = new ImageIcon("src/Imagenes/imagenPerfilpng.png");
+		Image imagenPerfilEscala = imagenPerfil.getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH);
+		menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
+		
+		//Panel para ver todas las reservas, borrarlas y editarlas
+		pListaReservas = new JPanel();
+		pListaReservas.setBackground(Color.LIGHT_GRAY);
+		DefaultListModel<Reserva> modeloListaReservas = new DefaultListModel<Reserva> ();
+		modeloListaReservas.addAll(cliente.getListaReservasCliente());
+		listaReservas = new JList<Reserva>(modeloListaReservas);
+		
+		JScrollPane scrollListaReservas = new JScrollPane(listaReservas);
+		scrollListaReservas.setSize(400, 400);
+		pListaReservas.add(scrollListaReservas);
+		
+		pBotonesVerReservas = new JPanel();
+		pBotonesVerReservas.setBackground(Color.LIGHT_GRAY);
+		bBorrarReserva= new JButton("Borrar reserva");
+		bEditarReserva= new JButton("Editar reserva");
+		
+		pBotonesVerReservas.add(bBorrarReserva);
+		pBotonesVerReservas.add(bEditarReserva);
+		
+		
+		bBorrarReserva.addActionListener((e)-> {
+			Reserva seleccionado =listaReservas.getSelectedValue();
+			cliente.getListaReservasCliente().remove(seleccionado);
+			modeloListaReservas.removeElement(seleccionado);
+			listaReservas.repaint();
+		});
+		
+		
+		pListaReservas.add(pBotonesVerReservas, BorderLayout.SOUTH);
+		
+		add(pListaReservas);
+		pListaReservas.setVisible(false);
+		
+		verReservas.addActionListener((e)->{
+			pListaReservas.setVisible(true);
+		});
+		
+		
+		//Panel para crear nuevas reservas
+		
+		class PanelCrearReserva extends JPanel{
+			protected JPanel pAbajo, pPrincipal;
+			protected JLabel lblFechaIni, lblFechaFin, lblHabSimples, lblHabDobles, lblHabSuites, lblParking;
+			protected JDatePicker datePickerIni, datePickerFin;
+			protected JSpinner spinHabSimple, spinHabDoble, spinHabSuite;
+			protected JButton bAñadirHabSimple, bAñadirHabDoble, bAñadirHabSuite,
+			bReservarParking, bCancelarReserva, bConfirmarReserva;
+			
+			
+			public PanelCrearReserva() {
+				
+				setLayout(new BorderLayout());
+				lblFechaIni = new JLabel("Fecha inicial: ");
+				lblFechaFin = new JLabel("Fecha final: ");
+				lblHabSimples = new JLabel("Habitaciones Simples: ");
+				lblHabDobles = new JLabel("Habitaciones dobles: ");
+				lblHabSuites = new JLabel("Suites: ");
+				lblParking = new JLabel("Reservar plazas de parking -> ");
+				
+				datePickerIni = new JDatePicker();
+				
+				//Configuracion del datepicker inicio
+				datePickerIni.addActionListener(new ActionListener() {	
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					GregorianCalendar calendar = (GregorianCalendar) datePickerIni.getModel().getValue();
+					ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+			        GregorianCalendar calendar2 = (GregorianCalendar) datePickerFin.getModel().getValue();
+			        if (calendar2!=null) {
+			        	ZonedDateTime zonedDateTime2 = calendar2.toZonedDateTime();
+				        LocalDate fechaLocal2 = zonedDateTime2.toLocalDate();
+				        if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isAfter(fechaLocal2)) {
+							datePickerIni.getModel().setValue(null);
+						}
+			        }else {
+			        	if (fechaLocal.isBefore(LocalDate.now())) {
+							datePickerIni.getModel().setValue(null);
+						}
+			        }
+					
+				}
+			});
+				
+				datePickerIni.addDateSelectionConstraint(new DateSelectionConstraint() {
+					
+					@Override
+					public boolean isValidSelection(DateModel<?> arg0) {
+						
+						GregorianCalendar calendar = (GregorianCalendar) arg0.getValue();
+				        if(calendar!=null) {
+				        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+					        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+					        GregorianCalendar calendar2 = (GregorianCalendar) datePickerFin.getModel().getValue();
+					        if (calendar2!=null) {
+					        	ZonedDateTime zonedDateTime2 = calendar2.toZonedDateTime();
+						        LocalDate fechaLocal2 = zonedDateTime2.toLocalDate();
+						        if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isAfter(fechaLocal2)) {
+									return false;
+								}else {
+									return true;
+								}
+					        }else{
+					        	if(fechaLocal.isBefore(LocalDate.now())) {
+						        	 return false;
+						         }else {
+						        	 return true;
+						         }
+					        }
+				        }else{
+				        	return true;
+				        }		         
+					}
+				});
+
+				
+				datePickerFin = new JDatePicker();
+				
+				//Configuracion del datepicker final
+				
+				datePickerFin.addActionListener(new ActionListener() {	
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					GregorianCalendar calendar = (GregorianCalendar) datePickerFin.getModel().getValue();
+					ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+			        GregorianCalendar calendar2 = (GregorianCalendar) datePickerIni.getModel().getValue();
+			        if (calendar2!=null) {
+			        	ZonedDateTime zonedDateTime2 = calendar2.toZonedDateTime();
+				        LocalDate fechaLocal2 = zonedDateTime2.toLocalDate();
+				        if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isBefore(fechaLocal2)) {
+							datePickerFin.getModel().setValue(null);
+						}
+			        }else {
+			        	if (fechaLocal.isBefore(LocalDate.now())) {
+							datePickerFin.getModel().setValue(null);
+						}
+			        }
+					
+				}
+			});
+
+				datePickerFin.addDateSelectionConstraint(new DateSelectionConstraint() {
+					
+					@Override
+					public boolean isValidSelection(DateModel<?> arg0) {
+						
+						GregorianCalendar calendar = (GregorianCalendar) arg0.getValue();
+				        if(calendar!=null) {
+				        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+					        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+					        GregorianCalendar calendar2 = (GregorianCalendar) datePickerIni.getModel().getValue();
+					        if (calendar2!=null) {
+					        	ZonedDateTime zonedDateTime2 = calendar2.toZonedDateTime();
+						        LocalDate fechaLocal2 = zonedDateTime2.toLocalDate();
+						        if (fechaLocal.isBefore(LocalDate.now())|| fechaLocal.isBefore(fechaLocal2)) {
+									return false;
+								}else {
+									return true;
+								}
+					        }else{
+					        	if(fechaLocal.isBefore(LocalDate.now())) {
+						        	 return false;
+						         }else {
+						        	 return true;
+						         }
+					        }
+				        }else{
+				        	return true;
+				        }		         
+					}
+				});
+
+				
+				SpinnerNumberModel modeloSpinner = new SpinnerNumberModel(0,0,datos.getListaHabitaciones().size(),1);
+				spinHabSimple = new JSpinner(modeloSpinner);
+				spinHabDoble = new JSpinner(modeloSpinner);
+				spinHabSuite = new JSpinner(modeloSpinner);
+				
+				bAñadirHabSimple = new JButton("+");
+				bAñadirHabDoble = new JButton("+");
+				bAñadirHabSuite = new JButton("+");
+				bReservarParking = new JButton("Reserva Parking");
+				bCancelarReserva = new JButton("Cancelar Reserva");
+				bConfirmarReserva = new JButton ("Confirmar Reserva");
+				
+				pPrincipal = new JPanel(new GridLayout(6,3));
+				pPrincipal.add(lblFechaIni);
+				pPrincipal.add(datePickerIni);
+				pPrincipal.add(new JLabel());
+				pPrincipal.add(lblFechaFin);
+				pPrincipal.add(datePickerFin);
+				pPrincipal.add(new JLabel());
+				pPrincipal.add(lblHabSimples);
+				pPrincipal.add(spinHabSimple);
+				pPrincipal.add(bAñadirHabSimple);
+				pPrincipal.add(lblHabDobles);
+				pPrincipal.add(spinHabDoble);
+				pPrincipal.add(bAñadirHabDoble);
+				pPrincipal.add(lblHabSuites);
+				pPrincipal.add(spinHabSuite);
+				pPrincipal.add(bAñadirHabSuite);
+				pPrincipal.add(lblParking);
+				pPrincipal.add(bReservarParking);
+				
+				pBotones = new JPanel();
+				pBotones.add(bCancelarReserva,bConfirmarReserva);
+				
+				add(pPrincipal, BorderLayout.NORTH);
+				add(pAbajo, BorderLayout.SOUTH);
+			}
+			
+		}
+		
+		/*
 		comboBoxHoteles = new JComboBox<>();
 		
 		JRadioButton habitacionSimple = new JRadioButton("Habitacion Simple");
@@ -124,8 +402,10 @@ public class VentanaCliente extends JFrame{
 			System.exit(0);
 		});
 		
-		setVisible(true);
 		
+		*/
+		setVisible(true);
 	}
+	
 	
 }

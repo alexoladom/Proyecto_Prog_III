@@ -139,8 +139,8 @@ public class Reserva implements Serializable{
 	@Override
 	public String toString() {
 		return String.format(
-				"Reserva %s, %s, fechaInicio: %s, fechaFinal: %s, %s, pagado? %s", id,
-				cliente, fechaInicio, fechaFinal, precioCobrar, estaPagado);
+				"Reserva %s, con fecha de inicio %s, fecha final %s, precio: %s,  estado de pago: %s, plazas de parking: %s, numero de habitaciones: %s ", id,
+				 fechaInicio, fechaFinal, precioCobrar, estaPagado, listaPlazasParking.size(), listaHabitacionesReservadas.size());
 	}
 	
 	
