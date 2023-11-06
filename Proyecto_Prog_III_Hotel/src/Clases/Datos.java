@@ -150,7 +150,6 @@ public class Datos {
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 	}
 
-	
 	public boolean comprobarContraseñaCliente(String dni, String contraseña) {
 		if (mapaClientesPorDNI.containsKey(dni)){
 			if(mapaClientesPorDNI.get(dni).getContraseña().equals(contraseña)){

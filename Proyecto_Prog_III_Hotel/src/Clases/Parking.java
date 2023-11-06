@@ -17,10 +17,10 @@ public class Parking implements Serializable{
 	protected boolean completo;
 	protected int numPlazasDisponibles = 100;
 	protected LocalDate fecha;
-	protected boolean[][] distribucion = new boolean[5][5];
+	protected PlazaParking[][] distribucion = new PlazaParking[5][5];
 	
 	//Constructores
-	public Parking( boolean completo, int numPlazasDisponibles, boolean[][] parking, LocalDate fecha) {
+	public Parking( boolean completo, int numPlazasDisponibles, PlazaParking[][] parking, LocalDate fecha) {
 		super();
 		numId++;
 		this.id = numId;
@@ -37,7 +37,7 @@ public class Parking implements Serializable{
 		this.numPlazasDisponibles = 100;
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				distribucion[i][j]= false;
+				distribucion[i][j]= new PlazaParking(i,j,false);
 			}
 		}
 		this.fecha= LocalDate.now();
@@ -69,10 +69,10 @@ public class Parking implements Serializable{
 		}
 		
 	}
-	public boolean[][] getDistribucion() {
+	public PlazaParking[][] getDistribucion() {
 		return distribucion;
 	}
-	public void setDistribucion(boolean[][] parking) {
+	public void setDistribucion(PlazaParking[][] parking) {
 		this.distribucion = parking;
 	}
 	
@@ -83,6 +83,18 @@ public class Parking implements Serializable{
 		this.fecha = fecha;
 	}
 	
+	
+	public boolean comprobarPlazaDisponible(Cliente cliente, PlazaParking plaza) {
+		boolean esta = false;
+		for (Reserva reserva : cliente.getListaReservasCliente()) {
+			if (reserva.getListaPlazasParking().contains(plaza)||!plaza.isOcupada()) {
+				esta = true;
+			}else {
+				esta = false;
+			}
+		}
+		return esta;
+	}
 	//Metodo toString
 	
 	

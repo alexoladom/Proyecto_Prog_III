@@ -18,13 +18,14 @@ public class Reserva implements Serializable{
 	protected LocalDate fechaInicio;
 	protected LocalDate fechaFinal;
 	protected List<Habitacion> listaHabitacionesReservadas;
+	protected List<PlazaParking> listaPlazasParking;
 	protected double precioCobrar;
 	protected boolean estaPagado;
 	
 	//Constructores
 	 
 	public Reserva( Cliente cliente, LocalDate fechaInicio, LocalDate fechaFinal, double precioCobrar,
-			boolean estaPagado, List<Habitacion> listaHabitacions) {
+			boolean estaPagado, List<Habitacion> listaHabitacions, List<PlazaParking> listaPlazasParking) {
 		super();
 		numId++;
 		this.id = numId;
@@ -34,6 +35,7 @@ public class Reserva implements Serializable{
 		this.precioCobrar = precioCobrar;
 		this.estaPagado = estaPagado;
 		this.listaHabitacionesReservadas = listaHabitacions;
+		this.listaPlazasParking = listaPlazasParking;
 	}
 	
 	
@@ -47,6 +49,7 @@ public class Reserva implements Serializable{
 		this.precioCobrar = 0;
 		this.estaPagado = false;
 		this.listaHabitacionesReservadas = new ArrayList<Habitacion>();
+		this.listaPlazasParking = new ArrayList<PlazaParking>();
 	}
 
 	
@@ -121,9 +124,17 @@ public class Reserva implements Serializable{
 		this.listaHabitacionesReservadas = listaHabitacionesReservadas;
 	}
 	
+	public List<PlazaParking> getListaPlazasParking() {
+		return listaPlazasParking;
+	}
+
+
+	public void setListaPlazasParking(List<PlazaParking> listaPlazasParking) {
+		this.listaPlazasParking = listaPlazasParking;
+	}
+	
 	
 	//Metodo toString
-
 
 	@Override
 	public String toString() {
