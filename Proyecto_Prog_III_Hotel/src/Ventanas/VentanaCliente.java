@@ -2,17 +2,10 @@ package Ventanas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
@@ -29,7 +22,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -44,6 +36,8 @@ import Clases.Datos;
 import Clases.Reserva;
 
 public class VentanaCliente extends JFrame{
+
+	private static final long serialVersionUID = 1L;
 	protected JProgressBar reservasHabitaciones;
 	protected JTextField textDni,textNombre,textApellido1,textApellido2,
 	textEmail,textDireccion,textfNacimiento,textContraseña,textTelefono;
@@ -68,6 +62,8 @@ public class VentanaCliente extends JFrame{
 		setJMenuBar(menuBar);
 		JMenu menuCrearReservas = new JMenu();
 		menuBar.add(menuCrearReservas);
+		JMenuItem crearReservas = new JMenuItem("CREAR RESERVA");
+		menuCrearReservas.add(crearReservas);
 		JMenu menuVerReservas = new JMenu();
 		menuBar.add(menuVerReservas);
 		JMenuItem verReservas = new JMenuItem("VER RESERVAS");
@@ -129,6 +125,7 @@ public class VentanaCliente extends JFrame{
 		pListaReservas.setVisible(false);
 		
 		verReservas.addActionListener((e)->{
+			pCrearEditarReserva.setVisible(false);
 			pListaReservas.setVisible(true);
 		});
 		
@@ -136,16 +133,17 @@ public class VentanaCliente extends JFrame{
 		//Panel para crear nuevas reservas
 		
 		class PanelCrearReserva extends JPanel{
+			
+			private static final long serialVersionUID = 1L;
 			protected JPanel pAbajo, pPrincipal;
 			protected JLabel lblFechaIni, lblFechaFin, lblHabSimples, lblHabDobles, lblHabSuites, lblParking;
 			protected JDatePicker datePickerIni, datePickerFin;
 			protected JSpinner spinHabSimple, spinHabDoble, spinHabSuite;
-			protected JButton bAñadirHabSimple, bAñadirHabDoble, bAñadirHabSuite,
-			bReservarParking, bCancelarReserva, bConfirmarReserva;
+			protected JButton bReservarParking, bCancelarReserva, bConfirmarReserva;
 			
 			
 			public PanelCrearReserva() {
-				
+				setVisible(false);
 				setLayout(new BorderLayout());
 				lblFechaIni = new JLabel("Fecha inicial: ");
 				lblFechaFin = new JLabel("Fecha final: ");
@@ -274,40 +272,42 @@ public class VentanaCliente extends JFrame{
 				spinHabDoble = new JSpinner(modeloSpinner);
 				spinHabSuite = new JSpinner(modeloSpinner);
 				
-				bAñadirHabSimple = new JButton("+");
-				bAñadirHabDoble = new JButton("+");
-				bAñadirHabSuite = new JButton("+");
 				bReservarParking = new JButton("Reserva Parking");
 				bCancelarReserva = new JButton("Cancelar Reserva");
 				bConfirmarReserva = new JButton ("Confirmar Reserva");
 				
-				pPrincipal = new JPanel(new GridLayout(6,3));
+				pPrincipal = new JPanel(new GridLayout(6,2));
 				pPrincipal.add(lblFechaIni);
 				pPrincipal.add(datePickerIni);
-				pPrincipal.add(new JLabel());
 				pPrincipal.add(lblFechaFin);
 				pPrincipal.add(datePickerFin);
-				pPrincipal.add(new JLabel());
 				pPrincipal.add(lblHabSimples);
 				pPrincipal.add(spinHabSimple);
-				pPrincipal.add(bAñadirHabSimple);
 				pPrincipal.add(lblHabDobles);
 				pPrincipal.add(spinHabDoble);
-				pPrincipal.add(bAñadirHabDoble);
 				pPrincipal.add(lblHabSuites);
 				pPrincipal.add(spinHabSuite);
-				pPrincipal.add(bAñadirHabSuite);
 				pPrincipal.add(lblParking);
 				pPrincipal.add(bReservarParking);
 				
-				pBotones = new JPanel();
-				pBotones.add(bCancelarReserva,bConfirmarReserva);
+				pAbajo = new JPanel();
+				pAbajo.add(bCancelarReserva,bConfirmarReserva);
 				
 				add(pPrincipal, BorderLayout.NORTH);
 				add(pAbajo, BorderLayout.SOUTH);
 			}
 			
 		}
+		
+		pCrearEditarReserva = new PanelCrearReserva();
+		add(pCrearEditarReserva,BorderLayout.NORTH);
+		
+		crearReservas.addActionListener((e)->{
+			pListaReservas.setVisible(false);
+			pCrearEditarReserva.setVisible(true);
+		});
+		
+
 		
 		/*
 		comboBoxHoteles = new JComboBox<>();
@@ -406,6 +406,14 @@ public class VentanaCliente extends JFrame{
 		*/
 		setVisible(true);
 	}
-	
+	public static void main(String[] args) {
+		Datos datos = new Datos();
+		datos.inicializarDatos();
+		Cliente c = new Cliente();
+		c.getListaReservasCliente().add(new Reserva());
+		c.setNombre("Alex");
+		c.setApellido1("Olazabal");
+		new VentanaCliente(datos,c);
+	}
 	
 }
