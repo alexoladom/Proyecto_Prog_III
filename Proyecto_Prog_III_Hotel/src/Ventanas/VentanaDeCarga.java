@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import Clases.Datos;
@@ -72,7 +73,15 @@ public class VentanaDeCarga extends JFrame{
                 @Override
                 protected void done() {
                     botonEntrar.setEnabled(true); // Habilitar el botón nuevamente
-                    VentanaSeleccion ventanaSeleccion = new VentanaSeleccion(null);
+                    SwingUtilities.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							new VentanaSeleccion(datos);
+							
+						}
+					});
+                    
                     dispose();
                 }
             };

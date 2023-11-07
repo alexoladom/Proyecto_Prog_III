@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.jdatepicker.JDatePicker;
 
@@ -31,7 +32,8 @@ public class VentanaInicioCliente extends JFrame {
 	protected JButton botonAtras1, botonRegistrarme, botonRegistro,  botonIniSesion,botonAtras2;
 	protected JLabel lblNombre, lblContra,lblContra2, lblDNI,lblDNI2,lblApellido,lblEmail,lblDireccion,lblFechaNacimiento,lblTelefono, lblCliente;
 	protected JPanel pBotones, pCentro, pArriba, pCentroRegistro;
-	protected JTextField textoNombre, textoContra,textoContra2,textoDNI,textoDNI2,textoApellido,textoEmail,textoDireccion,textoFechaNacimiento,textoTelefono;
+	protected JPasswordField textoContra, textoContra2;
+	protected JTextField textoNombre,textoDNI,textoDNI2,textoApellido,textoEmail,textoDireccion,textoFechaNacimiento,textoTelefono;
 	protected Map<String, Cliente> mapaClientesPorDNI;
 	protected Datos datos;
 
@@ -121,12 +123,26 @@ public class VentanaInicioCliente extends JFrame {
 		
 
 		botonAtras1.addActionListener((e) -> {
-			new VentanaSeleccion(datos);
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					new VentanaSeleccion(datos);					
+				}
+			});
+			
 			dispose();
 		});
 		
 		botonAtras2.addActionListener(e -> {
-			new VentanaInicioCliente(datos);
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					new VentanaInicioCliente(datos);					
+				}
+			});
+			
 			dispose();
 		});
 
@@ -154,7 +170,7 @@ public class VentanaInicioCliente extends JFrame {
 				cliente.setDni(textoDNI2.getText());
 				cliente.setApellido1(textoApellido.getText());
 				cliente.setEmail(textoEmail.getText());
-				cliente.setContraseña(textoContra2.getText());
+				cliente.setContraseña(String.valueOf(textoContra2.getPassword()));
 				cliente.setDireccion(textoDireccion.getText());
 				GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
 				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
@@ -164,7 +180,14 @@ public class VentanaInicioCliente extends JFrame {
 				datos.getListaClientes().add(cliente);
 				datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
 				datos.guardarDatos();
-				new VentanaInicioCliente(datos);
+				SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						new VentanaInicioCliente(datos);						
+					}
+				});
+				
 				dispose();
 			}
 		});
@@ -172,7 +195,7 @@ public class VentanaInicioCliente extends JFrame {
 		botonIniSesion.addActionListener((e) -> {
 			String dni = textoDNI.getText();
 			if (datos.getMapaClientesPorDNI().containsKey(dni)) {
-				if(datos.comprobarContraseñaCliente(dni, textoContra.getText())) {
+				if(datos.comprobarContraseñaCliente(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
