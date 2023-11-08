@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +21,15 @@ public class Datos {
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
 	protected Map<String, Cliente> mapaClientesPorDNI;
-
-	protected Parking parking;
-
+	protected Map<LocalDate,Parking> mapaParkingPorFecha;
 	protected Map<String, Trabajador> mapaTrabajadoresPorDNI;
 
 	
 	
 	
 	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
-			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI, Map<String, Trabajador> mapaTrabajadoresPorDNI) {
+			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI,
+			Map<String, Trabajador> mapaTrabajadoresPorDNI,Map<LocalDate, Parking> mapaParkingPorFecha) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
 		this.listaHabitaciones = listaHabitaciones;
@@ -37,6 +37,7 @@ public class Datos {
 		this.listaTareas = listaTareas;
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 		this.mapaTrabajadoresPorDNI = mapaTrabajadoresPorDNI;
+		this.mapaParkingPorFecha = mapaParkingPorFecha;
 	}
 	
 	public Datos() {
@@ -46,12 +47,39 @@ public class Datos {
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
-
-		this.parking= new Parking();
-
 		this.mapaTrabajadoresPorDNI = new HashMap<String, Trabajador> ();
+		this.mapaParkingPorFecha = new HashMap<LocalDate, Parking>();
 
 
+	}
+	
+	public void inicializarDatos() {
+		LocalDate a = LocalDate.of(1999, 9, 11);
+		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		LocalDate b = LocalDate.of(1989, 7, 23);
+		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		LocalDate c = LocalDate.of(1995, 3, 18);
+		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		LocalDate d = LocalDate.of(1993, 2, 6);
+		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		LocalDate e = LocalDate.of(1991, 1, 12);
+		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		LocalDate f = LocalDate.of(2000, 3, 7);
+		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		getListaTrabajadores().add(t1);
+		getListaTrabajadores().add(t2);
+		getListaTrabajadores().add(t3);
+		getListaTrabajadores().add(t4);
+		getListaTrabajadores().add(t5);
+		getListaTrabajadores().add(t6);
+
+		for (Trabajador trabajador : getListaTrabajadores()) {
+			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
+		}
+		
+		for (int i = 0; i < 15; i++) {
+			mapaParkingPorFecha.put(LocalDate.now().plusDays(i), new Parking());
+		}
 	}
 	
 	public Map<String, Trabajador> getMapaTrabajadoresPorDNI() {
@@ -105,13 +133,13 @@ public class Datos {
 	public static String getFichero() {
 		return FICHERO;
 	}
-	
-	public Parking getParking() {
-		return parking;
+
+	public Map<LocalDate, Parking> getMapaParkingPorFecha() {
+		return mapaParkingPorFecha;
 	}
 
-	public void setParking(Parking parking) {
-		this.parking = parking;
+	public void setMapaParkingPorFecha(Map<LocalDate, Parking> mapaParkingPorFecha) {
+		this.mapaParkingPorFecha = mapaParkingPorFecha;
 	}
 
 	public Map<String, Cliente> getMapaClientesPorDNI() {
@@ -122,7 +150,6 @@ public class Datos {
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 	}
 
-	
 	public boolean comprobarContraseñaCliente(String dni, String contraseña) {
 		if (mapaClientesPorDNI.containsKey(dni)){
 			if(mapaClientesPorDNI.get(dni).getContraseña().equals(contraseña)){
@@ -156,10 +183,8 @@ public class Datos {
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
 				oos.writeObject(mapaClientesPorDNI);
-
-				oos.writeObject(parking);
-
 				oos.writeObject(mapaTrabajadoresPorDNI);
+				oos.writeObject(mapaParkingPorFecha);
 
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
@@ -179,9 +204,8 @@ public class Datos {
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
 			this.mapaClientesPorDNI = (Map<String, Cliente>) ois.readObject();
-
-			this.parking= (Parking) ois.readObject();
 			this.mapaTrabajadoresPorDNI = (Map<String, Trabajador>) ois.readObject();
+			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
 
 			
 		} catch (FileNotFoundException e) {

@@ -1,19 +1,17 @@
 package Main;
 
+
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import Clases.Cliente;
+
 import Clases.Datos;
 import Clases.Trabajador;
 import Ventanas.VentanaDeCarga;
-//import Ventanas.VentanaDeCarga;
-import Ventanas.VentanaInicioCliente;
-import Ventanas.VentanaParking;
-import Ventanas.VentanaSeleccion;
-import Ventanas.VentanaTrabajador;
+
 
 public class Main {
 	public static void main(String[] args) {
@@ -42,6 +40,7 @@ public class Main {
 			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
 		new VentanaDeCarga(datos);
+		datos.inicializarDatos();
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
