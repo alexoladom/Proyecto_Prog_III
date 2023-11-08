@@ -2,21 +2,16 @@ package Ventanas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,21 +24,27 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
 import Clases.Cliente;
+import Clases.ComparadorReservasPorFecha;
+import Clases.ComparadorReservasPorPrecio;
 import Clases.Datos;
 import Clases.Reserva;
 
 public class VentanaCliente extends JFrame{
+
+	private static final long serialVersionUID = 1L;
 	protected JProgressBar reservasHabitaciones;
 	protected JTextField textDni,textNombre,textApellido1,textApellido2,
 	textEmail,textDireccion,textfNacimiento,textContraseña,textTelefono;
@@ -53,10 +54,45 @@ public class VentanaCliente extends JFrame{
 	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pCambiarPerfil,pBotonesVerReservas;
 	protected JList<Reserva> listaReservas;
 	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva;
-	protected JComboBox comboBoxHoteles;
+	protected JComboBox<String> comboBoxHoteles, comboOrdenar;
 	protected JSpinner numeroDeHabitaciones;
 	
 	
+	class MiRenderLista extends JLabel implements ListCellRenderer<Reserva>{
+
+
+		private boolean run;
+		@Override
+		public Component getListCellRendererComponent(JList<? extends Reserva> list, Reserva value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			setText(value.toString());
+			Thread hilo = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					while(run) {
+						for (int i = 0; i < 255; i++) {
+							setBackground(new Color(66,i,127));
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}	
+					}
+				}
+			});
+			if(isSelected) {
+				run = true;
+				hilo.start();
+			}else {
+				run = false;
+				setBorder(BorderFactory.createEmptyBorder());
+			}
+			return this;
+		}
+	}
+
 	public VentanaCliente(Datos datos, Cliente cliente) {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,350);
@@ -68,6 +104,8 @@ public class VentanaCliente extends JFrame{
 		setJMenuBar(menuBar);
 		JMenu menuCrearReservas = new JMenu();
 		menuBar.add(menuCrearReservas);
+		JMenuItem crearReservas = new JMenuItem("CREAR RESERVA");
+		menuCrearReservas.add(crearReservas);
 		JMenu menuVerReservas = new JMenu();
 		menuBar.add(menuVerReservas);
 		JMenuItem verReservas = new JMenuItem("VER RESERVAS");
@@ -98,9 +136,14 @@ public class VentanaCliente extends JFrame{
 		//Panel para ver todas las reservas, borrarlas y editarlas
 		pListaReservas = new JPanel();
 		pListaReservas.setBackground(Color.LIGHT_GRAY);
+		
 		DefaultListModel<Reserva> modeloListaReservas = new DefaultListModel<Reserva> ();
 		modeloListaReservas.addAll(cliente.getListaReservasCliente());
+		
+		
 		listaReservas = new JList<Reserva>(modeloListaReservas);
+		listaReservas.setCellRenderer(new MiRenderLista());
+		listaReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane scrollListaReservas = new JScrollPane(listaReservas);
 		scrollListaReservas.setSize(400, 400);
@@ -111,8 +154,28 @@ public class VentanaCliente extends JFrame{
 		bBorrarReserva= new JButton("Borrar reserva");
 		bEditarReserva= new JButton("Editar reserva");
 		
+		comboOrdenar = new JComboBox<String>();
+		comboOrdenar.addItem("Fecha inicial");
+		comboOrdenar.addItem("Precio");
+		comboOrdenar.setToolTipText("Seleccione el critecio de ordenacion");
+		
+		comboOrdenar.addActionListener((e) -> {
+			String selec = (String) comboOrdenar.getSelectedItem();
+			
+			if(selec=="Fecha inicial") {
+				cliente.getListaReservasCliente().sort(new ComparadorReservasPorFecha());
+				modeloListaReservas.removeAllElements();
+				modeloListaReservas.addAll(cliente.getListaReservasCliente());
+			}else if(selec =="Precio") {
+				cliente.getListaReservasCliente().sort(new ComparadorReservasPorPrecio());
+				modeloListaReservas.removeAllElements();
+				modeloListaReservas.addAll(cliente.getListaReservasCliente());
+			}
+		});
+		
 		pBotonesVerReservas.add(bBorrarReserva);
 		pBotonesVerReservas.add(bEditarReserva);
+		pBotonesVerReservas.add(comboOrdenar);
 		
 		
 		bBorrarReserva.addActionListener((e)-> {
@@ -129,30 +192,35 @@ public class VentanaCliente extends JFrame{
 		pListaReservas.setVisible(false);
 		
 		verReservas.addActionListener((e)->{
+			pCrearEditarReserva.setVisible(false);
 			pListaReservas.setVisible(true);
+			setSize(900,350);
+			setLocationRelativeTo(null);
 		});
 		
 		
 		//Panel para crear nuevas reservas
 		
 		class PanelCrearReserva extends JPanel{
+			
+			private static final long serialVersionUID = 1L;
 			protected JPanel pAbajo, pPrincipal;
 			protected JLabel lblFechaIni, lblFechaFin, lblHabSimples, lblHabDobles, lblHabSuites, lblParking;
 			protected JDatePicker datePickerIni, datePickerFin;
 			protected JSpinner spinHabSimple, spinHabDoble, spinHabSuite;
-			protected JButton bAñadirHabSimple, bAñadirHabDoble, bAñadirHabSuite,
-			bReservarParking, bCancelarReserva, bConfirmarReserva;
+			protected JButton bReservarParking, bCancelarReserva, bConfirmarReserva;
 			
 			
 			public PanelCrearReserva() {
 				
+				setVisible(false);
 				setLayout(new BorderLayout());
-				lblFechaIni = new JLabel("Fecha inicial: ");
-				lblFechaFin = new JLabel("Fecha final: ");
-				lblHabSimples = new JLabel("Habitaciones Simples: ");
-				lblHabDobles = new JLabel("Habitaciones dobles: ");
-				lblHabSuites = new JLabel("Suites: ");
-				lblParking = new JLabel("Reservar plazas de parking -> ");
+				lblFechaIni = new JLabel("Fecha inicial: ",SwingConstants.CENTER);
+				lblFechaFin = new JLabel("Fecha final: ",SwingConstants.CENTER);
+				lblHabSimples = new JLabel("Habitaciones Simples: ",SwingConstants.CENTER);
+				lblHabDobles = new JLabel("Habitaciones dobles: ",SwingConstants.CENTER);
+				lblHabSuites = new JLabel("Suites: ",SwingConstants.CENTER);
+				lblParking = new JLabel("Reservar plazas de parking -> ",SwingConstants.CENTER);
 				
 				datePickerIni = new JDatePicker();
 				
@@ -274,40 +342,44 @@ public class VentanaCliente extends JFrame{
 				spinHabDoble = new JSpinner(modeloSpinner);
 				spinHabSuite = new JSpinner(modeloSpinner);
 				
-				bAñadirHabSimple = new JButton("+");
-				bAñadirHabDoble = new JButton("+");
-				bAñadirHabSuite = new JButton("+");
 				bReservarParking = new JButton("Reserva Parking");
 				bCancelarReserva = new JButton("Cancelar Reserva");
 				bConfirmarReserva = new JButton ("Confirmar Reserva");
 				
-				pPrincipal = new JPanel(new GridLayout(6,3));
+				pPrincipal = new JPanel(new GridLayout(6,2));
 				pPrincipal.add(lblFechaIni);
 				pPrincipal.add(datePickerIni);
-				pPrincipal.add(new JLabel());
 				pPrincipal.add(lblFechaFin);
 				pPrincipal.add(datePickerFin);
-				pPrincipal.add(new JLabel());
 				pPrincipal.add(lblHabSimples);
 				pPrincipal.add(spinHabSimple);
-				pPrincipal.add(bAñadirHabSimple);
 				pPrincipal.add(lblHabDobles);
 				pPrincipal.add(spinHabDoble);
-				pPrincipal.add(bAñadirHabDoble);
 				pPrincipal.add(lblHabSuites);
 				pPrincipal.add(spinHabSuite);
-				pPrincipal.add(bAñadirHabSuite);
 				pPrincipal.add(lblParking);
 				pPrincipal.add(bReservarParking);
 				
-				pBotones = new JPanel();
-				pBotones.add(bCancelarReserva,bConfirmarReserva);
+				pAbajo = new JPanel();
+				pAbajo.add(bCancelarReserva,bConfirmarReserva);
 				
 				add(pPrincipal, BorderLayout.NORTH);
 				add(pAbajo, BorderLayout.SOUTH);
 			}
 			
 		}
+		
+		pCrearEditarReserva = new PanelCrearReserva();
+		add(pCrearEditarReserva,BorderLayout.NORTH);
+		
+		crearReservas.addActionListener((e)->{
+			pListaReservas.setVisible(false);
+			pCrearEditarReserva.setVisible(true);
+			setSize(700,300);
+			setLocationRelativeTo(null);
+		});
+		
+
 		
 		/*
 		comboBoxHoteles = new JComboBox<>();
@@ -406,6 +478,28 @@ public class VentanaCliente extends JFrame{
 		*/
 		setVisible(true);
 	}
-	
+	public static void main(String[] args) {
+		Datos datos = new Datos();
+		datos.inicializarDatos();
+		Cliente c = new Cliente();
+		Reserva r = new Reserva();
+		r.setPrecioCobrar(34);
+		r.setFechaInicio(LocalDate.now());
+		Reserva g = new Reserva();
+		g.setFechaInicio(LocalDate.now().plusDays(1));
+		Reserva h = new Reserva();
+		h.setPrecioCobrar(245);
+		h.setFechaInicio(LocalDate.now().plusDays(4));
+		Reserva j = new Reserva();
+		j.setFechaInicio(LocalDate.now().plusDays(3));
+		c.getListaReservasCliente().add(r);
+		c.getListaReservasCliente().add(h);
+		c.getListaReservasCliente().add(j);
+		c.getListaReservasCliente().add(g);
+		c.getListaReservasCliente().add(j);
+		c.setNombre("Alex");
+		c.setApellido1("Olazabal");
+		new VentanaCliente(datos,c);
+	}
 	
 }
