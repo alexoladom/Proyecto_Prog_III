@@ -2,16 +2,15 @@ package Ventanas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,14 +22,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+
 
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
@@ -38,6 +37,7 @@ import org.jdatepicker.constraints.DateSelectionConstraint;
 
 import Clases.Cliente;
 import Clases.ComparadorReservasPorFecha;
+import Clases.ComparadorReservasPorPagado;
 import Clases.ComparadorReservasPorPrecio;
 import Clases.Datos;
 import Clases.Reserva;
@@ -45,57 +45,18 @@ import Clases.Reserva;
 public class VentanaCliente extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	protected JProgressBar reservasHabitaciones;
-	protected JTextField textDni,textNombre,textApellido1,textApellido2,
-	textEmail,textDireccion,textfNacimiento,textContraseña,textTelefono;
-	protected JLabel lblDatoslblDatos, lblDni, lblNombre, lblApellido1, lblApellido2, lblEmail, lblDireccion, lblfNacimiento,
-    lblContraseña, lblTelefono;
-	protected JPanel pDatos, pBotones, pReservas, pHabitaciones, pFecha;
-	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pCambiarPerfil,pBotonesVerReservas;
+	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pPerfil,pCambiarPerfil,pBotonesVerReservas;
 	protected JList<Reserva> listaReservas;
-	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva;
-	protected JComboBox<String> comboBoxHoteles, comboOrdenar;
+	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva,bInvertirLista;
+	protected JComboBox<String>  comboOrdenar;
 	protected JSpinner numeroDeHabitaciones;
 	
 	
-	class MiRenderLista extends JLabel implements ListCellRenderer<Reserva>{
-
-
-		private boolean run;
-		@Override
-		public Component getListCellRendererComponent(JList<? extends Reserva> list, Reserva value, int index,
-				boolean isSelected, boolean cellHasFocus) {
-			setText(value.toString());
-			Thread hilo = new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					while(run) {
-						for (int i = 0; i < 255; i++) {
-							setBackground(new Color(66,i,127));
-							try {
-								Thread.sleep(10);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}	
-					}
-				}
-			});
-			if(isSelected) {
-				run = true;
-				hilo.start();
-			}else {
-				run = false;
-				setBorder(BorderFactory.createEmptyBorder());
-			}
-			return this;
-		}
-	}
+	
 
 	public VentanaCliente(Datos datos, Cliente cliente) {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(900,350);
+		setSize(700,300);
 		setLocationRelativeTo(null);
 		setTitle("Cliente "+ cliente.getNombre()+" "+cliente.getApellido1());
 		
@@ -133,30 +94,132 @@ public class VentanaCliente extends JFrame{
 		Image imagenPerfilEscala = imagenPerfil.getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH);
 		menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
 		
+		
+		
+		//Panel para ver y editar los datos del cliente
+		
+		pPerfil= new JPanel();
+		pPerfil.setVisible(true);
+		pInformacion = new JPanel();
+		
+		pInformacion.setLayout(new GridLayout(8,2));
+		
+		JLabel lblNombre = new JLabel("Introduzca su Nombre: ");
+		JLabel lblContra = new JLabel("Introduzca su contraseña: ");
+		JLabel lblDNI = new JLabel("Introduzca su DNI: ");
+		JLabel lblApellido = new JLabel("Introdzca su apellido: ");
+		JLabel lblEmail = new JLabel("Introduzca su e-mail: ");
+		JLabel lblDireccion = new JLabel("Introduzca su direccion: ");
+		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ");
+		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ");
+		
+		JTextField textoNombre = new JTextField(20);
+		JTextField textoContra = new JPasswordField(20);
+		JTextField textoDNI = new JTextField(20);
+		JTextField textoApellido = new JTextField(20);
+		JTextField textoEmail = new JTextField(20);
+		JTextField textoDireccion = new JTextField(20);
+		JDatePicker date = new JDatePicker();
+		JTextField textoTelefono= new JTextField(20);
+		
+		pInformacion.add(lblNombre);
+		pInformacion.add(textoNombre);
+		pInformacion.add(lblApellido);
+		pInformacion.add(textoApellido);
+		pInformacion.add(lblContra);
+		pInformacion.add(textoContra);
+		pInformacion.add(lblDNI);
+		pInformacion.add(textoDNI);
+		pInformacion.add(lblEmail);
+		pInformacion.add(textoEmail);
+		pInformacion.add(lblDireccion);
+		pInformacion.add(textoDireccion);
+		pInformacion.add(lblFechaNacimiento);
+		pInformacion.add(date);
+		pInformacion.add(lblTelefono);
+		pInformacion.add(textoTelefono);
+		
+		pPerfil.add(pInformacion);
+		
+		
 		//Panel para ver todas las reservas, borrarlas y editarlas
 		pListaReservas = new JPanel();
-		pListaReservas.setBackground(Color.LIGHT_GRAY);
+		pListaReservas.setBackground(new Color(0,140,255));
+		
 		
 		DefaultListModel<Reserva> modeloListaReservas = new DefaultListModel<Reserva> ();
 		modeloListaReservas.addAll(cliente.getListaReservasCliente());
 		
 		
 		listaReservas = new JList<Reserva>(modeloListaReservas);
-		listaReservas.setCellRenderer(new MiRenderLista());
 		listaReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		boolean run = true;
+		Thread hilo = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while(run) {
+					for (int i = 0; i < 255; i++) {
+						listaReservas.setSelectionBackground(new Color(0,i,255));
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					for (int i = 0; i < 255; i++) {
+						listaReservas.setSelectionBackground(new Color(0,255-i,255));
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			
+		});
+		
+		hilo.start();
 		
 		JScrollPane scrollListaReservas = new JScrollPane(listaReservas);
 		scrollListaReservas.setSize(400, 400);
 		pListaReservas.add(scrollListaReservas);
 		
 		pBotonesVerReservas = new JPanel();
-		pBotonesVerReservas.setBackground(Color.LIGHT_GRAY);
-		bBorrarReserva= new JButton("Borrar reserva");
-		bEditarReserva= new JButton("Editar reserva");
+		pBotonesVerReservas.setBackground(new Color(0,140,255));
+		
+		bBorrarReserva= new JButton();
+		bBorrarReserva.setBackground(Color.white);
+		bBorrarReserva.setBorder(null);
+		bBorrarReserva.setOpaque(false);
+		ImageIcon basura = new ImageIcon("src/Imagenes/basura.png");
+		Image basuraResized = basura.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		bBorrarReserva.setIcon(new ImageIcon(basuraResized));
+		
+		
+		bEditarReserva= new JButton();
+		bEditarReserva.setBackground(Color.white);
+		bEditarReserva.setBorder(null);
+		bEditarReserva.setOpaque(false);
+		ImageIcon editar = new ImageIcon("src/Imagenes/editar.png");
+		Image editarResized = editar.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		bEditarReserva.setIcon(new ImageIcon(editarResized));
+		
+		
+		bInvertirLista = new JButton();
+		bInvertirLista.setBackground(Color.white);
+		bInvertirLista.setBorder(null);
+		bInvertirLista.setOpaque(false);
+		ImageIcon flecha = new ImageIcon("src/Imagenes/flechaHaciaArriba.png");
+		Image flechaResized = flecha.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		bInvertirLista.setIcon(new ImageIcon(flechaResized));
+		
 		
 		comboOrdenar = new JComboBox<String>();
 		comboOrdenar.addItem("Fecha inicial");
 		comboOrdenar.addItem("Precio");
+		comboOrdenar.addItem("Pagado");
 		comboOrdenar.setToolTipText("Seleccione el critecio de ordenacion");
 		
 		comboOrdenar.addActionListener((e) -> {
@@ -170,13 +233,26 @@ public class VentanaCliente extends JFrame{
 				cliente.getListaReservasCliente().sort(new ComparadorReservasPorPrecio());
 				modeloListaReservas.removeAllElements();
 				modeloListaReservas.addAll(cliente.getListaReservasCliente());
+			}else if(selec=="Pagado") {
+				cliente.getListaReservasCliente().sort(new ComparadorReservasPorPagado());
+				modeloListaReservas.removeAllElements();
+				modeloListaReservas.addAll(cliente.getListaReservasCliente());
 			}
 		});
 		
 		pBotonesVerReservas.add(bBorrarReserva);
 		pBotonesVerReservas.add(bEditarReserva);
+		pBotonesVerReservas.add(new JLabel("Ordenar por:"));
 		pBotonesVerReservas.add(comboOrdenar);
+		pBotonesVerReservas.add(bInvertirLista);
 		
+		
+		bInvertirLista.addActionListener((e)->{
+			Collections.reverse(cliente.getListaReservasCliente());
+			modeloListaReservas.removeAllElements();
+			modeloListaReservas.addAll(cliente.getListaReservasCliente());
+			
+		});
 		
 		bBorrarReserva.addActionListener((e)-> {
 			Reserva seleccionado =listaReservas.getSelectedValue();
@@ -188,15 +264,8 @@ public class VentanaCliente extends JFrame{
 		
 		pListaReservas.add(pBotonesVerReservas, BorderLayout.SOUTH);
 		
-		add(pListaReservas);
-		pListaReservas.setVisible(false);
 		
-		verReservas.addActionListener((e)->{
-			pCrearEditarReserva.setVisible(false);
-			pListaReservas.setVisible(true);
-			setSize(900,350);
-			setLocationRelativeTo(null);
-		});
+		pListaReservas.setVisible(false);
 		
 		
 		//Panel para crear nuevas reservas
@@ -370,112 +439,39 @@ public class VentanaCliente extends JFrame{
 		}
 		
 		pCrearEditarReserva = new PanelCrearReserva();
-		add(pCrearEditarReserva,BorderLayout.NORTH);
 		
-		crearReservas.addActionListener((e)->{
-			pListaReservas.setVisible(false);
-			pCrearEditarReserva.setVisible(true);
-			setSize(700,300);
+		
+		verReservas.addActionListener((e)->{
+			pCrearEditarReserva.setVisible(false);
+			pListaReservas.setVisible(true);
+			pPerfil.setVisible(false);
+			setSize(900,350);
 			setLocationRelativeTo(null);
 		});
 		
-
-		
-		/*
-		comboBoxHoteles = new JComboBox<>();
-		
-		JRadioButton habitacionSimple = new JRadioButton("Habitacion Simple");
-		JRadioButton habitacionDoble = new JRadioButton("Habitacion Doble");
-		JRadioButton habitacionSuite = new JRadioButton("Habitacion Suite");
-		
-		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1,1,10,1);
-		numeroDeHabitaciones = new JSpinner(spinnerModel);
-		
-		pHabitaciones = new JPanel();
-		pReservas = new JPanel();
-		pBotones = new JPanel();
-		pFecha = new JPanel();
-		pDatos = new JPanel();
-		pDatos.setLayout(new GridLayout(12, 2));
-		
-		
-		botonCerrar = new JButton("CERRAR");
-		botonReserva = new JButton("RESERVAR");
-		
-		pBotones.add(botonCerrar);
-		pBotones.add(botonReserva);
-		pHabitaciones.add(new JLabel("Selecciona el tipo de Habitacion: "));
-		pHabitaciones.add(habitacionSimple);
-		pHabitaciones.add(habitacionDoble);
-		pHabitaciones.add(habitacionSuite);
-		pReservas.add(pHabitaciones);
-		pReservas.add(new JLabel("Seleccionaa un Hotel: "));
-		pReservas.add(comboBoxHoteles);
-		pReservas.add(new JLabel("Selecciona e numero de Habitaciones: "));
-		pReservas.add(numeroDeHabitaciones);
-		
-		textDni = new JTextField(10);
-		textNombre = new JTextField(10);
-		textApellido1 = new JTextField(10);
-		textApellido2 = new JTextField(10);
-		textEmail = new JTextField(10);
-		textDireccion = new JTextField(10);
-		textfNacimiento = new JTextField(1);
-		textContraseña = new JTextField(10);
-		textTelefono = new JTextField(10);
-		
-		lblDni = new JLabel("DNI: ");
-        lblNombre = new JLabel("Nombre: ");
-        lblApellido1 = new JLabel("Primer apellido: ");
-        lblApellido2 = new JLabel("Segundo apellido: ");
-        lblEmail = new JLabel("Email: ");
-        lblDireccion = new JLabel("Dirección: ");
-        lblfNacimiento = new JLabel("Fecha de nacimiento: ");
-        lblContraseña = new JLabel("Contraseña: ");
-        lblTelefono = new JLabel("Teléfono: ");
-        
-        pDatos.add(lblDni);
-        pDatos.add(textDni);
-        pDatos.add(lblNombre);
-        pDatos.add(textNombre);
-        pDatos.add(lblApellido1);
-        pDatos.add(textApellido1);
-        pDatos.add(lblApellido2);
-        pDatos.add(textApellido2);
-        pDatos.add(lblEmail);
-        pDatos.add(textEmail);
-        pDatos.add(lblDireccion);
-        pDatos.add(textDireccion);
-        pDatos.add(lblfNacimiento);
-        pDatos.add(textfNacimiento);
-        pDatos.add(lblContraseña);
-        pDatos.add(textContraseña);
-        pDatos.add(lblTelefono);
-        pDatos.add(textTelefono);
-        
-		
-		getContentPane().add(pBotones, BorderLayout.NORTH);
-		getContentPane().add(pReservas, BorderLayout.WEST);
-		getContentPane().add(pDatos, BorderLayout.SOUTH);
-		
-		
-		
-		botonReserva.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
+		cerrarSesion.addActionListener((e)->{
+			datos.guardarDatos();
+			dispose();
+			new VentanaInicioCliente(datos);
 		});
 		
-		
-		
-		botonCerrar.addActionListener((e) -> {
-			System.exit(0);
+		informacionCliente.addActionListener((e)->{
+			pCrearEditarReserva.setVisible(false);
+			pListaReservas.setVisible(false);
+			pPerfil.setVisible(true);
+			setSize(700,300);
 		});
+		crearReservas.addActionListener((e)->{
+			pListaReservas.setVisible(false);
+			pCrearEditarReserva.setVisible(true);
+			pPerfil.setVisible(false);
+			setSize(700,300);
+			setLocationRelativeTo(null);
+		});
+		add(pPerfil,BorderLayout.NORTH);
+		add(pCrearEditarReserva,BorderLayout.SOUTH);
+		add(pListaReservas, BorderLayout.CENTER);
 		
-		
-		*/
 		setVisible(true);
 	}
 	public static void main(String[] args) {
@@ -488,6 +484,7 @@ public class VentanaCliente extends JFrame{
 		Reserva g = new Reserva();
 		g.setFechaInicio(LocalDate.now().plusDays(1));
 		Reserva h = new Reserva();
+		h.setEstaPagado(true);
 		h.setPrecioCobrar(245);
 		h.setFechaInicio(LocalDate.now().plusDays(4));
 		Reserva j = new Reserva();
