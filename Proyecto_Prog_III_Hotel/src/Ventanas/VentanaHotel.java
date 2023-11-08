@@ -1,6 +1,8 @@
 package Ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -104,6 +106,39 @@ public class VentanaHotel extends JFrame{
 		pBotones.add(botonTerminarReserva);
 		pBotones.add(botonCerrar);
 		pBotones.add(botonSeleccionar);
+		
+		//ActionListeners de los botones
+		botonCerrar.addActionListener((e) -> {
+			System.exit(0);
+		});
+		botonReserva.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tablaA.setEnabled(true);
+				tablaB.setEnabled(true);
+				tablaC.setEnabled(true);
+				tablaComedor.setEnabled(true);
+				botonReserva.setEnabled(false);
+			}
+		});
+//		botonTerminarReserva.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				for (PlazaHotel string : estado.getListaHabitacionesHotel()) {
+//					System.out.println(string);
+//				}
+//				datos.guardarDatos();
+//				dispose();
+//			}
+//		});
+		botonSeleccionar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		
 //		tabla.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 //			
