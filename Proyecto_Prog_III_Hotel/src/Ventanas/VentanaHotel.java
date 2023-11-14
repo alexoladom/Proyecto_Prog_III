@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -46,34 +47,162 @@ public class VentanaHotel extends JFrame{
 		pArbol = new JPanel();
 		
 		//Creación de la tabla A
-		Object [] titulos = {"nº Habitacion","Estado","Esta limpia"};
-		modeloA = new DefaultTableModel();
-		modeloA.setColumnIdentifiers(titulos);
-		tablaA = new JTable(modeloA);
+		String [] titulos = {"nº Habitacion","Estado ocupación","Esta limpia"};
+		
+		class MiModeloA extends AbstractTableModel{
+
+			@Override
+			public int getRowCount() {
+				if(listaHabitacionesA == null) {
+					return 0;
+				}else {
+					return listaHabitacionesA.size();
+				}
+			}
+				
+			@Override
+			public int getColumnCount() {
+				return titulos.length;
+			}
+			@Override
+			public String getColumnName(int column) {
+				return titulos[column];
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Habitacion h = listaHabitacionesA.get(rowIndex);
+				switch(columnIndex) {
+					case 0: return h.getNumeroHabitacion(); 
+					case 1: return h.getEstadoOcupacion(); 
+					case 2: return h.getEstadoLimpieza(); 
+					default: return null;
+				}
+			}
+		}
+		tablaA = new JTable(new MiModeloA());
 		tablaA.setRowHeight(50);
 		tablaA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
 		scrollA = new JScrollPane(tablaA);
 		
 		//Creación de la tabla B
-		modeloB = new DefaultTableModel();
-		modeloB.setColumnIdentifiers(titulos);
-		tablaB = new JTable(modeloB);
+		class MiModeloB extends AbstractTableModel{
+
+			@Override
+			public int getRowCount() {
+				if(listaHabitacionesB == null) {
+					return 0;
+				}else {
+					return listaHabitacionesB.size();
+				}
+			}
+				
+			@Override
+			public int getColumnCount() {
+				return titulos.length;
+			}
+			@Override
+			public String getColumnName(int column) {
+				return titulos[column];
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Habitacion h = listaHabitacionesB.get(rowIndex);
+				switch(columnIndex) {
+					case 0: return h.getNumeroHabitacion(); 
+					case 1: return h.getEstadoOcupacion(); 
+					case 2: return h.getEstadoLimpieza(); 
+					default: return null;
+				}
+			}
+		}
+		tablaB = new JTable(new MiModeloB());
 		tablaB.setRowHeight(50);
 		tablaB.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
 		scrollB = new JScrollPane(tablaB);
 		
 		//Creación de la tabla C
-		modeloC = new DefaultTableModel();
-		modeloC.setColumnIdentifiers(titulos);
-		tablaC = new JTable(modeloC);
+		class MiModeloC extends AbstractTableModel{
+
+			@Override
+			public int getRowCount() {
+				if(listaHabitacionesC == null) {
+					return 0;
+				}else {
+					return listaHabitacionesC.size();
+				}
+			}
+				
+			@Override
+			public int getColumnCount() {
+				return titulos.length;
+			}
+			@Override
+			public String getColumnName(int column) {
+				return titulos[column];
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Habitacion h = listaHabitacionesC.get(rowIndex);
+				switch(columnIndex) {
+					case 0: return h.getNumeroHabitacion(); 
+					case 1: return h.getEstadoOcupacion(); 
+					case 2: return h.getEstadoLimpieza(); 
+					default: return null;
+				}
+			}
+		}
+		tablaC = new JTable(new MiModeloC());
 		tablaC.setRowHeight(50);
 		tablaC.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
 		scrollC = new JScrollPane(tablaC);
 		
 		//Creación de la tabla Comedor
 		Object [] titulos1 = {"nº Mesas","Estado"};
-		modeloComedor = new DefaultTableModel();
-		modeloComedor.setColumnIdentifiers(titulos1);
+		class MiModeloComedor extends AbstractTableModel{
+
+			@Override
+			public int getRowCount() {
+				if(listaComedor == null) {
+					return 0;
+				}else {
+					return listaComedor.size();
+				}
+			}
+				
+			@Override
+			public int getColumnCount() {
+				return titulos1.length;
+			}
+			@Override
+			public String getColumnName(int column) {
+				return titulos1[column];
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Comedor c = listaComedor.get(rowIndex);
+				switch(columnIndex) {
+					case 0: return c.getNumeroMesa(); 
+					case 1: return c.getEstadoOcupacion(); 
+					default: return null;
+				}
+			}
+		}
 		tablaComedor = new JTable(modeloComedor);
 		tablaComedor.setRowHeight(50);
 		tablaComedor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	

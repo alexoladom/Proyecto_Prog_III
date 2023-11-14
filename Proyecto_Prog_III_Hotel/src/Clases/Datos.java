@@ -17,7 +17,7 @@ public class Datos {
 	private static final String FICHERO = "datosHotel.dat";
 	protected List<Trabajador> listaTrabajadores;
 	protected List<Cliente> listaClientes;
-	protected List<Habitacion> listaHabitaciones;
+	protected Map<Integer, List<Habitacion>> MapaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
 	protected Map<String, Cliente> mapaClientesPorDNI;
@@ -27,12 +27,12 @@ public class Datos {
 	
 	
 	
-	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
+	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, Map<Integer, List<Habitacion>> MapaHabitaciones,
 			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI,
 			Map<String, Trabajador> mapaTrabajadoresPorDNI,Map<LocalDate, Parking> mapaParkingPorFecha) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
-		this.listaHabitaciones = listaHabitaciones;
+		this.MapaHabitaciones = MapaHabitaciones;
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
@@ -43,7 +43,7 @@ public class Datos {
 	public Datos() {
 		this.listaTrabajadores = new ArrayList<Trabajador>();
 		this.listaClientes = new ArrayList<Cliente>();
-		this.listaHabitaciones = new ArrayList<Habitacion>();
+		this.MapaHabitaciones = new HashMap<Integer, List<Habitacion>>();
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
@@ -106,12 +106,12 @@ public class Datos {
 		this.listaClientes = listaClientes;
 	}
 
-	public List<Habitacion> getListaHabitaciones() {
-		return listaHabitaciones;
+	public Map<Integer, List<Habitacion>> getMapaHabitaciones() {
+		return MapaHabitaciones;
 	}
 
-	public void setListaHabitaciones(List<Habitacion> listaHabitaciones) {
-		this.listaHabitaciones = listaHabitaciones;
+	public void setMapaHabitaciones(Map<Integer, List<Habitacion>> mapaHabitaciones) {
+		MapaHabitaciones = mapaHabitaciones;
 	}
 
 	public List<Reserva> getListaReservas() {
@@ -178,7 +178,7 @@ public class Datos {
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)){
 				oos.writeObject(listaClientes);
-				oos.writeObject(listaHabitaciones);
+				oos.writeObject(MapaHabitaciones);
 				oos.writeObject(listaReservas);
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
@@ -198,8 +198,8 @@ public class Datos {
 		try(FileInputStream fis = new FileInputStream(FICHERO);
 			ObjectInputStream ois = new ObjectInputStream(fis)){
 			
-			this.listaClientes= (List<Cliente>) ois.readObject();
-			this.listaHabitaciones= (List<Habitacion>) ois.readObject();
+			this.listaClientes = (List<Cliente>) ois.readObject();
+			this.MapaHabitaciones = (Map<Integer, List<Habitacion>>) ois.readObject();
 			this.listaReservas = (List<Reserva>) ois.readObject();
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
