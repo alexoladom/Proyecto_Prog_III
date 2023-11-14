@@ -25,7 +25,6 @@ public class VentanaHotel extends JFrame{
 //	protected JDatePicker datePicker;
 	protected boolean estado = false;
 	//Componentes para la JTable
-	private DefaultTableModel modeloComedor, modeloA, modeloB, modeloC;
 	private JTable tablaComedor, tablaA, tablaB, tablaC;
 	private JScrollPane scrollComedor, scrollA, scrollB, scrollC;
 	//Componentes para el arbol
@@ -203,7 +202,7 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 		}
-		tablaComedor = new JTable(modeloComedor);
+		tablaComedor = new JTable(new MiModeloComedor());
 		tablaComedor.setRowHeight(50);
 		tablaComedor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
 		scrollComedor = new JScrollPane(tablaComedor);

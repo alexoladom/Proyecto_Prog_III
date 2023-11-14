@@ -72,6 +72,7 @@ public class Datos {
 		getListaTrabajadores().add(t4);
 		getListaTrabajadores().add(t5);
 		getListaTrabajadores().add(t6);
+		Habitacion h1 = new Habitacion(001, 001, false, 1, 001);
 
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
