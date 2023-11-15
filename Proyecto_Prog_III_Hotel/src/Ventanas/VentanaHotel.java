@@ -16,8 +16,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import Clases.Comedor;
 import Clases.Datos;
 import Clases.Habitacion;
+import Clases.Mesa;
 
 public class VentanaHotel extends JFrame{
 	protected JButton botonReserva, botonTerminarReserva, botonCerrar, botonSeleccionar;
@@ -169,15 +171,15 @@ public class VentanaHotel extends JFrame{
 		scrollC = new JScrollPane(tablaC);
 		
 		//Creación de la tabla Comedor
-		Object [] titulos1 = {"nº Mesas","Estado"};
+		String [] titulos1 = {"nº Mesas","Estado"};
 		class MiModeloComedor extends AbstractTableModel{
 
 			@Override
 			public int getRowCount() {
-				if(listaComedor == null) {
+				if(datos.getListaComedor() == null) {
 					return 0;
 				}else {
-					return listaComedor.size();
+					return datos.getListaComedor().size();
 				}
 			}
 				
@@ -195,10 +197,10 @@ public class VentanaHotel extends JFrame{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Comedor c = listaComedor.get(rowIndex);
+				Mesa c = datos.getListaComedor().get(rowIndex);
 				switch(columnIndex) {
-					case 0: return c.getNumeroMesa(); 
-					case 1: return c.getEstadoOcupacion(); 
+					case 0: return c.getNumero(); 
+					case 1: return c.isOcupado(); 
 					default: return null;
 				}
 			}
@@ -238,7 +240,7 @@ public class VentanaHotel extends JFrame{
 		
 		//ActionListeners de los botones
 		botonCerrar.addActionListener((e) -> {
-			System.exit(0);
+			dispose();
 		});
 		botonReserva.addActionListener(new ActionListener() {
 			
