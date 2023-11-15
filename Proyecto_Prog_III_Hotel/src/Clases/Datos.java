@@ -72,8 +72,37 @@ public class Datos {
 		getListaTrabajadores().add(t4);
 		getListaTrabajadores().add(t5);
 		getListaTrabajadores().add(t6);
-		Habitacion h1 = new Habitacion(001, 001, false, 1, 001);
-
+		//Habitaciones planta A
+		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101);
+		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102);
+		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103);
+		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104);
+		getMapaHabitaciones().put(0, new ArrayList<>());
+		getMapaHabitaciones().get(0).add(h1);
+		getMapaHabitaciones().get(0).add(h2);
+		getMapaHabitaciones().get(0).add(h3);
+		getMapaHabitaciones().get(0).add(h4);
+		//Habitaciones planta B
+		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201);
+		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202);
+		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203);
+		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204);
+		getMapaHabitaciones().put(1, new ArrayList<>());
+		getMapaHabitaciones().get(1).add(h5);
+		getMapaHabitaciones().get(1).add(h6);
+		getMapaHabitaciones().get(1).add(h7);
+		getMapaHabitaciones().get(1).add(h8);
+		//Habitaciones planta C
+		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301);
+		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302);
+		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303);
+		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304);
+		getMapaHabitaciones().put(2, new ArrayList<>());
+		getMapaHabitaciones().get(2).add(h9);
+		getMapaHabitaciones().get(2).add(h10);
+		getMapaHabitaciones().get(2).add(h11);
+		getMapaHabitaciones().get(2).add(h12);
+		
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}

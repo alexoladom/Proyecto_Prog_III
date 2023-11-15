@@ -17,6 +17,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import Clases.Datos;
+import Clases.Habitacion;
 
 public class VentanaHotel extends JFrame{
 	protected JButton botonReserva, botonTerminarReserva, botonCerrar, botonSeleccionar;
@@ -46,16 +47,16 @@ public class VentanaHotel extends JFrame{
 		pArbol = new JPanel();
 		
 		//Creación de la tabla A
-		String [] titulos = {"nº Habitacion","Estado ocupación","Esta limpia"};
+		String [] titulos = {"Estado ocupación","nº Planta","nº Habitacion"};
 		
 		class MiModeloA extends AbstractTableModel{
 
 			@Override
 			public int getRowCount() {
-				if(listaHabitacionesA == null) {
+				if(datos.getMapaHabitaciones().get(0) == null) {
 					return 0;
 				}else {
-					return listaHabitacionesA.size();
+					return datos.getMapaHabitaciones().get(0).size();
 				}
 			}
 				
@@ -73,11 +74,11 @@ public class VentanaHotel extends JFrame{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Habitacion h = listaHabitacionesA.get(rowIndex);
+				Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return h.getNumeroHabitacion(); 
-					case 1: return h.getEstadoOcupacion(); 
-					case 2: return h.getEstadoLimpieza(); 
+					case 0: return String.valueOf(h.isOcupado()); 
+					case 1: return String.valueOf(h.getPlanta()); 
+					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
 				}
 			}
@@ -92,10 +93,10 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 			public int getRowCount() {
-				if(listaHabitacionesB == null) {
+				if(datos.getMapaHabitaciones().get(1) == null) {
 					return 0;
 				}else {
-					return listaHabitacionesB.size();
+					return datos.getMapaHabitaciones().get(1).size();
 				}
 			}
 				
@@ -113,11 +114,11 @@ public class VentanaHotel extends JFrame{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Habitacion h = listaHabitacionesB.get(rowIndex);
+				Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return h.getNumeroHabitacion(); 
-					case 1: return h.getEstadoOcupacion(); 
-					case 2: return h.getEstadoLimpieza(); 
+					case 0: return String.valueOf(h.isOcupado()); 
+					case 1: return String.valueOf(h.getPlanta()); 
+					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
 				}
 			}
@@ -132,10 +133,10 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 			public int getRowCount() {
-				if(listaHabitacionesC == null) {
+				if(datos.getMapaHabitaciones().get(2) == null) {
 					return 0;
 				}else {
-					return listaHabitacionesC.size();
+					return datos.getMapaHabitaciones().get(2).size();
 				}
 			}
 				
@@ -153,11 +154,11 @@ public class VentanaHotel extends JFrame{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Habitacion h = listaHabitacionesC.get(rowIndex);
+				Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return h.getNumeroHabitacion(); 
-					case 1: return h.getEstadoOcupacion(); 
-					case 2: return h.getEstadoLimpieza(); 
+					case 0: return String.valueOf(h.isOcupado()); 
+					case 1: return String.valueOf(h.getPlanta()); 
+					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
 				}
 			}
