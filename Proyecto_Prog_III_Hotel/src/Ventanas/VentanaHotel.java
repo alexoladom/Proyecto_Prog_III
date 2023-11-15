@@ -1,8 +1,12 @@
 package Ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +15,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -20,6 +28,7 @@ import Clases.Comedor;
 import Clases.Datos;
 import Clases.Habitacion;
 import Clases.Mesa;
+import Clases.Trabajador;
 
 public class VentanaHotel extends JFrame{
 	protected JButton botonReserva, botonTerminarReserva, botonCerrar, botonSeleccionar;
@@ -83,6 +92,12 @@ public class VentanaHotel extends JFrame{
 					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
 				}
+			}
+			public void actualizarEstado(int rowIndex, boolean ocupado) {
+			    Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
+			    h.setOcupado(ocupado);
+
+			    fireTableCellUpdated(rowIndex, 0);
 			}
 		}
 		tablaA = new JTable(new MiModeloA());
@@ -226,10 +241,6 @@ public class VentanaHotel extends JFrame{
 		arbol = new JTree(modeloArbol);
 		pArbol.add(arbol);
 		
-		getContentPane().add(scrollA, BorderLayout.CENTER);
-//		getContentPane().add(scrollB, BorderLayout.CENTER);
-//		getContentPane().add(scrollC, BorderLayout.CENTER);
-//		getContentPane().add(scrollComedor, BorderLayout.CENTER);
 		getContentPane().add(pBotones, BorderLayout.EAST);
 		getContentPane().add(pArbol, BorderLayout.WEST);
 		
@@ -242,16 +253,24 @@ public class VentanaHotel extends JFrame{
 		botonCerrar.addActionListener((e) -> {
 			dispose();
 		});
+//		botonReserva.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				tablaA.setEnabled(true);
+//				tablaB.setEnabled(true);
+//				tablaC.setEnabled(true);
+//				tablaComedor.setEnabled(true);
+//				botonReserva.setEnabled(false);
+//			}
+//		});
 		botonReserva.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tablaA.setEnabled(true);
-				tablaB.setEnabled(true);
-				tablaC.setEnabled(true);
-				tablaComedor.setEnabled(true);
-				botonReserva.setEnabled(false);
-			}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        MiModeloA modeloA = (MiModeloA) tablaA.getModel();
+		        modeloA.actualizarEstado(1, true);
+		        tablaA.repaint();
+		    }
 		});
 //		botonTerminarReserva.addActionListener(new ActionListener() {
 //			@Override
@@ -270,25 +289,69 @@ public class VentanaHotel extends JFrame{
 				
 			}
 		});
-		
-//		tabla.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-//			
-//			@Override
-//			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-//					int row, int column) {
-//				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-//				boolean libre = modelo.getValueAt(row, 2).toString();//Sin hacer
-//				if(libre == true) {
-//					c.setForeground(Color.GREEN);
-//				}else {
-//					c.setForeground(Color.RED);
-//				}
-//					
-//				return c;
-//			}
-//		});
+		//Creacion de los render de cada tabla
+		tablaA.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+		        MiModeloA modelo = (MiModeloA) table.getModel();
+		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+
+		        if (ocupado) {
+		            c.setBackground(Color.GREEN);
+		        } else {
+		            c.setBackground(Color.RED);
+		        }
+		        
+		        return c;
+		    }
+		});
+		
+		//Funcionamiento del arbol
+		arbol.addTreeSelectionListener(new TreeSelectionListener() {
+		    @Override
+		    public void valueChanged(TreeSelectionEvent e) {
+		        DefaultMutableTreeNode nodoSeleccionado = (DefaultMutableTreeNode) arbol.getLastSelectedPathComponent();
+
+		        if (nodoSeleccionado != null) {
+		            String nodo = nodoSeleccionado.toString();
+		            getContentPane().removeAll();
+
+		            if (nodo.equals("Comedor")) {
+		                getContentPane().add(scrollComedor, BorderLayout.CENTER);
+		            } else if (nodo.equals("Planta A")) {
+		                getContentPane().add(scrollA, BorderLayout.CENTER);
+		            } else if (nodo.equals("Planta B")) {
+		                getContentPane().add(scrollB, BorderLayout.CENTER);
+		            } else if (nodo.equals("Planta C")) {
+		                getContentPane().add(scrollC, BorderLayout.CENTER);
+		            }
+
+		            revalidate();
+		            repaint();
+		            pack();
+		        }
+		    }
+		});
+		
 		pack();
 		setVisible(true);
 	}	
+	public static void main(String[] args) {
+		System.out.println("hola mundo!");
+		Datos datos = new Datos();
+		new VentanaHotel(datos);
+		datos.inicializarDatos();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new VentanaHotel(datos);
+				
+			}
+		});
+		
+	}
+	
 }
