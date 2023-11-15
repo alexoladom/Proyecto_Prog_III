@@ -20,6 +20,7 @@ public class Datos {
 	protected Map<Integer, List<Habitacion>> MapaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
+	protected List<Mesa> listaComedor;//Creacion de la lista del comedor
 	protected Map<String, Cliente> mapaClientesPorDNI;
 	protected Map<LocalDate,Parking> mapaParkingPorFecha;
 	protected Map<String, Trabajador> mapaTrabajadoresPorDNI;
@@ -28,13 +29,14 @@ public class Datos {
 	
 	
 	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, Map<Integer, List<Habitacion>> MapaHabitaciones,
-			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI,
+			List<Reserva> listaReservas, List<Tarea> listaTareas, List<Mesa> listaComedor, Map<String, Cliente> mapaClientesPorDNI,
 			Map<String, Trabajador> mapaTrabajadoresPorDNI,Map<LocalDate, Parking> mapaParkingPorFecha) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
 		this.MapaHabitaciones = MapaHabitaciones;
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
+		this.listaComedor = listaComedor;//Comedor
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 		this.mapaTrabajadoresPorDNI = mapaTrabajadoresPorDNI;
 		this.mapaParkingPorFecha = mapaParkingPorFecha;
@@ -46,6 +48,7 @@ public class Datos {
 		this.MapaHabitaciones = new HashMap<Integer, List<Habitacion>>();
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
+		this.listaComedor = new ArrayList<Mesa>();//Comedor
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
 		this.mapaTrabajadoresPorDNI = new HashMap<String, Trabajador> ();
 		this.mapaParkingPorFecha = new HashMap<LocalDate, Parking>();
@@ -102,6 +105,31 @@ public class Datos {
 		getMapaHabitaciones().get(2).add(h10);
 		getMapaHabitaciones().get(2).add(h11);
 		getMapaHabitaciones().get(2).add(h12);
+		//Lugares del comedor
+		Mesa m1 = new Mesa(0, false);
+		getListaComedor().add(m1);
+		Mesa m2 = new Mesa(1, false);
+		getListaComedor().add(m2);
+		Mesa m3 = new Mesa(2, false);
+		getListaComedor().add(m3);
+		Mesa m4 = new Mesa(3, false);
+		getListaComedor().add(m4);
+		Mesa m5 = new Mesa(4, false);
+		getListaComedor().add(m5);
+		Mesa m6 = new Mesa(5, false);
+		getListaComedor().add(m6);
+		Mesa m7 = new Mesa(6, false);
+		getListaComedor().add(m7);
+		Mesa m8 = new Mesa(7, false);
+		getListaComedor().add(m8);
+		Mesa m9 = new Mesa(8, false);
+		getListaComedor().add(m9);
+		Mesa m10 = new Mesa(9, false);
+		getListaComedor().add(m10);
+		Mesa m11 = new Mesa(10, false);
+		getListaComedor().add(m11);
+		Mesa m12 = new Mesa(11, false);
+		getListaComedor().add(m12);
 		
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
@@ -138,6 +166,14 @@ public class Datos {
 
 	public Map<Integer, List<Habitacion>> getMapaHabitaciones() {
 		return MapaHabitaciones;
+	}
+	
+	public List<Mesa> getListaComedor() {//Comedor
+		return listaComedor;
+	}
+
+	public void setListaComedor(List<Mesa> listaComedor) {//Comedor
+		this.listaComedor = listaComedor;
 	}
 
 	public void setMapaHabitaciones(Map<Integer, List<Habitacion>> mapaHabitaciones) {
