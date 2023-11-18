@@ -17,9 +17,10 @@ public class Datos {
 	private static final String FICHERO = "datosHotel.dat";
 	protected List<Trabajador> listaTrabajadores;
 	protected List<Cliente> listaClientes;
-	protected List<Habitacion> listaHabitaciones;
+	protected Map<Integer, List<Habitacion>> MapaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
+	protected List<Mesa> listaComedor;//Creacion de la lista del comedor
 	protected Map<String, Cliente> mapaClientesPorDNI;
 	protected Map<LocalDate,Parking> mapaParkingPorFecha;
 	protected Map<String, Trabajador> mapaTrabajadoresPorDNI;
@@ -27,14 +28,15 @@ public class Datos {
 	
 	
 	
-	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, List<Habitacion> listaHabitaciones,
-			List<Reserva> listaReservas, List<Tarea> listaTareas,Map<String, Cliente> mapaClientesPorDNI,
+	public Datos(List<Trabajador> listaTrabajadores, List<Cliente> listaClientes, Map<Integer, List<Habitacion>> MapaHabitaciones,
+			List<Reserva> listaReservas, List<Tarea> listaTareas, List<Mesa> listaComedor, Map<String, Cliente> mapaClientesPorDNI,
 			Map<String, Trabajador> mapaTrabajadoresPorDNI,Map<LocalDate, Parking> mapaParkingPorFecha) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
-		this.listaHabitaciones = listaHabitaciones;
+		this.MapaHabitaciones = MapaHabitaciones;
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
+		this.listaComedor = listaComedor;//Comedor
 		this.mapaClientesPorDNI = mapaClientesPorDNI;
 		this.mapaTrabajadoresPorDNI = mapaTrabajadoresPorDNI;
 		this.mapaParkingPorFecha = mapaParkingPorFecha;
@@ -43,9 +45,10 @@ public class Datos {
 	public Datos() {
 		this.listaTrabajadores = new ArrayList<Trabajador>();
 		this.listaClientes = new ArrayList<Cliente>();
-		this.listaHabitaciones = new ArrayList<Habitacion>();
+		this.MapaHabitaciones = new HashMap<Integer, List<Habitacion>>();
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
+		this.listaComedor = new ArrayList<Mesa>();//Comedor
 		this.mapaClientesPorDNI = new HashMap<String, Cliente> ();
 		this.mapaTrabajadoresPorDNI = new HashMap<String, Trabajador> ();
 		this.mapaParkingPorFecha = new HashMap<LocalDate, Parking>();
@@ -72,7 +75,62 @@ public class Datos {
 		getListaTrabajadores().add(t4);
 		getListaTrabajadores().add(t5);
 		getListaTrabajadores().add(t6);
-
+		//Habitaciones planta A
+		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101);
+		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102);
+		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103);
+		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104);
+		getMapaHabitaciones().put(0, new ArrayList<>());
+		getMapaHabitaciones().get(0).add(h1);
+		getMapaHabitaciones().get(0).add(h2);
+		getMapaHabitaciones().get(0).add(h3);
+		getMapaHabitaciones().get(0).add(h4);
+		//Habitaciones planta B
+		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201);
+		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202);
+		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203);
+		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204);
+		getMapaHabitaciones().put(1, new ArrayList<>());
+		getMapaHabitaciones().get(1).add(h5);
+		getMapaHabitaciones().get(1).add(h6);
+		getMapaHabitaciones().get(1).add(h7);
+		getMapaHabitaciones().get(1).add(h8);
+		//Habitaciones planta C
+		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301);
+		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302);
+		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303);
+		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304);
+		getMapaHabitaciones().put(2, new ArrayList<>());
+		getMapaHabitaciones().get(2).add(h9);
+		getMapaHabitaciones().get(2).add(h10);
+		getMapaHabitaciones().get(2).add(h11);
+		getMapaHabitaciones().get(2).add(h12);
+		//Lugares del comedor
+		Mesa m1 = new Mesa(0, false);
+		getListaComedor().add(m1);
+		Mesa m2 = new Mesa(1, false);
+		getListaComedor().add(m2);
+		Mesa m3 = new Mesa(2, false);
+		getListaComedor().add(m3);
+		Mesa m4 = new Mesa(3, false);
+		getListaComedor().add(m4);
+		Mesa m5 = new Mesa(4, false);
+		getListaComedor().add(m5);
+		Mesa m6 = new Mesa(5, false);
+		getListaComedor().add(m6);
+		Mesa m7 = new Mesa(6, false);
+		getListaComedor().add(m7);
+		Mesa m8 = new Mesa(7, false);
+		getListaComedor().add(m8);
+		Mesa m9 = new Mesa(8, false);
+		getListaComedor().add(m9);
+		Mesa m10 = new Mesa(9, false);
+		getListaComedor().add(m10);
+		Mesa m11 = new Mesa(10, false);
+		getListaComedor().add(m11);
+		Mesa m12 = new Mesa(11, false);
+		getListaComedor().add(m12);
+		
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
@@ -106,12 +164,20 @@ public class Datos {
 		this.listaClientes = listaClientes;
 	}
 
-	public List<Habitacion> getListaHabitaciones() {
-		return listaHabitaciones;
+	public Map<Integer, List<Habitacion>> getMapaHabitaciones() {
+		return MapaHabitaciones;
+	}
+	
+	public List<Mesa> getListaComedor() {//Comedor
+		return listaComedor;
 	}
 
-	public void setListaHabitaciones(List<Habitacion> listaHabitaciones) {
-		this.listaHabitaciones = listaHabitaciones;
+	public void setListaComedor(List<Mesa> listaComedor) {//Comedor
+		this.listaComedor = listaComedor;
+	}
+
+	public void setMapaHabitaciones(Map<Integer, List<Habitacion>> mapaHabitaciones) {
+		MapaHabitaciones = mapaHabitaciones;
 	}
 
 	public List<Reserva> getListaReservas() {
@@ -178,7 +244,7 @@ public class Datos {
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)){
 				oos.writeObject(listaClientes);
-				oos.writeObject(listaHabitaciones);
+				oos.writeObject(MapaHabitaciones);
 				oos.writeObject(listaReservas);
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
@@ -198,8 +264,8 @@ public class Datos {
 		try(FileInputStream fis = new FileInputStream(FICHERO);
 			ObjectInputStream ois = new ObjectInputStream(fis)){
 			
-			this.listaClientes= (List<Cliente>) ois.readObject();
-			this.listaHabitaciones= (List<Habitacion>) ois.readObject();
+			this.listaClientes = (List<Cliente>) ois.readObject();
+			this.MapaHabitaciones = (Map<Integer, List<Habitacion>>) ois.readObject();
 			this.listaReservas = (List<Reserva>) ois.readObject();
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();

@@ -2,131 +2,104 @@ package Ventanas;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 
 import Clases.Datos;
+import Clases.Tarea;
 import Clases.Trabajador;
 
 public class VentanaTrabajador extends JFrame {
-	protected JProgressBar tareasHacer;
-	protected JTextField textDni, textNombre, textApellido1, textApellido2, textEmail, textDireccion, textfNacimiento,
-			textContraseña, textTelefono, textSalario, textHorasTrabajadas;
-	protected JLabel lblDatos, lblDni, lblNombre, lblApellido1, lblApellido2, lblEmail, lblDireccion, lblfNacimiento,
-    lblContraseña, lblTelefono, lblSalario, lblHorasTrabajadas;
-	protected JPanel pDatos, pTareas, pBotones;
-	protected JButton botonCerrar, botonTareaHecha;
-	protected Trabajador trabajador;
-	protected int tareasPendientes = 10;//ejemplo de tareas pendientes que tiene un trabajador
+    protected JProgressBar tareasHacer;
+    protected JTable tablaDatos;
+    protected JButton botonCerrar, botonTareaHecha;
+    protected List<Tarea> tareasPendientes; //= trabajador.getListaTareasPorHacer(); // ejemplo de tareas pendientes que tiene un trabajador
 
-	public VentanaTrabajador(String dni) {
-		//trabajador= Datos.getMapaTrabajadoresPorDNI(dni);//esta linea se me esta complicando
-		//no entiendo por que pilla error si alguien ve el error porfa decirme que es
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-
-		botonCerrar = new JButton("CERRAR");
-		botonTareaHecha = new JButton("TAREA HECHA");
-
-		tareasHacer = new JProgressBar(0,tareasPendientes);
-		tareasHacer.setStringPainted(true); 
-		tareasHacer.setValue(tareasPendientes);
-
-
-		pDatos = new JPanel();
-		pDatos.setLayout(new GridLayout(12, 2));
-		pTareas = new JPanel();
-		pBotones = new JPanel();
+    public VentanaTrabajador(Datos datos, Trabajador trabajador) {
+    	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    	setSize(900,350);
+    	setLocationRelativeTo(null);
+    	setTitle("Trabajador: "+ trabajador.getNombre()+" "+trabajador.getApellido1());
+    	JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		JMenu menuPerfil = new JMenu();
+		menuBar.add(menuPerfil);
+		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
+		menuPerfil.add(cambiarFotoPerfil);
+		JMenuItem informacionTrabajador = new JMenuItem("VER/EDITAR MIS DATOS");
+		menuPerfil.add(informacionTrabajador);
+		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
+		menuPerfil.add(cerrarSesion);
 		
-		//Crear los labels
-		lblDni = new JLabel("DNI: ");
-        lblNombre = new JLabel("Nombre: ");
-        lblApellido1 = new JLabel("Primer apellido: ");
-        lblApellido2 = new JLabel("Segundo apellido: ");
-        lblEmail = new JLabel("Email: ");
-        lblDireccion = new JLabel("Dirección: ");
-        lblfNacimiento = new JLabel("Fecha de nacimiento: ");
-        lblContraseña = new JLabel("Contraseña: ");
-        lblTelefono = new JLabel("Teléfono: ");
-        lblSalario = new JLabel("Salario: ");
-        lblHorasTrabajadas = new JLabel("Horas trabajadas: ");
-
-
-		// crear los textfields
-		textDni = new JTextField(15);
-		textNombre = new JTextField(15);
-		textApellido1 = new JTextField(15);
-		textApellido2 = new JTextField(15);
-		textEmail = new JTextField(15);
-		textDireccion = new JTextField(15);
-		textfNacimiento = new JTextField(15);
-		textContraseña = new JTextField(15);
-		textTelefono = new JTextField(15);
-		textSalario = new JTextField(15);
-		textHorasTrabajadas = new JTextField(15);
 		
-		//Colocar la informacion sacada de datos
-		 textDni.setText(trabajador.getDni());//toca crear un par de estos para cada textfield
-	     textDni.setEditable(false);//cuando arregle el problema con la carga de informacion los coloco
-		
-		// añadir los labels y textfields al panel
-        pDatos.add(lblDni);
-        pDatos.add(textDni);
-        pDatos.add(lblNombre);
-        pDatos.add(textNombre);
-        pDatos.add(lblApellido1);
-        pDatos.add(textApellido1);
-        pDatos.add(lblApellido2);
-        pDatos.add(textApellido2);
-        pDatos.add(lblEmail);
-        pDatos.add(textEmail);
-        pDatos.add(lblDireccion);
-        pDatos.add(textDireccion);
-        pDatos.add(lblfNacimiento);
-        pDatos.add(textfNacimiento);
-        pDatos.add(lblContraseña);
-        pDatos.add(textContraseña);
-        pDatos.add(lblTelefono);
-        pDatos.add(textTelefono);
-        pDatos.add(lblSalario);
-        pDatos.add(textSalario);
-        pDatos.add(lblHorasTrabajadas);
-        pDatos.add(textHorasTrabajadas);
-		
+		ImageIcon imagenPerfil = new ImageIcon("src/Imagenes/imagenPerfilpng.png");
+		Image imagenPerfilEscala = imagenPerfil.getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH);
+		menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
 
-		pBotones.add(botonCerrar);
+        botonCerrar = new JButton("CERRAR");
+        botonTareaHecha = new JButton("TAREA HECHA");
 
-		//pTareas.add(tareasHacer);
-		pDatos.add(new JLabel("Tareas pendientes: "));
-        pDatos.add(tareasHacer);
+        //tareasHacer = new JProgressBar(0, tareasPendientes);
+        //tareasHacer.setStringPainted(true);
+        //tareasHacer.setValue(tareasPendientes);
+        
+        
+        //Panel del menu
+        JPanel pMostrarInfo = new JPanel();
+        
+
+        String[] columnNames = {"DNI", "Nombre", "Apellido", "Email", "Direccion", "Fecha de Nacimiento", "Telefono", "Salario", "Horas Trabajadas"};
+        Object[] data = {
+        	    trabajador.getDni(),
+        	    trabajador.getNombre(),
+        	    trabajador.getApellido1(),
+        	    trabajador.getEmail(),
+        	    trabajador.getDireccion(),
+        	    trabajador.getfNacimiento(),
+        	    trabajador.getTelefono(),
+        	    trabajador.getSalario(),
+        	    trabajador.getNumHorasTrabajadas(),
+        	};
+
+        	tablaDatos = new JTable(new Object[][]{ data }, columnNames);
+
+        //getContentPane().add(tareasHacer, BorderLayout.NORTH);
+        JScrollPane scrollPane = new JScrollPane(tablaDatos);
+        pMostrarInfo.add(scrollPane);
+
+        getContentPane().add(pMostrarInfo, BorderLayout.CENTER);
+
+        JPanel pBotones = new JPanel();
+        pBotones.add(botonCerrar);
         pBotones.add(botonTareaHecha);
+        getContentPane().add(pBotones, BorderLayout.SOUTH);
 
-		getContentPane().add(pBotones, BorderLayout.SOUTH);
-		getContentPane().add(pDatos, BorderLayout.CENTER);
-		getContentPane().add(pTareas, BorderLayout.WEST);
-
-		botonCerrar.addActionListener((e) -> {
-			System.exit(0);
-		});
-		botonTareaHecha.addActionListener((e) -> {
-            if (tareasPendientes > 0) {
-                tareasPendientes--;
-                tareasHacer.setValue(tareasPendientes);
-                // se puede crear una nueva ventana que muestre un menu donde se puedan selecionar
-                //por ahora se queda asi
-            }
+        botonCerrar.addActionListener((e) -> {
+            System.exit(0);
         });
-		setVisible(true);
-
-	}
-
+//        botonTareaHecha.addActionListener((e) -> {
+//            if (tareasPendientes > 0) {
+//                tareasPendientes--;
+//                tareasHacer.setValue(tareasPendientes);
+//            }
+//        });
+        pMostrarInfo.add(tablaDatos);
+        setVisible(true);
+    }
 }
