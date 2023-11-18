@@ -259,6 +259,7 @@ public class Datos {
 			return false;
 		}
 	}
+	
 	public void guardarDatos() {
 		
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);

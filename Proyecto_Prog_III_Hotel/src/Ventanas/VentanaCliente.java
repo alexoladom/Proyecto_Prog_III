@@ -79,7 +79,6 @@ public class VentanaCliente extends JFrame{
 				setVisible(false);
 				setLayout(new BorderLayout());
 				reserva = new Reserva();
-				cliente.getListaReservasCliente().add(reserva);
 				lblFechaIni = new JLabel("Fecha inicial: ",SwingConstants.CENTER);
 				lblFechaFin = new JLabel("Fecha final: ",SwingConstants.CENTER);
 				lblReservaHabitacion = new JLabel("Reserva de habitaciones y comedor -> ",SwingConstants.CENTER);
@@ -258,14 +257,13 @@ public class VentanaCliente extends JFrame{
 			        }
 			        
 			        if(ini && fin) {
-			        	System.out.println("a");
 			        	modeloListaReservas.addElement(reserva);
-			        	datos.getListaReservas().add(reserva);
-			        	cliente.getListaReservasCliente().add(reserva);
+			    
 			        }
 
 				});
 				bReservarParking.addActionListener((e)->{
+					cliente.getListaReservasCliente().add(reserva);
 					new VentanaParking(datos,reserva,cliente);
 				});
 				
@@ -290,10 +288,9 @@ public class VentanaCliente extends JFrame{
 				        LocalDate fechaLocal = zonedDateTime.toLocalDate();
 				        reserva.setFechaFinal(fechaLocal);
 			        }
-		        	datos.getListaReservas().add(reserva);
-		        	cliente.getListaReservasCliente().add(reserva);
 				});
 				bReservarParking.addActionListener((e)->{
+					cliente.getListaReservasCliente().add(reserva);
 					new VentanaParking(datos,reserva,cliente);
 				});
 				
@@ -508,6 +505,7 @@ public class VentanaCliente extends JFrame{
 		
 		bBorrarReserva.addActionListener((e)-> {
 			Reserva seleccionado =listaReservas.getSelectedValue();
+			datos.getListaReservas().remove(seleccionado);
 			cliente.getListaReservasCliente().remove(seleccionado);
 			modeloListaReservas.removeElement(seleccionado);
 			listaReservas.repaint();
