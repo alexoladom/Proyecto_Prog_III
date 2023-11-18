@@ -195,6 +195,8 @@ public class VentanaInicioCliente extends JFrame {
 			if (datos.getMapaClientesPorDNI().containsKey(dni)) {
 				if(datos.comprobarContraseñaCliente(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
+					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni));
+					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 				}

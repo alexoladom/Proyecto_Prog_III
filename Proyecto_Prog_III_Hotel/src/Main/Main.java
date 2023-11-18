@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-
+import Clases.Cliente;
 import Clases.Datos;
+import Clases.Reserva;
 import Clases.Trabajador;
 import Ventanas.VentanaDeCarga;
 
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("hola mundo!");
 		Datos datos = new Datos();
 		LocalDate a = LocalDate.of(1999, 9, 11);
 		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
@@ -35,11 +35,11 @@ public class Main {
 		datos.getListaTrabajadores().add(t4);
 		datos.getListaTrabajadores().add(t5);
 		datos.getListaTrabajadores().add(t6);
-
+		
+		
 		for (Trabajador trabajador : datos.getListaTrabajadores()) {
 			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
-		new VentanaDeCarga(datos);
 		datos.inicializarDatos();
 		
 		SwingUtilities.invokeLater(new Runnable() {

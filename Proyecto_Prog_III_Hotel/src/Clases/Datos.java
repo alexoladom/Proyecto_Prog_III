@@ -134,10 +134,30 @@ public class Datos {
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
-		
 		for (int i = 0; i < 15; i++) {
 			mapaParkingPorFecha.put(LocalDate.now().plusDays(i), new Parking());
 		}
+		
+		
+		Cliente c1 = new Cliente();
+		c1.setDni("abc");
+		c1.setContraseña("123");
+		Reserva r = new Reserva();
+		c1.getListaReservasCliente().add(r);
+		getListaReservas().add(r);
+		getListaClientes().add(c1);
+		getMapaClientesPorDNI().put("abc", c1);
+		
+		Cliente c2 = new Cliente();
+		c2.setDni("a");
+		c2.setContraseña("a");
+		Reserva r2 = new Reserva();
+		c2.getListaReservasCliente().add(r2);
+		getListaReservas().add(r2);
+		getListaClientes().add(c2);
+		getMapaClientesPorDNI().put("a", c2);
+		
+		
 	}
 	
 	public Map<String, Trabajador> getMapaTrabajadoresPorDNI() {
@@ -269,7 +289,7 @@ public class Datos {
 			this.listaReservas = (List<Reserva>) ois.readObject();
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
-			this.mapaClientesPorDNI = (Map<String, Cliente>) ois.readObject();
+			this.mapaClientesPorDNI= (Map<String, Cliente>) ois.readObject();
 			this.mapaTrabajadoresPorDNI = (Map<String, Trabajador>) ois.readObject();
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
 
