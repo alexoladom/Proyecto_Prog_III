@@ -1,16 +1,12 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,16 +14,16 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import domain.Datos;
 import domain.Tarea;
 import domain.Trabajador;
 
-import java.awt.BorderLayout;
 
 public class VentanaTrabajador extends JFrame {
-    protected JProgressBar tareasHacer;
+    
+	private static final long serialVersionUID = 1L;
+	protected JProgressBar tareasHacer;
     protected JTable tablaDatos;
     protected JButton botonCerrar, botonTareaHecha;
     protected List<Tarea> tareasPendientes; //= trabajador.getListaTareasPorHacer(); // ejemplo de tareas pendientes que tiene un trabajador

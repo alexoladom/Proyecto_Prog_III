@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -21,15 +19,12 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import domain.Comedor;
 import domain.Datos;
 import domain.Habitacion;
 import domain.Mesa;
-import domain.Trabajador;
 
 public class VentanaHotel extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
@@ -67,6 +62,8 @@ public class VentanaHotel extends JFrame{
 		
 		class MiModeloA extends AbstractTableModel{
 
+		
+			private static final long serialVersionUID = 1L;
 			@Override
 			public int getRowCount() {
 				if(datos.getMapaHabitaciones().get(0) == null) {
@@ -114,6 +111,8 @@ public class VentanaHotel extends JFrame{
 		//Creación de la tabla B
 		class MiModeloB extends AbstractTableModel{
 
+			
+			private static final long serialVersionUID = 1L;
 			@Override
 			public int getRowCount() {
 				if(datos.getMapaHabitaciones().get(1) == null) {
@@ -155,6 +154,8 @@ public class VentanaHotel extends JFrame{
 		//Creación de la tabla C
 		class MiModeloC extends AbstractTableModel{
 
+			
+			private static final long serialVersionUID = 1L;
 			@Override
 			public int getRowCount() {
 				if(datos.getMapaHabitaciones().get(2) == null) {
@@ -197,6 +198,8 @@ public class VentanaHotel extends JFrame{
 		String [] titulos1 = {"nº Mesas","Estado"};
 		class MiModeloComedor extends AbstractTableModel{
 
+			
+			private static final long serialVersionUID = 1L;
 			@Override
 			public int getRowCount() {
 				if(datos.getListaComedor() == null) {
@@ -302,7 +305,10 @@ public class VentanaHotel extends JFrame{
 		});
 		//Creacion de los render de cada tabla
 		tablaA.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-		    @Override
+		    
+			private static final long serialVersionUID = 1L;
+
+			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 

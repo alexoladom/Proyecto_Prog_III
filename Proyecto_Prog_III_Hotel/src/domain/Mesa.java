@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Mesa {
+public class Mesa implements Serializable{
 	private static final long serialVersionUID = 1L;
 	protected static int numId;
 	protected int id;

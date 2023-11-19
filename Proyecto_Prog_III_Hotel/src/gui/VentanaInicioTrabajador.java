@@ -34,7 +34,6 @@ public class VentanaInicioTrabajador extends JFrame{
 		this.datos= datos;
 		botonAtras = new JButton("ATRAS");
 		botonIniSesion = new JButton("INICIO DE SESION");
-		ImageIcon imTrabajador = new ImageIcon("src\\Imagenes\\Trabajadores.jpeg");
 
 		lblNombre = new JLabel("Introduce tu DNI: ");
 		lblContra = new JLabel("Introduce tu contraseña: ");
