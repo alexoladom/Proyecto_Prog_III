@@ -316,7 +316,7 @@ public class VentanaHotel extends JFrame{
 
 		        if (nodoSeleccionado != null) {
 		            String nodo = nodoSeleccionado.toString();
-		            getContentPane().removeAll();
+//		            getContentPane().removeAll();
 
 		            if (nodo.equals("Comedor")) {
 		                getContentPane().add(scrollComedor, BorderLayout.CENTER);
