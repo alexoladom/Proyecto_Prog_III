@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class Habitacion implements Serializable{
 	
@@ -33,6 +34,9 @@ public abstract class Habitacion implements Serializable{
 
 	public static int getNumId() {
 		return numId;
+	}
+	public static void setNumId(int a) {
+		numId=a;
 	}
 
 	public int getId() {
@@ -67,6 +71,24 @@ public abstract class Habitacion implements Serializable{
 			this.numero = numero;	
 		}
 		
+	}
+	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, numero, planta);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Habitacion other = (Habitacion) obj;
+		return id == other.id && numero == other.numero && planta == other.planta;
 	}
 
 	@Override

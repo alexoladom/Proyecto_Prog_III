@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Datos {
 	
-	private static final String FICHERO = "resources/data/datosHotel.dat";
+	private static String FICHERO = "resources/data/datosHotel.dat";
 	protected List<Trabajador> listaTrabajadores;
 	protected List<Cliente> listaClientes;
 	protected Map<Integer, List<Habitacion>> MapaHabitaciones;
@@ -57,6 +58,7 @@ public class Datos {
 	}
 	
 	public void inicializarDatos() {
+		setFichero("resources/data/datosHotel.dat");
 		LocalDate a = LocalDate.of(1999, 9, 11);
 		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
 		LocalDate b = LocalDate.of(1989, 7, 23);
@@ -220,6 +222,9 @@ public class Datos {
 		return FICHERO;
 	}
 
+	public static void setFichero(String fichero) {
+		FICHERO = fichero;
+	}
 	public Map<LocalDate, Parking> getMapaParkingPorFecha() {
 		return mapaParkingPorFecha;
 	}
@@ -260,6 +265,33 @@ public class Datos {
 		}
 	}
 	
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(MapaHabitaciones, listaClientes, listaComedor, listaReservas, listaTareas,
+				listaTrabajadores, mapaClientesPorDNI, mapaParkingPorFecha, mapaTrabajadoresPorDNI);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Datos other = (Datos) obj;
+		return Objects.equals(MapaHabitaciones, other.MapaHabitaciones)
+				&& Objects.equals(listaClientes, other.listaClientes)
+				&& Objects.equals(listaComedor, other.listaComedor)
+				&& Objects.equals(listaReservas, other.listaReservas) 
+				&& Objects.equals(listaTareas, other.listaTareas)
+				&& Objects.equals(listaTrabajadores, other.listaTrabajadores)
+				&& Objects.equals(mapaClientesPorDNI, other.mapaClientesPorDNI)
+				&& Objects.equals(mapaParkingPorFecha, other.mapaParkingPorFecha)
+				&& Objects.equals(mapaTrabajadoresPorDNI, other.mapaTrabajadoresPorDNI);
+	}
+
 	public void guardarDatos() {
 		
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);

@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Parking implements Serializable{
 
@@ -47,7 +48,9 @@ public class Parking implements Serializable{
 	public static int getNumId() {
 		return numId;
 	}
-	
+	public static void setNumId(int a) {
+		 numId = a;
+	}
 	public int getId() {
 		return id;
 	}
@@ -98,12 +101,28 @@ public class Parking implements Serializable{
 	//Metodo toString
 	
 	
+	
 	@Override
 	public String toString() {
 		return String.format("Parking %s, completo? %s, Plazad disponibles: %s", id, completo,
 				numPlazasDisponibles);
 	} 
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(fecha, id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Parking other = (Parking) obj;
+		return Objects.equals(fecha, other.fecha) && id == other.id;
+	}
 	//Metodo para visualizar las plazas disponibles del parking 
 	//True si esta ocupado, false si esta libre
 	public String parkinigToString() {

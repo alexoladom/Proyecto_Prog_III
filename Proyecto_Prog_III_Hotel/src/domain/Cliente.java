@@ -35,7 +35,7 @@ public class Cliente extends Persona{
 
 	public List<Reserva> getListaReservasCliente() {
 		if (this.listaReservasCliente==null) {
-			System.err.println("No existe lista para este cliente");
+			System.err.println("No existe lista  de reservas para este cliente");
 			return null;
 		}else {
 			return listaReservasCliente;

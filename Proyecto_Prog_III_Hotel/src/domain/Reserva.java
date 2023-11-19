@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Reserva implements Serializable{
 
@@ -57,6 +58,9 @@ public class Reserva implements Serializable{
 
 	public static int getNumId() {
 		return numId;
+	}
+	public static void setNumId(int a) {
+		 numId=a;
 	}
 
 
@@ -134,7 +138,28 @@ public class Reserva implements Serializable{
 	}
 	
 	
+	
 	//Metodo toString
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fechaFinal, fechaInicio, id);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reserva other = (Reserva) obj;
+		return Objects.equals(fechaFinal, other.fechaFinal) && Objects.equals(fechaInicio, other.fechaInicio)
+				&& id == other.id;
+	}
+
 
 	@Override
 	public String toString() {

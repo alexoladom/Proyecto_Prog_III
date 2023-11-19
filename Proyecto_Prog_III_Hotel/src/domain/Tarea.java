@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Tarea implements Serializable{
 
@@ -87,8 +88,26 @@ public class Tarea implements Serializable{
 	}
 
 	
+	
 	//Metdo tostring
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(descripcion, id, rol);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tarea other = (Tarea) obj;
+		return Objects.equals(descripcion, other.descripcion) && id == other.id && rol == other.rol;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Tarea id=%s, %s, %s horas, %s, descripcion: %s", id, rol, numHoras,
