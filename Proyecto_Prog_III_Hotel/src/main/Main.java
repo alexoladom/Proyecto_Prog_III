@@ -1,9 +1,6 @@
 package main;
 
-
-
 import javax.swing.SwingUtilities;
-
 import domain.Datos;
 import gui.VentanaDeCarga;
 
@@ -21,6 +18,5 @@ public class Main {
 				
 			}
 		});
-		
 	}
 }

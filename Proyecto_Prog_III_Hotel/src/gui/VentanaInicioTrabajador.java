@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
-
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +17,7 @@ import domain.Datos;
 
 
 public class VentanaInicioTrabajador extends JFrame{
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 
 	private static final long serialVersionUID = 1L;
 	protected JButton botonAtras, botonRegistro, botonIniSesion;
@@ -64,7 +65,8 @@ public class VentanaInicioTrabajador extends JFrame{
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos);					
+					new VentanaSeleccion(datos);	
+					logger.info("Se vuelve a la ventana de selección");
 				}
 			});
 			
@@ -75,11 +77,14 @@ public class VentanaInicioTrabajador extends JFrame{
 			if (datos.getMapaTrabajadoresPorDNI().containsKey(dni)) {
 				if(datos.comprobarContraseñaTrabajador(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
+					logger.info("El trabajador ha iniciado sesión");
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+					logger.warning("La contraseña del trabajador es incorrecta");
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "No existe el trabajador con ese DNI");
+				logger.warning("El trabajador introducido no existe");
 			}
 		}); 
 		setVisible(true);

@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
-
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +14,7 @@ import javax.swing.SwingUtilities;
 import domain.Datos;
 
 public class VentanaSeleccion extends JFrame{
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 
 	private static final long serialVersionUID = 1L;
 	protected JButton botonCerrar, botonCliente, botonTrabajador;
@@ -51,6 +52,7 @@ public class VentanaSeleccion extends JFrame{
 
 		botonCerrar.addActionListener((e) -> {
 			System.exit(0);
+			logger.info("Se ha cerrado la ventana");
 		});
 
 		botonTrabajador.addActionListener((e) -> {
@@ -58,6 +60,7 @@ public class VentanaSeleccion extends JFrame{
 			    @Override
 				public void run() {
 					new VentanaInicioTrabajador(datos);	
+					logger.info("Se ha abierto la ventana de inicio del trabajador");
 				}
 			});	
             dispose();
@@ -68,6 +71,7 @@ public class VentanaSeleccion extends JFrame{
 				@Override
 				public void run() {
 					new VentanaInicioCliente(datos);
+					logger.info("Se ha abierto la ventana de inicio del cliente");
 				}
 			});
 			

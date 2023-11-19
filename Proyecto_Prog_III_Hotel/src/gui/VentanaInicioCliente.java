@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ import domain.Cliente;
 import domain.Datos;
 
 public class VentanaInicioCliente extends JFrame {
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 
 	private static final long serialVersionUID = 1L;
 	protected JButton botonAtras1, botonRegistrarme, botonRegistro,  botonIniSesion,botonAtras2;
@@ -125,7 +127,8 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos);					
+					new VentanaSeleccion(datos);	
+					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
 			
@@ -137,7 +140,8 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaInicioCliente(datos);					
+					new VentanaInicioCliente(datos);	
+					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
 			
@@ -182,7 +186,7 @@ public class VentanaInicioCliente extends JFrame {
 					
 					@Override
 					public void run() {
-						new VentanaInicioCliente(datos);						
+						new VentanaInicioCliente(datos);	
 					}
 				});
 				
@@ -195,13 +199,16 @@ public class VentanaInicioCliente extends JFrame {
 			if (datos.getMapaClientesPorDNI().containsKey(dni)) {
 				if(datos.comprobarContraseñaCliente(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
+					logger.info("Un usuario inicia sesión");
 					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni));
 					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+					logger.warning("El usuario ha aplicado una contraseña incorrecta");
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "Primero tienes que registrarte");
+				logger.warning("El usuario no esta registrado");
 			}
 		});
 		
@@ -210,11 +217,13 @@ public class VentanaInicioCliente extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				datos.cargarDatos();
+				logger.info("Se cargan los datos");
 			}
 		
 			@Override
 			public void windowClosing(WindowEvent e) {
 				datos.guardarDatos();
+				logger.info("Se guardan los datos");
 			}
 			
 			

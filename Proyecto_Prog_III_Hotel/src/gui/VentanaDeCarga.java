@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Image;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.SwingWorker;
 import domain.Datos;
 
 public class VentanaDeCarga extends JFrame{
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	
 	private static final long serialVersionUID = 1L;
 	protected JButton botonCerrar, botonEntrar;
@@ -56,6 +58,7 @@ public class VentanaDeCarga extends JFrame{
 		
 		botonCerrar.addActionListener((e) -> {
 			System.exit(0);
+			logger.info("Se cierra la ventana");
 		});
 		
 		botonEntrar.addActionListener((e) -> {
@@ -80,6 +83,7 @@ public class VentanaDeCarga extends JFrame{
 						@Override
 						public void run() {
 							new VentanaSeleccion(datos);
+							logger.info("Se carga la Ventana de seleccion");
 							
 						}
 					});

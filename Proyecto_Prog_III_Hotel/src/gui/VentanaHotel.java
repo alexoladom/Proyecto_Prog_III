@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +32,7 @@ import domain.Mesa;
 import domain.Trabajador;
 
 public class VentanaHotel extends JFrame{
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	
 	private static final long serialVersionUID = 1L;
 	protected JButton botonReserva, botonTerminarReserva, botonCerrar, botonSeleccionar;
@@ -58,6 +60,7 @@ public class VentanaHotel extends JFrame{
 		botonSeleccionar = new JButton("Seleccionar");
 		pBotones = new JPanel();
 		pArbol = new JPanel();
+		logger.info("Se han creado los botones");
 		
 		//Creación de la tabla A
 		String [] titulos = {"Estado ocupación","nº Planta","nº Habitacion"};
@@ -102,6 +105,7 @@ public class VentanaHotel extends JFrame{
 			    fireTableCellUpdated(rowIndex, 0);
 			}
 		}
+		logger.info("Se ha creado el modelo de la tabla A");
 		tablaA = new JTable(new MiModeloA());
 		tablaA.setRowHeight(50);
 		tablaA.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
@@ -142,6 +146,7 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 		}
+		logger.info("Se ha creado el modelo de la tabla B");
 		tablaB = new JTable(new MiModeloB());
 		tablaB.setRowHeight(50);
 		tablaB.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
@@ -182,6 +187,7 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 		}
+		logger.info("Se ha creado el modelo de la tabla C");
 		tablaC = new JTable(new MiModeloC());
 		tablaC.setRowHeight(50);
 		tablaC.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
@@ -222,6 +228,7 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 		}
+		logger.info("Se ha creado el modelo de la tabla del comedor");
 		tablaComedor = new JTable(new MiModeloComedor());
 		tablaComedor.setRowHeight(50);
 		tablaComedor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
@@ -242,6 +249,7 @@ public class VentanaHotel extends JFrame{
 		
 		arbol = new JTree(modeloArbol);
 		pArbol.add(arbol);
+		logger.info("Se ha creado el arbol");
 		
 		getContentPane().add(pBotones, BorderLayout.EAST);
 		getContentPane().add(pArbol, BorderLayout.WEST);
@@ -254,6 +262,7 @@ public class VentanaHotel extends JFrame{
 		//ActionListeners de los botones
 		botonCerrar.addActionListener((e) -> {
 			dispose();
+			logger.info("Se cierra la ventana del hotel");
 		});
 //		botonReserva.addActionListener(new ActionListener() {
 //			
@@ -309,6 +318,7 @@ public class VentanaHotel extends JFrame{
 		        return c;
 		    }
 		});
+		
 		
 		//Funcionamiento del arbol
 		arbol.addTreeSelectionListener(new TreeSelectionListener() {
