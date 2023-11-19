@@ -310,9 +310,9 @@ public class VentanaHotel extends JFrame{
 		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
 
 		        if (ocupado) {
-		            c.setBackground(Color.GREEN);
-		        } else {
 		            c.setBackground(Color.RED);
+		        } else {
+		            c.setBackground(Color.GREEN);
 		        }
 		        
 		        return c;
