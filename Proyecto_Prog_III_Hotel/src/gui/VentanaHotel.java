@@ -7,14 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -30,7 +33,7 @@ public class VentanaHotel extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	
 	private static final long serialVersionUID = 1L;
-	protected JButton botonReserva, botonTerminarReserva, botonCerrar, botonSeleccionar;
+	protected JButton botonReserva, botonTerminarReserva, botonCerrar;
 	protected JPanel pBotones, pArbol;
 	protected Datos datos;
 //	protected JDatePicker datePicker;
@@ -52,7 +55,6 @@ public class VentanaHotel extends JFrame{
 		botonReserva = new JButton ("Reserva");
 		botonTerminarReserva = new JButton ("Acabar reserva");
 		botonCerrar = new JButton ("Cerrar");
-		botonSeleccionar = new JButton("Seleccionar");
 		pBotones = new JPanel();
 		pArbol = new JPanel();
 		logger.info("Se han creado los botones");
@@ -144,6 +146,12 @@ public class VentanaHotel extends JFrame{
 					default: return null;
 				}
 			}
+			public void actualizarEstado(int rowIndex, boolean ocupado) {
+			    Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
+			    h.setOcupado(ocupado);
+
+			    fireTableCellUpdated(rowIndex, 1);
+			}
 		}
 		logger.info("Se ha creado el modelo de la tabla B");
 		tablaB = new JTable(new MiModeloB());
@@ -186,6 +194,12 @@ public class VentanaHotel extends JFrame{
 					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
 				}
+			}
+			public void actualizarEstado(int rowIndex, boolean ocupado) {
+			    Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
+			    h.setOcupado(ocupado);
+
+			    fireTableCellUpdated(rowIndex, 2);
 			}
 		}
 		logger.info("Se ha creado el modelo de la tabla C");
@@ -230,6 +244,13 @@ public class VentanaHotel extends JFrame{
 					default: return null;
 				}
 			}
+			public void actualizarEstado(int rowIndex, boolean ocupado) {
+			    Mesa c = datos.getListaComedor().get(rowIndex);
+			    c.setOcupado(ocupado);
+
+			    fireTableCellUpdated(rowIndex, 1);
+			}
+
 		}
 		logger.info("Se ha creado el modelo de la tabla del comedor");
 		tablaComedor = new JTable(new MiModeloComedor());
@@ -260,49 +281,57 @@ public class VentanaHotel extends JFrame{
 		pBotones.add(botonReserva);
 		pBotones.add(botonTerminarReserva);
 		pBotones.add(botonCerrar);
-		pBotones.add(botonSeleccionar);
 		
 		//ActionListeners de los botones
 		botonCerrar.addActionListener((e) -> {
 			dispose();
 			logger.info("Se cierra la ventana del hotel");
 		});
-//		botonReserva.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				tablaA.setEnabled(true);
-//				tablaB.setEnabled(true);
-//				tablaC.setEnabled(true);
-//				tablaComedor.setEnabled(true);
-//				botonReserva.setEnabled(false);
-//			}
-//		});
+		
 		botonReserva.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	//Tabla A
 		        MiModeloA modeloA = (MiModeloA) tablaA.getModel();
-		        modeloA.actualizarEstado(1, true);
+		        modeloA.actualizarEstado(tablaA.getSelectedRow(), true);
 		        tablaA.repaint();
+		        //Tabla B
+		        MiModeloB modeloB = (MiModeloB) tablaB.getModel();
+		        modeloB.actualizarEstado(tablaB.getSelectedRow(), true);
+		        tablaB.repaint();
+		        //Tabla C
+		        MiModeloC modeloC = (MiModeloC) tablaC.getModel();
+		        modeloC.actualizarEstado(tablaC.getSelectedRow(), true);
+		        tablaC.repaint();
+		        //Tabla Comedor
+		        MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
+		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), true);
+		        tablaComedor.repaint();
 		    }
 		});
-//		botonTerminarReserva.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				for (PlazaHotel string : estado.getListaHabitacionesHotel()) {
-//					System.out.println(string);
-//				}
-//				datos.guardarDatos();
-//				dispose();
-//			}
-//		});
-		botonSeleccionar.addActionListener(new ActionListener() {
-			
+		
+		botonTerminarReserva.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				//Tabla A
+				MiModeloA modeloA = (MiModeloA) tablaA.getModel();
+		        modeloA.actualizarEstado(tablaA.getSelectedRow(), false);
+		        tablaA.repaint();
+		        //Tabla B
+				MiModeloB modeloB = (MiModeloB) tablaB.getModel();
+		        modeloB.actualizarEstado(tablaB.getSelectedRow(), false);
+		        tablaB.repaint();
+		        //Tabla C
+				MiModeloC modeloC = (MiModeloC) tablaC.getModel();
+		        modeloC.actualizarEstado(tablaC.getSelectedRow(), false);
+		        tablaC.repaint();
+		        //Tabla Comedor
+				MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
+		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), false);
+		        tablaComedor.repaint();
 			}
 		});
+		
 		//Creacion de los render de cada tabla
 		tablaA.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 		    
@@ -310,18 +339,98 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
+				JLabel l = new JLabel();
+		        
+		        l.setOpaque(true);
+		        l.setText(value.toString());
+		        
 		        MiModeloA modelo = (MiModeloA) table.getModel();
 		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
-
+		        if (isSelected) {
+		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		        }
 		        if (ocupado) {
-		            c.setBackground(Color.RED);
+		            l.setBackground(Color.RED);
 		        } else {
-		            c.setBackground(Color.GREEN);
+		            l.setBackground(Color.GREEN);
 		        }
 		        
-		        return c;
+		        return l;
+		    }
+		});
+		tablaB.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+		    
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel l = new JLabel();
+		        
+		        l.setOpaque(true);
+		        l.setText(value.toString());
+		        
+		        MiModeloB modelo = (MiModeloB) table.getModel();
+		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+		        if (isSelected) {
+		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		        }
+		        if (ocupado) {
+		            l.setBackground(Color.RED);
+		        } else {
+		            l.setBackground(Color.GREEN);
+		        }
+		        
+		        return l;
+		    }
+		});
+		tablaC.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+		    
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel l = new JLabel();
+		        
+		        l.setOpaque(true);
+		        l.setText(value.toString());
+		        
+		        MiModeloC modelo = (MiModeloC) table.getModel();
+		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+		        if (isSelected) {
+		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		        }
+		        if (ocupado) {
+		            l.setBackground(Color.RED);
+		        } else {
+		            l.setBackground(Color.GREEN);
+		        }
+		        
+		        return l;
+		    }
+		});
+		tablaComedor.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+		    
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel l = new JLabel();
+		        
+		        l.setOpaque(true);
+		        l.setText(value.toString());
+		        
+		        MiModeloComedor modelo = (MiModeloComedor) table.getModel();
+		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 1).toString());
+		        if (isSelected) {
+		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		        }
+		        if (ocupado) {
+		            l.setBackground(Color.RED);
+		        } else {
+		            l.setBackground(Color.GREEN);
+		        }
+		        
+		        return l;
 		    }
 		});
 		
@@ -334,25 +443,32 @@ public class VentanaHotel extends JFrame{
 
 		        if (nodoSeleccionado != null) {
 		            String nodo = nodoSeleccionado.toString();
-		            getContentPane().removeAll();
 
 		            if (nodo.equals("Comedor")) {
 		                getContentPane().add(scrollComedor, BorderLayout.CENTER);
+		                getContentPane().remove(scrollA);
+		            	getContentPane().remove(scrollB);
+		            	getContentPane().remove(scrollC);
 		            } else if (nodo.equals("Planta A")) {
+		            	getContentPane().remove(scrollComedor);
+		            	getContentPane().remove(scrollB);
+		            	getContentPane().remove(scrollC);
 		                getContentPane().add(scrollA, BorderLayout.CENTER);
 		            } else if (nodo.equals("Planta B")) {
+		            	getContentPane().remove(scrollA);
+		            	getContentPane().remove(scrollC);
+		            	getContentPane().remove(scrollComedor);
 		                getContentPane().add(scrollB, BorderLayout.CENTER);
 		            } else if (nodo.equals("Planta C")) {
+		            	getContentPane().remove(scrollA);
+		            	getContentPane().remove(scrollB);
+		            	getContentPane().remove(scrollComedor);
 		                getContentPane().add(scrollC, BorderLayout.CENTER);
 		            }
-
-		            revalidate();
-		            repaint();
 		            pack();
 		        }
 		    }
 		});
-		
 		pack();
 		setVisible(true);
 	}	
