@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.swing.ImageIcon;
+
 public class Datos {
 	
 	private static String FICHERO = "resources/data/datosHotel.dat";
@@ -60,17 +62,17 @@ public class Datos {
 	public void inicializarDatos() {
 		setFichero("resources/data/datosHotel.dat");
 		LocalDate a = LocalDate.of(1999, 9, 11);
-		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		LocalDate b = LocalDate.of(1989, 7, 23);
-		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		LocalDate c = LocalDate.of(1995, 3, 18);
-		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		LocalDate d = LocalDate.of(1993, 2, 6);
-		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		LocalDate e = LocalDate.of(1991, 1, 12);
-		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		LocalDate f = LocalDate.of(2000, 3, 7);
-		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>());
+		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
 		getListaTrabajadores().add(t1);
 		getListaTrabajadores().add(t2);
 		getListaTrabajadores().add(t3);

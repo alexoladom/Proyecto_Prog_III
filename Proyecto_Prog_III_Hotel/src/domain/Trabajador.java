@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 public class Trabajador extends Persona{
 
 	//Clase trabajador que hereda de persona
@@ -22,9 +24,9 @@ public class Trabajador extends Persona{
 	
 	public Trabajador(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, double salario, int numHorasTrabajadas,
-			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer) {
+			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer, ImageIcon foto) {
 		
-		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono);
+		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono,foto);
 		
 		this.salario = salario;
 		this.numHorasTrabajadas = numHorasTrabajadas;

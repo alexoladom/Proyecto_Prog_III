@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -32,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
@@ -43,6 +47,7 @@ import domain.ComparadorReservasPorPagado;
 import domain.ComparadorReservasPorPrecio;
 import domain.Datos;
 import domain.Reserva;
+
 
 public class VentanaCliente extends JFrame{
 
@@ -58,6 +63,9 @@ public class VentanaCliente extends JFrame{
 	
 
 	public VentanaCliente(Datos datos, Cliente cliente) {
+		if (cliente.getFotoPerfil()!=null) {
+			setIconImage(cliente.getFotoPerfil().getImage());
+		}
 		System.out.println(cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(700,300);
@@ -339,6 +347,26 @@ public class VentanaCliente extends JFrame{
 		menuPerfil.add(informacionCliente);
 		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
 		menuPerfil.add(cerrarSesion);
+		
+		cambiarFotoPerfil.addActionListener((e)->{
+			 JFileChooser fileChooser = new JFileChooser();
+			 FileFilter filter = new FileNameExtensionFilter("Fichero jpg o png", "jpg","png");
+             fileChooser.setFileFilter(filter);
+             int result = fileChooser.showOpenDialog(VentanaCliente.this);
+             if (result == JFileChooser.APPROVE_OPTION) {
+                 File file = fileChooser.getSelectedFile();
+                 ImageIcon imagen = new ImageIcon(file.getPath());
+                 cliente.setFotoPerfil(imagen);
+                 this.setIconImage(imagen.getImage());
+                 Image imagenPerfilEscala = imagen.getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH);
+                 menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
+                 this.repaint();
+
+                 System.out.println("Fichero seleccionado: " + file.toString());
+             }
+		});
+		
+			
 		
 		
 	
