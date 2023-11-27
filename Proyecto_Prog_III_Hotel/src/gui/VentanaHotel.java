@@ -8,9 +8,11 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -44,6 +46,9 @@ public class VentanaHotel extends JFrame{
 	//Componentes para el arbol
 	private DefaultTreeModel modeloArbol;							
 	private JTree arbol;
+	//Componentes para una JList
+	private DefaultListModel<String> modeloLista;
+	private JList<String> listaReservas;
 	
 	public VentanaHotel(Datos datos) {
 		this.datos=datos;
@@ -275,6 +280,11 @@ public class VentanaHotel extends JFrame{
 		pArbol.add(arbol);
 		logger.info("Se ha creado el arbol");
 		
+		//Creacion de la JList
+		modeloLista = new DefaultListModel<>();
+	    listaReservas = new JList<>(modeloLista);
+		
+	    getContentPane().add(new JScrollPane(listaReservas), BorderLayout.SOUTH);
 		getContentPane().add(pBotones, BorderLayout.EAST);
 		getContentPane().add(pArbol, BorderLayout.WEST);
 		
@@ -307,6 +317,8 @@ public class VentanaHotel extends JFrame{
 		        MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), true);
 		        tablaComedor.repaint();
+		        modeloLista.addElement("Nueva reserva");//Para los elementos de la lista
+		        listaReservas.setModel(modeloLista);
 		    }
 		});
 		
@@ -329,6 +341,10 @@ public class VentanaHotel extends JFrame{
 				MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), false);
 		        tablaComedor.repaint();
+		        int index = listaReservas.getSelectedIndex();
+	            if (index != -1) {
+	                modeloLista.removeElementAt(index);
+	            }
 			}
 		});
 		
@@ -475,7 +491,6 @@ public class VentanaHotel extends JFrame{
 	public static void main(String[] args) {
 		System.out.println("hola mundo!");
 		Datos datos = new Datos();
-		new VentanaHotel(datos);
 		datos.inicializarDatos();
 		
 		SwingUtilities.invokeLater(new Runnable() {
