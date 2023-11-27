@@ -31,7 +31,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-
+import javax.swing.SwingUtilities;
 
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
@@ -72,12 +72,11 @@ public class VentanaCliente extends JFrame{
 			protected JDatePicker datePickerIni, datePickerFin;
 			protected JButton bReservarParking, bCancelarReserva, bConfirmarReserva, bReservarHabitacion;
 			protected Reserva reserva;
-		
+
 			
 			public void init() {
 				setVisible(false);
 				setLayout(new BorderLayout());
-				reserva = new Reserva();
 				lblFechaIni = new JLabel("Fecha inicial: ",SwingConstants.CENTER);
 				lblFechaFin = new JLabel("Fecha final: ",SwingConstants.CENTER);
 				lblReservaHabitacion = new JLabel("Reserva de habitaciones y comedor -> ",SwingConstants.CENTER);
@@ -201,7 +200,7 @@ public class VentanaCliente extends JFrame{
 				bReservarParking = new JButton("Reserva Parking");
 				bCancelarReserva = new JButton("Cancelar Reserva");
 				bCancelarReserva.addActionListener((e)->{
-					cliente.getListaReservasCliente().remove(reserva);
+		
 					if (pCrearEditarReserva != null) {
 						pCrearEditarReserva.setVisible(false);
 					}
@@ -231,11 +230,14 @@ public class VentanaCliente extends JFrame{
 				add(pAbajo, BorderLayout.SOUTH);
 			}
 			public PanelCrearReserva() {
-				init();
+				init();	
+				reserva = new Reserva();
 				bConfirmarReserva.addActionListener((e)->{
+					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
+				        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
 					boolean ini = false;
 					boolean fin = false;
-					reserva.setCliente(cliente);
+					
 					GregorianCalendar calendar = (GregorianCalendar) datePickerIni.getModel().getValue();
 			        if(calendar!=null) {
 			        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
@@ -256,14 +258,28 @@ public class VentanaCliente extends JFrame{
 			        }
 			        
 			        if(ini && fin) {
+						
 			        	modeloListaReservas.addElement(reserva);
-			    
+			        	cliente.getListaReservasCliente().add(reserva);
+			        	datos.getListaReservas().add(reserva);
+			        	System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
+			        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+			        	JOptionPane.showMessageDialog(bCancelarReserva, "Reserva Guardada");
+			        	reserva = new Reserva();
+			        	
 			        }
 
 				});
 				bReservarParking.addActionListener((e)->{
-					cliente.getListaReservasCliente().add(reserva);
+					reserva.setCliente(cliente);
+					System.out.println("ID de la reserva creada ->"+reserva.getId());
+					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
+				        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+					if(!cliente.getListaReservasCliente().contains(reserva)) {
+						cliente.getListaReservasCliente().add(reserva);
+					}
 					new VentanaParking(datos,reserva,cliente);
+					
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
@@ -286,10 +302,14 @@ public class VentanaCliente extends JFrame{
 			        	ZonedDateTime zonedDateTime = calendar2.toZonedDateTime();
 				        LocalDate fechaLocal = zonedDateTime.toLocalDate();
 				        reserva.setFechaFinal(fechaLocal);
+				        
 			        }
 				});
 				bReservarParking.addActionListener((e)->{
-					cliente.getListaReservasCliente().add(reserva);
+					if (!cliente.getListaReservasCliente().contains(reserva)) {
+						cliente.getListaReservasCliente().add(reserva);
+					}
+					
 					new VentanaParking(datos,reserva,cliente);
 				});
 				
@@ -342,7 +362,7 @@ public class VentanaCliente extends JFrame{
 		pPerfil.setVisible(true);
 		pInformacion = new JPanel();
 		
-		pInformacion.setLayout(new GridLayout(8,2));
+		pInformacion.setLayout(new GridLayout(9,2));
 		
 		JLabel lblNombre = new JLabel("Introduzca su Nombre: ");
 		JLabel lblContra = new JLabel("Introduzca su contraseña: ");
@@ -354,13 +374,64 @@ public class VentanaCliente extends JFrame{
 		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ");
 		
 		JTextField textoNombre = new JTextField(20);
-		JTextField textoContra = new JPasswordField(20);
+		textoNombre.setEditable(false);
+		textoNombre.setText(cliente.getNombre());
+		JPasswordField textoContra = new JPasswordField(20);
+		textoContra.setEditable(false);
+		textoContra.setText(cliente.getContraseña());
 		JTextField textoDNI = new JTextField(20);
+		textoDNI.setEditable(false);
+		textoDNI.setText(cliente.getDni());
 		JTextField textoApellido = new JTextField(20);
+		textoApellido.setEditable(false);
+		textoApellido.setText(cliente.getApellido1());
 		JTextField textoEmail = new JTextField(20);
+		textoEmail.setEditable(false);
+		textoEmail.setText(cliente.getEmail());
 		JTextField textoDireccion = new JTextField(20);
-		JDatePicker date = new JDatePicker();
+		textoDireccion.setEditable(false);
+		textoDireccion.setText(cliente.getDireccion());
 		JTextField textoTelefono= new JTextField(20);
+		textoTelefono.setEditable(false);
+		textoTelefono.setText(cliente.getTelefono());
+		JDatePicker date = new JDatePicker();
+		date.setEnabled(false);
+		date.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
+				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        if (calendar!=null) {
+			        if (fechaLocal.isAfter(LocalDate.now())) {
+						date.getModel().setValue(null);
+					}
+		        }
+				
+			}
+		});
+
+		date.addDateSelectionConstraint(new DateSelectionConstraint() {
+			
+			@Override
+			public boolean isValidSelection(DateModel<?> arg0) {
+				
+				GregorianCalendar calendar = (GregorianCalendar) arg0.getValue();
+		        if(calendar!=null) {
+		        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+				    if (fechaLocal.isAfter(LocalDate.now())) {
+							return false;
+						}else {
+							return true;
+					}
+		        }else{
+		        	return true;
+		        }		         
+			}
+		});
+		
+		
 		
 		pInformacion.add(lblNombre);
 		pInformacion.add(textoNombre);
@@ -379,6 +450,57 @@ public class VentanaCliente extends JFrame{
 		pInformacion.add(lblTelefono);
 		pInformacion.add(textoTelefono);
 		
+		JButton botonEditar = new JButton("Editar datos");
+		JButton botonGuardar = new JButton("Guardar edicion");
+		botonGuardar.setEnabled(false);
+		
+		botonEditar.addActionListener((e)->{
+			textoNombre.setEditable(true);
+			textoApellido.setEditable(true);
+			textoContra.setEditable(true);
+			textoDireccion.setEditable(true);
+			textoDNI.setEditable(true);
+			textoEmail.setEditable(true);
+			textoTelefono.setEditable(true);
+			date.setEnabled(true);
+			
+			botonGuardar.setEnabled(true);
+			botonEditar.setEnabled(false);
+		});
+		
+		botonGuardar.addActionListener((e)->{
+			datos.getMapaClientesPorDNI().remove(cliente.getDni());
+			textoNombre.setEditable(false);
+			textoApellido.setEditable(false);
+			textoContra.setEditable(false);
+			textoDireccion.setEditable(false);
+			textoDNI.setEditable(false);
+			textoEmail.setEditable(false);
+			textoTelefono.setEditable(false);
+			date.setEnabled(false);
+			
+			botonGuardar.setEnabled(false);
+			botonEditar.setEnabled(true);
+			
+			cliente.setNombre(textoNombre.getText());
+			cliente.setApellido1(textoApellido.getText());
+			cliente.setDni(textoDNI.getText());
+			cliente.setContraseña(String.valueOf(textoContra.getPassword()));
+			cliente.setDireccion(textoDireccion.getText());
+			cliente.setEmail(textoEmail.getText());
+			cliente.setTelefono(textoTelefono.getText());
+			
+			GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
+	        if(calendar!=null) {
+	        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        cliente.setfNacimiento(fechaLocal);
+	        }
+	        datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
+		});
+		pPerfil.add(botonEditar);
+		pPerfil.add(botonGuardar);
+		
 		pPerfil.add(pInformacion);
 		
 		
@@ -395,19 +517,32 @@ public class VentanaCliente extends JFrame{
 		boolean run = true;
 		Thread hilo = new Thread(new Runnable() {
 
+			private int j=0;
 			@Override
 			public void run() {
 				while(run) {
-					for (int i = 0; i < 255; i++) {
-						listaReservas.setSelectionBackground(new Color(0,i,255));
+					for (j = 0; j < 255; j++) {
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								listaReservas.setSelectionBackground(new Color(0,j,255));								
+							}
+						});
+
 						try {
 							Thread.sleep(5);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}
-					for (int i = 0; i < 255; i++) {
-						listaReservas.setSelectionBackground(new Color(0,255-i,255));
+					for (j = 0; j < 255; j++) {
+						
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								listaReservas.setSelectionBackground(new Color(0,255-j,255));
+							}
+						});
 						try {
 							Thread.sleep(5);
 						} catch (InterruptedException e) {
@@ -521,7 +656,7 @@ public class VentanaCliente extends JFrame{
 
 		verReservas.addActionListener((e)->{
 			if (pCrearEditarReserva != null) {
-				pCrearEditarReserva.setVisible(false);
+				remove(pCrearEditarReserva);
 			}
 			pListaReservas.setVisible(true);
 			pPerfil.setVisible(false);
@@ -537,7 +672,7 @@ public class VentanaCliente extends JFrame{
 		
 		informacionCliente.addActionListener((e)->{
 			if (pCrearEditarReserva != null) {
-				pCrearEditarReserva.setVisible(false);
+				remove(pCrearEditarReserva);
 			}
 			pListaReservas.setVisible(false);
 			pPerfil.setVisible(true);

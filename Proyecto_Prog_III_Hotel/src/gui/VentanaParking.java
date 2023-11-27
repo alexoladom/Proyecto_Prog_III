@@ -340,7 +340,7 @@ public class VentanaParking extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				datos.guardarDatos();
+//				datos.guardarDatos();
 				
 			}
 		});

@@ -156,8 +156,7 @@ public class Reserva implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Reserva other = (Reserva) obj;
-		return Objects.equals(fechaFinal, other.fechaFinal) && Objects.equals(fechaInicio, other.fechaInicio)
-				&& id == other.id;
+		return id == other.id;
 	}
 
 

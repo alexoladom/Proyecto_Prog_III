@@ -141,23 +141,7 @@ public class Datos {
 		}
 		
 		
-		Cliente c1 = new Cliente();
-		c1.setDni("abc");
-		c1.setContraseña("123");
-		Reserva r = new Reserva();
-		c1.getListaReservasCliente().add(r);
-		getListaReservas().add(r);
-		getListaClientes().add(c1);
-		getMapaClientesPorDNI().put("abc", c1);
 		
-		Cliente c2 = new Cliente();
-		c2.setDni("a");
-		c2.setContraseña("a");
-		Reserva r2 = new Reserva();
-		c2.getListaReservasCliente().add(r2);
-		getListaReservas().add(r2);
-		getListaClientes().add(c2);
-		getMapaClientesPorDNI().put("a", c2);
 		
 		
 	}
@@ -304,6 +288,8 @@ public class Datos {
 				oos.writeObject(mapaClientesPorDNI);
 				oos.writeObject(mapaTrabajadoresPorDNI);
 				oos.writeObject(mapaParkingPorFecha);
+				oos.writeObject(Reserva.getNumId());
+
 
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
@@ -313,6 +299,7 @@ public class Datos {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void cargarDatos() {
 		try(FileInputStream fis = new FileInputStream(FICHERO);
 			ObjectInputStream ois = new ObjectInputStream(fis)){
@@ -325,6 +312,7 @@ public class Datos {
 			this.mapaClientesPorDNI= (Map<String, Cliente>) ois.readObject();
 			this.mapaTrabajadoresPorDNI = (Map<String, Trabajador>) ois.readObject();
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
+			Reserva.setNumId((int) ois.readObject());
 
 			
 		} catch (FileNotFoundException e) {
