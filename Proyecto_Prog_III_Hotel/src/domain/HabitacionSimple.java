@@ -16,7 +16,8 @@ public class HabitacionSimple extends Habitacion{
 		super();
 	}
 
-	public static double getPreciopornoche() {
+	@Override
+	public double getPrecioPorNoche() {
 		return precioPorNoche;
 	}
 

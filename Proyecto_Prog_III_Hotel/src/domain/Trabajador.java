@@ -90,6 +90,14 @@ public class Trabajador extends Persona{
 	public void setListaTareasPorHacer(List<Tarea> listaTareasPorHacer) {
 		this.listaTareasPorHacer = listaTareasPorHacer;
 	}
+
+	@Override
+	public String toString() {
+		return "Trabajador [salario=" + salario + ", numHorasTrabajadas=" + numHorasTrabajadas + ", dni=" + dni
+				+ ", nombre=" + nombre + ", apellido1=" + apellido1 + ", email=" + email + ", telefono=" + telefono
+				+ "]";
+	}
+	
 	
 	
 }

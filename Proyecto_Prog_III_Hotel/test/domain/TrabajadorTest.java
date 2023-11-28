@@ -1,6 +1,10 @@
 package domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,5 +22,47 @@ public class TrabajadorTest {
 		trabajador.setSalario(2);
 		assertEquals(2, trabajador.getSalario(), 0);
 	}
+	@Test
+	public void testSetsalario() {
+		trabajador.setSalario(12);
+		trabajador.setSalario(-1);
+		assertEquals(12, trabajador.getSalario(),0);
+	}
+	@Test
+	public void testGetNumHorasTrabajadas() {
+		trabajador.setNumHorasTrabajadas(10);
+		assertEquals(10, trabajador.getNumHorasTrabajadas());
+	}
 	
+	@Test
+	public void testSetNumHorasTrabajadasMenorCero() {
+		trabajador.setNumHorasTrabajadas(10);
+		trabajador.setNumHorasTrabajadas(-1);
+		assertEquals(10, trabajador.getNumHorasTrabajadas());
+		
+	}
+	@Test
+	public void getListaTareasHechas() {
+		List<Tarea> a = new ArrayList<>();
+		a.add(new Tarea());
+		trabajador.setListaTareasHechas(a);
+		assertEquals(a, trabajador.getListaTareasHechas());
+	}
+	@Test
+	public void getListaTareasHechasNull() {
+		trabajador.setListaTareasHechas(null);
+		assertNull(trabajador.getListaTareasHechas());
+	}
+	@Test
+	public void getListaTareasPorHacer() {
+		List<Tarea> a = new ArrayList<>();
+		a.add(new Tarea());
+		trabajador.setListaTareasPorHacer(a);
+		assertEquals(a, trabajador.getListaTareasPorHacer());
+	}
+	@Test
+	public void getListaTareasPorhacerNull() {
+		trabajador.setListaTareasPorHacer(null);
+		assertNull(trabajador.getListaTareasPorHacer());
+	}
 }

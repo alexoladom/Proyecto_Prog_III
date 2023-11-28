@@ -20,12 +20,11 @@ public class Reserva implements Serializable{
 	protected LocalDate fechaFinal;
 	protected List<Habitacion> listaHabitacionesReservadas;
 	protected List<PlazaParking> listaPlazasParking;
-	protected double precioCobrar;
 	protected boolean estaPagado;
 	
 	//Constructores
 	 
-	public Reserva( Cliente cliente, LocalDate fechaInicio, LocalDate fechaFinal, double precioCobrar,
+	public Reserva( Cliente cliente, LocalDate fechaInicio, LocalDate fechaFinal,
 			boolean estaPagado, List<Habitacion> listaHabitacions, List<PlazaParking> listaPlazasParking) {
 		super();
 		numId++;
@@ -33,7 +32,6 @@ public class Reserva implements Serializable{
 		this.cliente = cliente;
 		this.fechaInicio = fechaInicio;
 		this.fechaFinal = fechaFinal;
-		this.precioCobrar = precioCobrar;
 		this.estaPagado = estaPagado;
 		this.listaHabitacionesReservadas = listaHabitacions;
 		this.listaPlazasParking = listaPlazasParking;
@@ -47,7 +45,6 @@ public class Reserva implements Serializable{
 		this.cliente = null;
 		this.fechaInicio = null;
 		this.fechaFinal = null;
-		this.precioCobrar = 0;
 		this.estaPagado = false;
 		this.listaHabitacionesReservadas = new ArrayList<Habitacion>();
 		this.listaPlazasParking = new ArrayList<PlazaParking>();
@@ -99,16 +96,14 @@ public class Reserva implements Serializable{
 
 
 	public double getPrecioCobrar() {
-		return precioCobrar;
-	}
-
-
-	public void setPrecioCobrar(double precioCobrar) {
-		if(precioCobrar>0) {
-			this.precioCobrar = precioCobrar;	
+		double a = 0;
+		for (Habitacion habitacion : listaHabitacionesReservadas) {
+			a = a+ habitacion.getPrecioPorNoche();
 		}
-		
+		return a;
 	}
+
+
 	public boolean isEstaPagado() {
 		return estaPagado;
 	}
@@ -164,7 +159,7 @@ public class Reserva implements Serializable{
 	public String toString() {
 		return String.format(
 				"Reserva %s, con fecha de inicio %s, fecha final %s, precio: %s,  estado de pago: %s, plazas de parking: %s, numero de habitaciones: %s ", id,
-				 fechaInicio, fechaFinal, precioCobrar, estaPagado, listaPlazasParking.size(), listaHabitacionesReservadas.size());
+				 fechaInicio, fechaFinal,this.getPrecioCobrar(), estaPagado, listaPlazasParking.size(), listaHabitacionesReservadas.size());
 	}
 	
 	
