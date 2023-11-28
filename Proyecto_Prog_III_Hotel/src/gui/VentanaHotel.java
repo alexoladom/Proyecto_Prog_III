@@ -29,7 +29,9 @@ import javax.swing.tree.DefaultTreeModel;
 
 import domain.Datos;
 import domain.Habitacion;
+import domain.HabitacionSimple;
 import domain.Mesa;
+import domain.Reserva;
 
 public class VentanaHotel extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
@@ -47,10 +49,10 @@ public class VentanaHotel extends JFrame{
 	private DefaultTreeModel modeloArbol;							
 	private JTree arbol;
 	//Componentes para una JList
-	private DefaultListModel<String> modeloLista;
-	private JList<String> listaReservas;
+	private DefaultListModel<Habitacion> modeloLista;
+	private JList<Habitacion> listaReservas;
 	
-	public VentanaHotel(Datos datos) {
+	public VentanaHotel(Datos datos,Reserva reserva) {
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,800);
@@ -103,8 +105,10 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
-			    Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
-			    h.setOcupado(ocupado);
+				if (rowIndex!=-1) {
+					  Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
+					    h.setOcupado(ocupado);
+				}
 
 			    fireTableCellUpdated(rowIndex, 0);
 			}
@@ -152,8 +156,10 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
-			    Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
-			    h.setOcupado(ocupado);
+				if (rowIndex!=-1) {
+					  Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
+					    h.setOcupado(ocupado);
+				}
 
 			    fireTableCellUpdated(rowIndex, 1);
 			}
@@ -201,8 +207,10 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
-			    Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
-			    h.setOcupado(ocupado);
+				if (rowIndex!=-1) {
+					  Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
+					    h.setOcupado(ocupado);
+				}
 
 			    fireTableCellUpdated(rowIndex, 2);
 			}
@@ -250,9 +258,10 @@ public class VentanaHotel extends JFrame{
 				}
 			}
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
-			    Mesa c = datos.getListaComedor().get(rowIndex);
-			    c.setOcupado(ocupado);
-
+			   if(rowIndex!=-1) {
+				   Mesa c = datos.getListaComedor().get(rowIndex);
+				    c.setOcupado(ocupado);
+			   }
 			    fireTableCellUpdated(rowIndex, 1);
 			}
 
@@ -281,16 +290,21 @@ public class VentanaHotel extends JFrame{
 		logger.info("Se ha creado el arbol");
 		
 		//Creacion de la JList
-		modeloLista = new DefaultListModel<>();
-	    listaReservas = new JList<>(modeloLista);
-		
-	    getContentPane().add(new JScrollPane(listaReservas), BorderLayout.SOUTH);
+		modeloLista = new DefaultListModel<Habitacion>();
+		modeloLista.addElement(new HabitacionSimple());
+		listaReservas = new JList<Habitacion>(modeloLista);
+
+	   
+//	    getContentPane().add(new JScrollPane(listaReservas), BorderLayout.SOUTH);
 		getContentPane().add(pBotones, BorderLayout.EAST);
 		getContentPane().add(pArbol, BorderLayout.WEST);
-		
-		pBotones.add(botonReserva);
-		pBotones.add(botonTerminarReserva);
-		pBotones.add(botonCerrar);
+		JPanel pAuxiliar = new JPanel();
+		pAuxiliar.add(botonReserva);
+		pAuxiliar.add(botonCerrar);
+		pAuxiliar.add(botonTerminarReserva);
+		pBotones.setLayout(new BorderLayout());
+		pBotones.add(pAuxiliar, BorderLayout.NORTH);
+		pBotones.add(listaReservas,BorderLayout.CENTER);
 		
 		//ActionListeners de los botones
 		botonCerrar.addActionListener((e) -> {
@@ -317,7 +331,11 @@ public class VentanaHotel extends JFrame{
 		        MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), true);
 		        tablaComedor.repaint();
-		        modeloLista.addElement("Nueva reserva");//Para los elementos de la lista
+		        //JList
+		        if(tablaA.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+		        }
+		        modeloLista.addAll(reserva.getListaHabitacionesReservadas());//Para los elementos de la lista
 		        listaReservas.setModel(modeloLista);
 		    }
 		});
@@ -341,6 +359,7 @@ public class VentanaHotel extends JFrame{
 				MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), false);
 		        tablaComedor.repaint();
+		        //Jlist
 		        int index = listaReservas.getSelectedIndex();
 	            if (index != -1) {
 	                modeloLista.removeElementAt(index);
@@ -496,7 +515,7 @@ public class VentanaHotel extends JFrame{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new VentanaHotel(datos);
+				new VentanaHotel(datos,new Reserva());
 				
 			}
 		});
