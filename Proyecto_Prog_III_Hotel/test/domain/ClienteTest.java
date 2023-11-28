@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +24,7 @@ public class ClienteTest {
 	public void testClienteConParam() {
 		cliente = new  Cliente("a", "a", "2", "2", "2",
 				LocalDate.now(), "2", "2", new ArrayList<Reserva> (),
-				LocalDate.now());
+				LocalDate.now(),new ImageIcon("src/Imagenes/imagenPerfilpng.png")) ;
 		assertNotNull(cliente);
 	}
 	

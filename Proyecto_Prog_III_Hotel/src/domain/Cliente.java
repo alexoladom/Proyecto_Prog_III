@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 public class Cliente extends Persona{
 
 	
@@ -17,9 +19,9 @@ public class Cliente extends Persona{
 	
 	public Cliente(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, List<Reserva> listaReservasCliente,
-			LocalDate ultimoLogin) {
+			LocalDate ultimoLogin,ImageIcon foto) {
 		
-		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono);
+		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono, foto);
 		
 		this.listaReservasCliente = listaReservasCliente;
 		this.ultimoLogin = ultimoLogin;

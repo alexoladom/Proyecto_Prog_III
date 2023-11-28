@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.swing.ImageIcon;
+
 public abstract class Persona implements Serializable{
 
 	//Clase principal persona de donde heredaran cliente y trabajador
@@ -23,10 +25,11 @@ public abstract class Persona implements Serializable{
 	protected LocalDate fNacimiento;
 	protected String contraseña;
 	protected String telefono;
+	protected ImageIcon fotoPerfil;
 	
 	
 	public Persona(String dni, String nombre, String apellido1, String email, String direccion,
-			LocalDate fNacimiento, String contraseña, String telefono) {
+			LocalDate fNacimiento, String contraseña, String telefono, ImageIcon fotoPerfil) {
 		super();
 		this.dni = dni;
 		this.nombre = nombre;
@@ -36,6 +39,7 @@ public abstract class Persona implements Serializable{
 		this.fNacimiento = fNacimiento;
 		this.contraseña = contraseña;
 		this.telefono = telefono;
+		this.fotoPerfil = fotoPerfil;
 	}
 	
 	public Persona() {
@@ -48,6 +52,16 @@ public abstract class Persona implements Serializable{
 		this.fNacimiento = null;
 		this.contraseña = "";
 		this.telefono = "";
+		this.setFotoPerfil(new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+	}
+	
+
+	public ImageIcon getFotoPerfil() {
+		return fotoPerfil;
+	}
+
+	public void setFotoPerfil(ImageIcon fotoPerfil) {
+		this.fotoPerfil = fotoPerfil;
 	}
 
 	public String getDni() {
