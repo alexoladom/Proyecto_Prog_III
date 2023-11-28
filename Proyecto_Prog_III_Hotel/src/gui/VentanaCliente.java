@@ -283,7 +283,7 @@ public class VentanaCliente extends JFrame{
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
-					new VentanaHotel(datos);
+					new VentanaHotel(datos,reserva);
 				});
 				
 			}
@@ -314,7 +314,7 @@ public class VentanaCliente extends JFrame{
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
-					new VentanaHotel(datos);
+					new VentanaHotel(datos,reserva);
 				});
 				
 				

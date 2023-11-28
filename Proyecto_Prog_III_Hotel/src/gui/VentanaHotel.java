@@ -68,7 +68,6 @@ public class VentanaHotel extends JFrame{
 		
 		//Creación de la tabla A
 		String [] titulos = {"Estado ocupación","nº Planta","nº Habitacion"};
-		
 		class MiModeloA extends AbstractTableModel{
 
 		
@@ -295,7 +294,6 @@ public class VentanaHotel extends JFrame{
 		listaReservas = new JList<Habitacion>(modeloLista);
 
 	   
-//	    getContentPane().add(new JScrollPane(listaReservas), BorderLayout.SOUTH);
 		getContentPane().add(pBotones, BorderLayout.EAST);
 		getContentPane().add(pArbol, BorderLayout.WEST);
 		JPanel pAuxiliar = new JPanel();
@@ -334,8 +332,29 @@ public class VentanaHotel extends JFrame{
 		        //JList
 		        if(tablaA.getSelectedRow()!=-1) {
 			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+			        if(modeloLista.contains(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()))) {
+			        	System.err.println("La reserva ya esta añadida en la Planta A");
+			        }else {
+			        	modeloLista.addElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+			        }
 		        }
-		        modeloLista.addAll(reserva.getListaHabitacionesReservadas());//Para los elementos de la lista
+		        if(tablaB.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+			        if(modeloLista.contains(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()))) {
+			        	System.err.println("La reserva ya esta añadida en la Planta B");
+			        }else {
+			        	modeloLista.addElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+			        }
+		        }
+		        if(tablaC.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+			        if(modeloLista.contains(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()))) {
+			        	System.err.println("La reserva ya esta añadida en la Planta C");
+			        }else {
+			        	modeloLista.addElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+			        }
+		        }
+		        
 		        listaReservas.setModel(modeloLista);
 		    }
 		});
@@ -360,10 +379,21 @@ public class VentanaHotel extends JFrame{
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), false);
 		        tablaComedor.repaint();
 		        //Jlist
-		        int index = listaReservas.getSelectedIndex();
-	            if (index != -1) {
-	                modeloLista.removeElementAt(index);
-	            }
+		        if(tablaA.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+			        modeloLista.removeElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+		        }
+		        if(tablaB.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+			        modeloLista.removeElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+		        }
+		        if(tablaC.getSelectedRow()!=-1) {
+			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+			        modeloLista.removeElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+		        }
+		        listaReservas.setModel(modeloLista);
+		        listaReservas.repaint();
+		       
 			}
 		});
 		
