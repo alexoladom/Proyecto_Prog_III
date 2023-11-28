@@ -268,11 +268,13 @@ public class VentanaCliente extends JFrame{
 			        if(ini && fin) {
 						
 			        	modeloListaReservas.addElement(reserva);
-			        	cliente.getListaReservasCliente().add(reserva);
+			        	if(!cliente.getListaReservasCliente().contains(reserva)) {
+							cliente.getListaReservasCliente().add(reserva);
+						}
 			        	datos.getListaReservas().add(reserva);
 			        	System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
 			        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
-			        	JOptionPane.showMessageDialog(bCancelarReserva, "Reserva Guardada");
+			        	JOptionPane.showMessageDialog(this, "Reserva Guardada");
 			        	reserva = new Reserva();
 			        	
 			        }
@@ -282,7 +284,7 @@ public class VentanaCliente extends JFrame{
 					reserva.setCliente(cliente);
 					System.out.println("ID de la reserva creada ->"+reserva.getId());
 					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-				        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+				    cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
