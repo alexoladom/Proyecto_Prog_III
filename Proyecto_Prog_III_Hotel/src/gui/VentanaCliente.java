@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -51,6 +53,7 @@ import domain.Reserva;
 
 public class VentanaCliente extends JFrame{
 
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	private static final long serialVersionUID = 1L;
 	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pPerfil,pCambiarPerfil,pBotonesVerReservas;
 	protected JList<Reserva> listaReservas;
@@ -83,6 +86,7 @@ public class VentanaCliente extends JFrame{
 
 			
 			public void init() {
+				logger.info("INIFORMACION: inicializado el panel crear/editar reserva");
 				setVisible(false);
 				setLayout(new BorderLayout());
 				lblFechaIni = new JLabel("Fecha inicial: ",SwingConstants.CENTER);
@@ -293,7 +297,11 @@ public class VentanaCliente extends JFrame{
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
-					new VentanaHotel(datos,reserva);
+					reserva.setCliente(cliente);
+					if(!cliente.getListaReservasCliente().contains(reserva)) {
+						cliente.getListaReservasCliente().add(reserva);
+					}
+					new VentanaHotel(datos,reserva,cliente);
 				});
 				
 			}
@@ -324,7 +332,10 @@ public class VentanaCliente extends JFrame{
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
-					new VentanaHotel(datos,reserva);
+					if (!cliente.getListaReservasCliente().contains(reserva)) {
+						cliente.getListaReservasCliente().add(reserva);
+					}
+					new VentanaHotel(datos,reserva,cliente);
 				});
 				
 				
@@ -366,6 +377,7 @@ public class VentanaCliente extends JFrame{
 
                  System.out.println("Fichero seleccionado: " + file.toString());
              }
+             logger.info("INFORMACION: cambiada la foto de perfil");
 		});
 		
 			
@@ -527,6 +539,7 @@ public class VentanaCliente extends JFrame{
 		        cliente.setfNacimiento(fechaLocal);
 	        }
 	        datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
+	        logger.info("INFORMACION: actualizados los datos del cliente");
 		});
 		pPerfil.add(botonEditar);
 		pPerfil.add(botonGuardar);
@@ -562,7 +575,7 @@ public class VentanaCliente extends JFrame{
 						try {
 							Thread.sleep(5);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							logger.log(Level.WARNING, "ERROR HILO INTERRUMPIDO");
 						}
 					}
 					for (j = 0; j < 255; j++) {
@@ -576,7 +589,7 @@ public class VentanaCliente extends JFrame{
 						try {
 							Thread.sleep(5);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							logger.log(Level.WARNING, "ERROR HILO INTERRUMPIDO");
 						}
 					}
 				}
@@ -725,10 +738,7 @@ public class VentanaCliente extends JFrame{
 				datos.guardarDatos();
 				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
-			
-			
-		
-			
+
 		});
 		add(pPerfil,BorderLayout.NORTH);
 		

@@ -75,10 +75,10 @@ public class VentanaParking extends JFrame {
 			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
 			        PlazaParking [][] distribucion =datos.getMapaParkingPorFecha().get(fechaLocal).getDistribucion();
 					if ((boolean) aValue==true) {
-						distribucion[rowIndex-1][columnIndex-1].setOcupada((boolean) aValue);
+						distribucion[rowIndex-1][columnIndex-1].setOcupada(true);
 						reserva.getListaPlazasParking().add(distribucion[rowIndex-1][columnIndex-1]);
 					}else if((boolean) aValue== false&& cliente.getListaReservasCliente().contains(reserva)){
-						distribucion[rowIndex-1][columnIndex-1].setOcupada((boolean)aValue);
+						distribucion[rowIndex-1][columnIndex-1].setOcupada(false);
 						reserva.getListaPlazasParking().remove(distribucion[rowIndex-1][columnIndex-1]);
 					}
 					

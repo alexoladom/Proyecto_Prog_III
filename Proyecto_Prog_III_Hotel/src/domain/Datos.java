@@ -12,11 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
 public class Datos {
 	
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	private static String FICHERO = "resources/data/datosHotel.dat";
 	protected List<Trabajador> listaTrabajadores;
 	protected List<Cliente> listaClientes;
@@ -288,12 +291,13 @@ public class Datos {
 				oos.writeObject(mapaParkingPorFecha);
 				oos.writeObject(mapaHabitaciones);
 				oos.writeObject(Reserva.getNumId());
-				System.out.println("GUARDANDO DATOS...");
+				logger.info("GUARDANDO DATOS...");
 
 			}catch (FileNotFoundException e) {
-			System.err.println("No se encontro el fichero");
+			logger.log(Level.WARNING, "FICHERO NO ENCONTRADO AL GUARDAR LOS DATOS");
+			
 			}catch (IOException e) {
-			System.err.println("Error al guardar los datos");
+			logger.log(Level.WARNING, "ERROR DE SALIDA AL GUARDAR LOS DATOS");
 		}
 	}
 	
@@ -313,15 +317,15 @@ public class Datos {
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
 			this.mapaHabitaciones=(Map<Integer, List<Habitacion>>) ois.readObject();
 			Reserva.setNumId((int) ois.readObject());
-			System.out.println("CARGANDO DATOS...");
+			logger.info("CARGANDO DATOS...");
 
 			
 		} catch (FileNotFoundException e) {
-			System.err.println("No se encontro el fichero");
+			logger.log(Level.WARNING, "FICHERO NO ENCONTRADO AL CARGAR LOS DATOS");
 		} catch (IOException e) {
-			System.err.println("Error al guardal los datos");
+			logger.log(Level.WARNING, "ERROR EN LA ENTRADA EL CARGAR LOS DATOS");
 		} catch (ClassNotFoundException e) {
-			System.err.println("Clase no encontrada");
+			logger.log(Level.WARNING, "CLASE NO ENCONTRADA AL CARGAR LOS DATOS");
 		}
 	}
 	

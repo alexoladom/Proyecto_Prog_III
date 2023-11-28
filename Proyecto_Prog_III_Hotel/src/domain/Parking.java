@@ -92,8 +92,6 @@ public class Parking implements Serializable{
 		for (Reserva reserva : cliente.getListaReservasCliente()) {
 			if (reserva.getListaPlazasParking().contains(plaza)||!plaza.isOcupada()) {
 				esta = true;
-			}else {
-				esta = false;
 			}
 		}
 		return esta;

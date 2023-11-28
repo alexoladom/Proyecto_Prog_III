@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import domain.Cliente;
 import domain.Datos;
 import domain.Habitacion;
 import domain.HabitacionSimple;
@@ -50,7 +51,7 @@ public class VentanaHotel extends JFrame{
 	private DefaultListModel<Habitacion> modeloLista;
 	private JList<Habitacion> listaReservas;
 	
-	public VentanaHotel(Datos datos,Reserva reserva) {
+	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente) {
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,800);
