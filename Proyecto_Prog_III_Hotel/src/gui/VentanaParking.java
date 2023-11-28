@@ -331,16 +331,10 @@ public class VentanaParking extends JFrame {
 			}
 		});
         addWindowListener(new WindowAdapter() {
-			
-			@Override
-			public void windowOpened(WindowEvent e) {
-				datos.cargarDatos();
-				tabla.repaint();
-			}
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-//				datos.guardarDatos();
+				datos.guardarDatos();
 				
 			}
 		});

@@ -18,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -536,19 +535,8 @@ public class VentanaHotel extends JFrame{
 		pack();
 		setVisible(true);
 	}	
-	public static void main(String[] args) {
-		System.out.println("hola mundo!");
-		Datos datos = new Datos();
-		datos.inicializarDatos();
+	
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new VentanaHotel(datos,new Reserva());
-				
-			}
-		});
-		
-	}
+	
 	
 }

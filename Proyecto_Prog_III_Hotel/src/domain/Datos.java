@@ -20,7 +20,7 @@ public class Datos {
 	private static String FICHERO = "resources/data/datosHotel.dat";
 	protected List<Trabajador> listaTrabajadores;
 	protected List<Cliente> listaClientes;
-	protected Map<Integer, List<Habitacion>> MapaHabitaciones;
+	protected Map<Integer, List<Habitacion>> mapaHabitaciones;
 	protected List<Reserva> listaReservas;
 	protected List<Tarea> listaTareas;
 	protected List<Mesa> listaComedor;//Creacion de la lista del comedor
@@ -36,7 +36,7 @@ public class Datos {
 			Map<String, Trabajador> mapaTrabajadoresPorDNI,Map<LocalDate, Parking> mapaParkingPorFecha) {
 		this.listaTrabajadores = listaTrabajadores;
 		this.listaClientes = listaClientes;
-		this.MapaHabitaciones = MapaHabitaciones;
+		this.mapaHabitaciones = MapaHabitaciones;
 		this.listaReservas = listaReservas;
 		this.listaTareas = listaTareas;
 		this.listaComedor = listaComedor;//Comedor
@@ -48,7 +48,7 @@ public class Datos {
 	public Datos() {
 		this.listaTrabajadores = new ArrayList<Trabajador>();
 		this.listaClientes = new ArrayList<Cliente>();
-		this.MapaHabitaciones = new HashMap<Integer, List<Habitacion>>();
+		this.mapaHabitaciones = new HashMap<Integer, List<Habitacion>>();
 		this.listaReservas = new ArrayList<Reserva>();
 		this.listaTareas = new ArrayList<Tarea>();
 		this.listaComedor = new ArrayList<Mesa>();//Comedor
@@ -141,11 +141,7 @@ public class Datos {
 		for (int i = 0; i < 15; i++) {
 			mapaParkingPorFecha.put(LocalDate.now().plusDays(i), new Parking());
 		}
-		
-		
-		
-		
-		
+
 	}
 	
 	public Map<String, Trabajador> getMapaTrabajadoresPorDNI() {
@@ -173,7 +169,7 @@ public class Datos {
 	}
 
 	public Map<Integer, List<Habitacion>> getMapaHabitaciones() {
-		return MapaHabitaciones;
+		return mapaHabitaciones;
 	}
 	
 	public List<Mesa> getListaComedor() {//Comedor
@@ -185,7 +181,7 @@ public class Datos {
 	}
 
 	public void setMapaHabitaciones(Map<Integer, List<Habitacion>> mapaHabitaciones) {
-		MapaHabitaciones = mapaHabitaciones;
+		this.mapaHabitaciones = mapaHabitaciones;
 	}
 
 	public List<Reserva> getListaReservas() {
@@ -254,7 +250,7 @@ public class Datos {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(MapaHabitaciones, listaClientes, listaComedor, listaReservas, listaTareas,
+		return Objects.hash(mapaHabitaciones, listaClientes, listaComedor, listaReservas, listaTareas,
 				listaTrabajadores, mapaClientesPorDNI, mapaParkingPorFecha, mapaTrabajadoresPorDNI);
 	}
 
@@ -267,7 +263,7 @@ public class Datos {
 		if (getClass() != obj.getClass())
 			return false;
 		Datos other = (Datos) obj;
-		return Objects.equals(MapaHabitaciones, other.MapaHabitaciones)
+		return Objects.equals(mapaHabitaciones, other.mapaHabitaciones)
 				&& Objects.equals(listaClientes, other.listaClientes)
 				&& Objects.equals(listaComedor, other.listaComedor)
 				&& Objects.equals(listaReservas, other.listaReservas) 
@@ -283,15 +279,16 @@ public class Datos {
 		try (FileOutputStream fos = new FileOutputStream (FICHERO);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)){
 				oos.writeObject(listaClientes);
-				oos.writeObject(MapaHabitaciones);
+				oos.writeObject(mapaHabitaciones);
 				oos.writeObject(listaReservas);
 				oos.writeObject(listaTareas);
 				oos.writeObject(listaTrabajadores);
 				oos.writeObject(mapaClientesPorDNI);
 				oos.writeObject(mapaTrabajadoresPorDNI);
 				oos.writeObject(mapaParkingPorFecha);
+				oos.writeObject(mapaHabitaciones);
 				oos.writeObject(Reserva.getNumId());
-
+				System.out.println("GUARDANDO DATOS...");
 
 			}catch (FileNotFoundException e) {
 			System.err.println("No se encontro el fichero");
@@ -307,14 +304,16 @@ public class Datos {
 			ObjectInputStream ois = new ObjectInputStream(fis)){
 			
 			this.listaClientes = (List<Cliente>) ois.readObject();
-			this.MapaHabitaciones = (Map<Integer, List<Habitacion>>) ois.readObject();
+			this.mapaHabitaciones = (Map<Integer, List<Habitacion>>) ois.readObject();
 			this.listaReservas = (List<Reserva>) ois.readObject();
 			this.listaTareas = (List<Tarea>) ois.readObject();
 			this.listaTrabajadores = (List<Trabajador>) ois.readObject();
 			this.mapaClientesPorDNI= (Map<String, Cliente>) ois.readObject();
 			this.mapaTrabajadoresPorDNI = (Map<String, Trabajador>) ois.readObject();
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
+			this.mapaHabitaciones=(Map<Integer, List<Habitacion>>) ois.readObject();
 			Reserva.setNumId((int) ois.readObject());
+			System.out.println("CARGANDO DATOS...");
 
 			
 		} catch (FileNotFoundException e) {

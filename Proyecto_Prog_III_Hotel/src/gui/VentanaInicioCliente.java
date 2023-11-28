@@ -215,12 +215,6 @@ public class VentanaInicioCliente extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			
 			@Override
-			public void windowOpened(WindowEvent e) {
-				datos.cargarDatos();
-				logger.info("Se cargan los datos");
-			}
-		
-			@Override
 			public void windowClosing(WindowEvent e) {
 				datos.guardarDatos();
 				logger.info("Se guardan los datos");

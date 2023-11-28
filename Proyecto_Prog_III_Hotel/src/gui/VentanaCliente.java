@@ -66,7 +66,7 @@ public class VentanaCliente extends JFrame{
 		if (cliente.getFotoPerfil()!=null) {
 			setIconImage(cliente.getFotoPerfil().getImage());
 		}
-		System.out.println(cliente.getListaReservasCliente().size());
+		System.out.println("Tamaño de la lista de reservas del cliente ->"+cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(700,300);
 		setLocationRelativeTo(null);
@@ -721,6 +721,7 @@ public class VentanaCliente extends JFrame{
 			@Override
 			public void windowClosing(WindowEvent e) {
 				datos.guardarDatos();
+				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
 			
 			
