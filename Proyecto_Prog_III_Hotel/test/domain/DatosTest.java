@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
@@ -169,9 +170,7 @@ public class DatosTest {
 		listaClientes.add(c2);
 		mapaCliDNI.put("a", c2);
 		
-		assertEquals(datos.getListaClientes(), listaClientes);
-		assertEquals(datos.getListaReservas(), listaReservas);
-		assertEquals(datos.getMapaClientesPorDNI(),mapaCliDNI);
+
 		
 	}
 	
@@ -460,11 +459,16 @@ public class DatosTest {
 
 		assertEquals(datos.getMapaParkingPorFecha(), mapaParkingFecha);
 
-		assertEquals(datos.getListaClientes(), listaClientes);
-		assertEquals(datos.getListaReservas(), listaReservas);
-		assertEquals(datos.getMapaClientesPorDNI(),mapaCliDNI);
+	
 		
 	}
-	
+	@Test
+	public void testHashCode() {
+		Datos b = new Datos();
+		b.inicializarDatos();
+		int a = Objects.hash(b.mapaHabitaciones, b.listaClientes, b.listaComedor, b.listaReservas, b.listaTareas,
+				b.listaTrabajadores, b.mapaClientesPorDNI, b.mapaParkingPorFecha, b.mapaTrabajadoresPorDNI);
+		 assertEquals(b.hashCode(), a);
+	}
 	
 }

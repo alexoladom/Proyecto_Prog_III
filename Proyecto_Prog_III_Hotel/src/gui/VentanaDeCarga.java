@@ -82,6 +82,7 @@ public class VentanaDeCarga extends JFrame{
 						
 						@Override
 						public void run() {
+							datos.cargarDatos();
 							new VentanaSeleccion(datos);
 							logger.info("Se carga la Ventana de seleccion");
 							

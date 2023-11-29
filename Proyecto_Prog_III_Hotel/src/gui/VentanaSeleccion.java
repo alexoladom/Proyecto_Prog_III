@@ -25,7 +25,7 @@ public class VentanaSeleccion extends JFrame{
 	public VentanaSeleccion(Datos datos) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-
+		
 		botonCerrar = new JButton("CERRAR");
 		botonCliente = new JButton("SOY CLIENTE");
 		botonTrabajador = new JButton("SOY TRABAJADOR");

@@ -147,13 +147,6 @@ public abstract class Persona implements Serializable{
 		&& Objects.equals(fNacimiento, other.fNacimiento) && Objects.equals(nombre, other.nombre);
 	}
 
-	@Override
-	public String toString() {
-		return String.format(
-				"Persona %s, %s, %s, %s, %s, %s, %s",
-				dni, nombre, apellido1, email, direccion, fNacimiento, telefono);
-	}
-	
 	
 	
 	

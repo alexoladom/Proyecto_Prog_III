@@ -49,6 +49,6 @@ public class ClienteTest {
 		
 		assertEquals(s, cliente.toString());
 	}
-	
+
 	
 }

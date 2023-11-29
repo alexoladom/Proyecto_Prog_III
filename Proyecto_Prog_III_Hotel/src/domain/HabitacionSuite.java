@@ -19,7 +19,8 @@ public class HabitacionSuite extends Habitacion{
 		return numCamas;
 	}
 
-	public static double getPreciopornoche() {
+	@Override
+	public double getPrecioPorNoche() {
 		return precioPorNoche;
 	}
 	
