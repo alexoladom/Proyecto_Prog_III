@@ -65,4 +65,13 @@ public class TrabajadorTest {
 		trabajador.setListaTareasPorHacer(null);
 		assertNull(trabajador.getListaTareasPorHacer());
 	}
+	
+	@Test 
+	public void testToString() {
+		String a = "Trabajador [salario=" + trabajador.salario + ", numHorasTrabajadas=" + trabajador.numHorasTrabajadas + ", dni=" + trabajador.dni
+		+ ", nombre=" + trabajador.nombre + ", apellido1=" + trabajador.apellido1 + ", email=" + trabajador.email + ", telefono=" + trabajador.telefono
+		+ "]";
+		
+		assertEquals(a, trabajador.toString());
+	}
 }
