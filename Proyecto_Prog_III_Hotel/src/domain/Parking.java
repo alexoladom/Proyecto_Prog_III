@@ -2,7 +2,6 @@ package domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Parking implements Serializable{
@@ -121,14 +120,6 @@ public class Parking implements Serializable{
 		Parking other = (Parking) obj;
 		return Objects.equals(fecha, other.fecha) && id == other.id;
 	}
-	//Metodo para visualizar las plazas disponibles del parking 
-	//True si esta ocupado, false si esta libre
-	public String parkinigToString() {
-		String a = "";
-		for (int i = 0; i < 5; i++) {
-			a = a+ Arrays.toString(distribucion[i])+ "\n";	
-			}
-		return a;
-	}
+	
 	
 }
