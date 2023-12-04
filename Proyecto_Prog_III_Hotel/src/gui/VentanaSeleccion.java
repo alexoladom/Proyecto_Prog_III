@@ -22,7 +22,9 @@ public class VentanaSeleccion extends JFrame{
 	protected JTextField textoIdentificacion;
 	protected JLabel lblIdentificacion, lblImagenTrabajador, lblImagenCliente;
 	
-	public VentanaSeleccion(Datos datos) {
+	public VentanaSeleccion(Datos datos,boolean seleccionDatos) {
+		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		
@@ -59,7 +61,7 @@ public class VentanaSeleccion extends JFrame{
 			SwingUtilities.invokeLater(new Runnable() {
 			    @Override
 				public void run() {
-					new VentanaInicioTrabajador(datos);	
+					new VentanaInicioTrabajador(datos,seleccionDatos);	
 					logger.info("Se ha abierto la ventana de inicio del trabajador");
 				}
 			});	
@@ -70,7 +72,7 @@ public class VentanaSeleccion extends JFrame{
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new VentanaInicioCliente(datos);
+					new VentanaInicioCliente(datos,seleccionDatos);
 					logger.info("Se ha abierto la ventana de inicio del cliente");
 				}
 			});

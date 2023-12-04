@@ -144,6 +144,7 @@ public class Datos {
 		for (int i = 0; i < 15; i++) {
 			mapaParkingPorFecha.put(LocalDate.now().plusDays(i), new Parking());
 		}
+		logger.info("DATOS INICIALIZADOS");
 
 	}
 	

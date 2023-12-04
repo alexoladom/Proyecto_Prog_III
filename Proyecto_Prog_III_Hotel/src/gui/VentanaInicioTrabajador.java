@@ -27,7 +27,9 @@ public class VentanaInicioTrabajador extends JFrame{
 	protected JPasswordField textoContra;
 	protected Datos datos;
 
-	public VentanaInicioTrabajador(Datos datos) {
+	public VentanaInicioTrabajador(Datos datos,boolean seleccionDatos) {
+		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
@@ -64,7 +66,7 @@ public class VentanaInicioTrabajador extends JFrame{
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos);	
+					new VentanaSeleccion(datos,seleccionDatos);	
 					logger.info("Se vuelve a la ventana de selección");
 				}
 			});

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -52,6 +53,8 @@ public class VentanaHotel extends JFrame{
 	private JList<Habitacion> listaReservas;
 	
 	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente) {
+		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(h.getImage());
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,800);

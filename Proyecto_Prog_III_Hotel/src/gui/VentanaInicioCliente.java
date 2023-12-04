@@ -38,7 +38,9 @@ public class VentanaInicioCliente extends JFrame {
 	protected Map<String, Cliente> mapaClientesPorDNI;
 	protected Datos datos;
 
-	public VentanaInicioCliente(Datos datos) {
+	public VentanaInicioCliente(Datos datos, boolean seleccionDatos) {
+		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
@@ -127,7 +129,7 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos);	
+					new VentanaSeleccion(datos,seleccionDatos);	
 					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
@@ -140,7 +142,7 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaInicioCliente(datos);	
+					new VentanaInicioCliente(datos,seleccionDatos);	
 					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
@@ -181,12 +183,11 @@ public class VentanaInicioCliente extends JFrame {
 				cliente.setTelefono(textoTelefono.getText());
 				datos.getListaClientes().add(cliente);
 				datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
-				datos.guardarDatos();
 				SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
 					public void run() {
-						new VentanaInicioCliente(datos);	
+						new VentanaInicioCliente(datos,seleccionDatos);	
 					}
 				});
 				
@@ -200,7 +201,7 @@ public class VentanaInicioCliente extends JFrame {
 				if(datos.comprobarContraseñaCliente(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 					logger.info("Un usuario inicia sesión");
-					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni));
+					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni),seleccionDatos);
 					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
@@ -216,8 +217,11 @@ public class VentanaInicioCliente extends JFrame {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				datos.guardarDatos();
-				logger.info("Se guardan los datos");
+				if(seleccionDatos) {
+					datos.guardarDatos();
+					logger.info("Se guardan los datos");
+				}
+				
 			}
 			
 			

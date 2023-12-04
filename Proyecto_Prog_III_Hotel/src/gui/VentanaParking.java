@@ -49,7 +49,7 @@ public class VentanaParking extends JFrame {
 	protected Datos datos;
 	protected JDatePicker datePicker;
 
-	public VentanaParking(Datos datos, Reserva reserva, Cliente cliente) {
+	public VentanaParking(Datos datos, Reserva reserva, Cliente cliente,boolean seleccionDatos) {
 		
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -284,7 +284,9 @@ public class VentanaParking extends JFrame {
 				for (PlazaParking string : reserva.getListaPlazasParking()) {
 					System.out.println(string);
 				}
-				datos.guardarDatos();
+				if(seleccionDatos) {
+					datos.guardarDatos();
+				}
 				dispose();
 			}
 		});
@@ -334,8 +336,10 @@ public class VentanaParking extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				datos.guardarDatos();
-				
+				if(seleccionDatos) {
+					datos.guardarDatos();
+				}
+	
 			}
 		});
         ImageIcon icono = new ImageIcon("src/Imagenes/parkingIcono.png");

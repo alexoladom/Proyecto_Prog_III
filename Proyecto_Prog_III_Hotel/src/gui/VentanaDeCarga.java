@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
@@ -24,11 +26,19 @@ public class VentanaDeCarga extends JFrame{
 	protected JPanel panelAbajo, panelCentro, panelFoto;
 	protected JProgressBar progressBar;
 	protected JLabel lblImagenHotel;
+	protected boolean seleccion = true; //true si es desde el fichero false si es desde los datos de prueba
+	protected boolean flagAdvertencia = true;
 	
 	public VentanaDeCarga(Datos datos){
+		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500,500);
-		setTitle("Aplicación de Gestion para un Hotel");
+		setTitle("HOTEL");
+		JComboBox<String> combo = new JComboBox<>();
+		combo.addItem("Fichero de datos");
+		combo.addItem("Datos de prueba");
+		
 		
 		botonCerrar = new JButton("CERRAR");
 		botonEntrar = new JButton("ENTRAR");
@@ -82,8 +92,12 @@ public class VentanaDeCarga extends JFrame{
 						
 						@Override
 						public void run() {
-							datos.cargarDatos();
-							new VentanaSeleccion(datos);
+							if(seleccion) {
+								datos.cargarDatos();
+							}else {
+								datos.inicializarDatos();
+							}
+							new VentanaSeleccion(datos,seleccion);
 							logger.info("Se carga la Ventana de seleccion");
 							
 						}
@@ -97,6 +111,25 @@ public class VentanaDeCarga extends JFrame{
         });
 
 		setVisible(true);
+		setLocationRelativeTo(null);
+		ImageIcon imagenDatos = new ImageIcon("src/Imagenes/imagen_datos.png");
+		Image imagenDatosEscala = imagenDatos.getImage().getScaledInstance(45, 45,Image.SCALE_SMOOTH);
+		combo.addActionListener((e)->{
+			if(combo.getSelectedItem()=="Datos de prueba"&&flagAdvertencia) {
+				JOptionPane.showMessageDialog(this, "ADVERTENCIA: LOS DATOS DE PRUEBA "
+						+ "NO SE GUARDARÁN \n                  DESPUES DE USAR LA APLICACIÓN");
+				flagAdvertencia = false;		
+			}
+		});
+		int seleccionDatos = JOptionPane.showConfirmDialog(this,combo,"Elija el origen de los datos", JOptionPane.OK_CANCEL_OPTION, 
+				JOptionPane.QUESTION_MESSAGE,new ImageIcon(imagenDatosEscala));
+		if (seleccionDatos==JOptionPane.YES_OPTION) {
+			if(combo.getSelectedItem()=="Fichero de datos") {
+				seleccion=true;
+			}else {
+				seleccion= false;
+			}
+		}
 	}
 	
 

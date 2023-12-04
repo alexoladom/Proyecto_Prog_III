@@ -65,7 +65,7 @@ public class VentanaCliente extends JFrame{
 	
 	
 
-	public VentanaCliente(Datos datos, Cliente cliente) {
+	public VentanaCliente(Datos datos, Cliente cliente, boolean seleccionDatos) {
 		if (cliente.getFotoPerfil()!=null) {
 			setIconImage(cliente.getFotoPerfil().getImage());
 		}
@@ -292,7 +292,7 @@ public class VentanaCliente extends JFrame{
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
-					new VentanaParking(datos,reserva,cliente);
+					new VentanaParking(datos,reserva,cliente,seleccionDatos);
 					
 				});
 				
@@ -328,7 +328,7 @@ public class VentanaCliente extends JFrame{
 						cliente.getListaReservasCliente().add(reserva);
 					}
 					
-					new VentanaParking(datos,reserva,cliente);
+					new VentanaParking(datos,reserva,cliente,seleccionDatos);
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
@@ -708,9 +708,11 @@ public class VentanaCliente extends JFrame{
 		});
 		
 		cerrarSesion.addActionListener((e)->{
-			datos.guardarDatos();
+			if(seleccionDatos) {
+				datos.guardarDatos();
+			}	
 			dispose();
-			new VentanaInicioCliente(datos);
+			new VentanaInicioCliente(datos,seleccionDatos);
 		});
 		
 		informacionCliente.addActionListener((e)->{
@@ -735,7 +737,9 @@ public class VentanaCliente extends JFrame{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				datos.guardarDatos();
+				if(seleccionDatos) {
+					datos.guardarDatos();
+				}
 				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
 
