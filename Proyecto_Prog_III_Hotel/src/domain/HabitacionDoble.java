@@ -21,7 +21,6 @@ public class HabitacionDoble extends Habitacion{
 		return numCamas;
 	}
 
-	@Override
 	public double getPrecioPorNoche() {
 		return precioPorNoche;
 	}

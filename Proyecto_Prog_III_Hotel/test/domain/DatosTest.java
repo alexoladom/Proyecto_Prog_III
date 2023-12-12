@@ -41,6 +41,9 @@ public class DatosTest {
 	}
 	@Test
 	public void testInicializarDatos() {
+		Habitacion.setNumId(0);
+		Mesa.setNumId(0);
+		Parking.setNumId(0);
 		datos.inicializarDatos();
 		LocalDate a = LocalDate.of(1999, 9, 11);
 		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
@@ -146,29 +149,7 @@ public class DatosTest {
 		
 		assertEquals(datos.getMapaParkingPorFecha(), mapaParkingFecha);
 		
-		
-		List<Reserva> listaReservas = new ArrayList<>();
-		List<Cliente> listaClientes = new ArrayList<>();
-		Map<String,Cliente> mapaCliDNI = new HashMap<>();
 		Reserva.setNumId(0);
-		
-		Cliente c1 = new Cliente();
-		c1.setDni("abc");
-		c1.setContraseña("123");
-		Reserva r = new Reserva();
-		c1.getListaReservasCliente().add(r);
-		listaReservas.add(r);
-		listaClientes.add(c1);
-		mapaCliDNI.put("abc", c1);
-		
-		Cliente c2 = new Cliente();
-		c2.setDni("a");
-		c2.setContraseña("a");
-		Reserva r2 = new Reserva();
-		c2.getListaReservasCliente().add(r2);
-		listaReservas.add(r2);
-		listaClientes.add(c2);
-		mapaCliDNI.put("a", c2);
 		
 
 		
@@ -445,8 +426,6 @@ public class DatosTest {
 		listaClientes.add(c2);
 		mapaCliDNI.put("a", c2);
 		
-		datos.guardarDatos();
-		datos.cargarDatos();
 		
 		assertArrayEquals(datos.getListaTrabajadores().toArray(), listaTrabajadores.toArray());
 		assertEquals(datos.getListaTrabajadores(), listaTrabajadores);

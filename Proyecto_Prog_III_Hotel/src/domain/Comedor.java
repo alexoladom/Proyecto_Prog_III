@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comedor {
@@ -15,8 +16,23 @@ public class Comedor {
 		this.completo = completo;
 		this.listaMesas = listaMesas;
 	}
+	
+	
+	public boolean isCompleto() {
+		return completo;
+	}
+
+
+	public void setCompleto(boolean completo) {
+		this.completo = completo;
+	}
+
+
 	public Comedor() {
-		super();
+		numId++;
+		this.id = numId;
+		this.completo= false;
+		this.listaMesas = new ArrayList<Mesa>();
 	}
 	public static int getNumId() {
 		return numId;

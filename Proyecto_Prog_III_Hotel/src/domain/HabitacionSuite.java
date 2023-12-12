@@ -18,12 +18,11 @@ public class HabitacionSuite extends Habitacion{
 	public static int getNumcamas() {
 		return numCamas;
 	}
-
-	@Override
+	
 	public double getPrecioPorNoche() {
 		return precioPorNoche;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("HabitacionSuite %s, ocupado=%s, planta=%s, %s]", id, ocupado, planta, numero);

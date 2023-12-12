@@ -74,7 +74,7 @@ public abstract class Habitacion implements Serializable{
 	}
 	
 	public abstract double getPrecioPorNoche();
-		
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, numero, planta);
