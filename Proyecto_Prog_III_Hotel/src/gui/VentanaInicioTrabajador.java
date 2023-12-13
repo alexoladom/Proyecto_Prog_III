@@ -79,6 +79,15 @@ public class VentanaInicioTrabajador extends JFrame{
 				if(datos.comprobarContraseñaTrabajador(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 					logger.info("El trabajador ha iniciado sesión");
+					SwingUtilities.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							new VentanaTrabajador(datos, datos.getMapaTrabajadoresPorDNI().get(dni),seleccionDatos);
+							
+						}
+					});
+					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
 					logger.warning("La contraseña del trabajador es incorrecta");
