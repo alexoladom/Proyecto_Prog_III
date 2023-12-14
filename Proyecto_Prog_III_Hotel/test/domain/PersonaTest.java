@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 
 import java.time.LocalDate;
 
-import javax.swing.ImageIcon;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,9 +19,8 @@ public class PersonaTest {
 	
 	@Test
 	public void testGetFotoPerfil() {
-		ImageIcon a = new ImageIcon("src/Imagenes/imagenPerfilpng.png");
-		persona.setFotoPerfil(a);
-		assertEquals(a, persona.getFotoPerfil());
+		persona.setFotoPerfil("src/Imagenes/imagenPerfilpng.png");
+		assertEquals("src/Imagenes/imagenPerfilpng.png", persona.getFotoPerfil());
 	}
 	
 	@Test

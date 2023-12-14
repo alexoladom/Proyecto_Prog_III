@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.ImageIcon;
 
 public class Datos {
 	
@@ -65,17 +64,17 @@ public class Datos {
 	public void inicializarDatos() {
 		setFichero("resources/data/datosHotel.dat");
 		LocalDate a = LocalDate.of(1999, 9, 11);
-		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate b = LocalDate.of(1989, 7, 23);
-		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate c = LocalDate.of(1995, 3, 18);
-		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate d = LocalDate.of(1993, 2, 6);
-		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate e = LocalDate.of(1991, 1, 12);
-		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate f = LocalDate.of(2000, 3, 7);
-		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		getListaTrabajadores().add(t1);
 		getListaTrabajadores().add(t2);
 		getListaTrabajadores().add(t3);
@@ -87,16 +86,16 @@ public class Datos {
 		
 		//Creacion de clientes de prueba
 		
-		Cliente cliente1 = new Cliente("123456789A", "Juan", "Pérez", "juan@example.com", "Calle Principal 123", LocalDate.of(1990, 5, 15), "contraseña123", "555-1234", new ArrayList<>(), LocalDate.of(2023, 12, 1), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente2 = new Cliente("987654321B", "María", "González", "maria@example.com", "Avenida Secundaria 456", LocalDate.of(1985, 9, 25), "contraseña456", "555-5678", new ArrayList<>(), LocalDate.of(2023, 11, 28), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente3 = new Cliente("111222333C", "Pedro", "Martínez", "pedro@example.com", "Plaza Principal 789", LocalDate.of(1982, 3, 8), "contraseña789", "555-9012", new ArrayList<>(), LocalDate.of(2023, 12, 5), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente4 = new Cliente("444555666D", "Ana", "López", "ana@example.com", "Calle Secundaria 789", LocalDate.of(1995, 7, 12), "contraseña789", "555-7890", new ArrayList<>(), LocalDate.of(2023, 12, 10), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente5 = new Cliente("777888999E", "Luis", "Ramírez", "luis@example.com", "Avenida Principal 456", LocalDate.of(1988, 10, 20), "contraseña456", "555-2345", new ArrayList<>(), LocalDate.of(2023, 11, 30), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente6 = new Cliente("112233445F", "Laura", "García", "laura@example.com", "Calle Principal 567", LocalDate.of(1980, 12, 5), "contraseña567", "555-6789", new ArrayList<>(), LocalDate.of(2023, 12, 3), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente7 = new Cliente("998877665G", "Carlos", "Fernández", "carlos@example.com", "Avenida Secundaria 890", LocalDate.of(1992, 4, 18), "contraseña890", "555-0123", new ArrayList<>(), LocalDate.of(2023, 12, 8), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente8 = new Cliente("554433221H", "Elena", "Díaz", "elena@example.com", "Plaza Principal 234", LocalDate.of(1987, 8, 30), "contraseña234", "555-4567", new ArrayList<>(), LocalDate.of(2023, 12, 12), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente9 = new Cliente("678905432I", "Javier", "Hernández", "javier@example.com", "Calle Secundaria 567", LocalDate.of(1997, 2, 9), "contraseña567", "555-8901", new ArrayList<>(), LocalDate.of(2023, 12, 6), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
-		Cliente cliente10 = new Cliente("543216789J", "Sofía", "López", "sofia@example.com", "Avenida Principal 890", LocalDate.of(1983, 6, 22), "contraseña890", "555-2345", new ArrayList<>(), LocalDate.of(2023, 12, 15), new ImageIcon("src/Imagenes/imagenPerfilpng.png"));
+		Cliente cliente1 = new Cliente("123456789A", "Juan", "Pérez", "juan@example.com", "Calle Principal 123", LocalDate.of(1990, 5, 15), "contraseña123", "555-1234", new ArrayList<>(), LocalDate.of(2023, 12, 1), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente2 = new Cliente("987654321B", "María", "González", "maria@example.com", "Avenida Secundaria 456", LocalDate.of(1985, 9, 25), "contraseña456", "555-5678", new ArrayList<>(), LocalDate.of(2023, 11, 28), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente3 = new Cliente("111222333C", "Pedro", "Martínez", "pedro@example.com", "Plaza Principal 789", LocalDate.of(1982, 3, 8), "contraseña789", "555-9012", new ArrayList<>(), LocalDate.of(2023, 12, 5), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente4 = new Cliente("444555666D", "Ana", "López", "ana@example.com", "Calle Secundaria 789", LocalDate.of(1995, 7, 12), "contraseña789", "555-7890", new ArrayList<>(), LocalDate.of(2023, 12, 10), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente5 = new Cliente("777888999E", "Luis", "Ramírez", "luis@example.com", "Avenida Principal 456", LocalDate.of(1988, 10, 20), "contraseña456", "555-2345", new ArrayList<>(), LocalDate.of(2023, 11, 30), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente6 = new Cliente("112233445F", "Laura", "García", "laura@example.com", "Calle Principal 567", LocalDate.of(1980, 12, 5), "contraseña567", "555-6789", new ArrayList<>(), LocalDate.of(2023, 12, 3), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente7 = new Cliente("998877665G", "Carlos", "Fernández", "carlos@example.com", "Avenida Secundaria 890", LocalDate.of(1992, 4, 18), "contraseña890", "555-0123", new ArrayList<>(), LocalDate.of(2023, 12, 8), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente8 = new Cliente("554433221H", "Elena", "Díaz", "elena@example.com", "Plaza Principal 234", LocalDate.of(1987, 8, 30), "contraseña234", "555-4567", new ArrayList<>(), LocalDate.of(2023, 12, 12), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente9 = new Cliente("678905432I", "Javier", "Hernández", "javier@example.com", "Calle Secundaria 567", LocalDate.of(1997, 2, 9), "contraseña567", "555-8901", new ArrayList<>(), LocalDate.of(2023, 12, 6), "src/Imagenes/imagenPerfilpng.png");
+		Cliente cliente10 = new Cliente("543216789J", "Sofía", "López", "sofia@example.com", "Avenida Principal 890", LocalDate.of(1983, 6, 22), "contraseña890", "555-2345", new ArrayList<>(), LocalDate.of(2023, 12, 15), "src/Imagenes/imagenPerfilpng.png");
 		
 		
 		getListaClientes().add(cliente1);

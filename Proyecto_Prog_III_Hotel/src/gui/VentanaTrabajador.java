@@ -304,8 +304,7 @@ public class VentanaTrabajador extends JFrame {
 				
 				}
 				return null;
-			}
-			
+			}		
 			
 		}
 		
@@ -327,10 +326,7 @@ public class VentanaTrabajador extends JFrame {
 				}
 				return label;
 			}
-			
 		}
-		
-		
 		//Etitor de las columnas de fNacimiento y ultimoLogin
 		
 		class EditorTablaClientesReservas extends AbstractCellEditor implements TableCellEditor{

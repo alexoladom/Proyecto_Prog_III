@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 
 public class Trabajador extends Persona{
 
@@ -24,7 +23,7 @@ public class Trabajador extends Persona{
 	
 	public Trabajador(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, double salario, int numHorasTrabajadas,
-			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer, ImageIcon foto) {
+			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer, String foto) {
 		
 		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono,foto);
 		

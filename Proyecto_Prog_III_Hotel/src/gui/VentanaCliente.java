@@ -67,7 +67,7 @@ public class VentanaCliente extends JFrame{
 
 	public VentanaCliente(Datos datos, Cliente cliente, boolean seleccionDatos) {
 		if (cliente.getFotoPerfil()!=null) {
-			setIconImage(cliente.getFotoPerfil().getImage());
+			setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
 		}
 		System.out.println("Tamaño de la lista de reservas del cliente ->"+cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -368,10 +368,9 @@ public class VentanaCliente extends JFrame{
              int result = fileChooser.showOpenDialog(VentanaCliente.this);
              if (result == JFileChooser.APPROVE_OPTION) {
                  File file = fileChooser.getSelectedFile();
-                 ImageIcon imagen = new ImageIcon(file.getPath());
-                 cliente.setFotoPerfil(imagen);
-                 this.setIconImage(imagen.getImage());
-                 Image imagenPerfilEscala = imagen.getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH);
+                 cliente.setFotoPerfil(file.getPath());
+                 this.setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
+                 Image imagenPerfilEscala = (new ImageIcon(cliente.getFotoPerfil()).getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH));
                  menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
                  this.repaint();
 
