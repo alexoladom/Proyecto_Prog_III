@@ -27,6 +27,7 @@ public class BDmanager {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			conn.setAutoCommit(true);
 		} catch (ClassNotFoundException e) {
 			throw new BDexception("Error cargando el driver de la BD", e);
 		} catch (SQLException e) {
@@ -199,6 +200,9 @@ public class BDmanager {
 				reserva.setFechaInicio(LocalDate.parse(rs.getString("fInicio")));
 				reserva.setFechaFinal(LocalDate.parse(rs.getString("fFinal")));
 				reserva.setEstaPagado(rs.getBoolean("estaPagado"));
+				List<Habitacion> listaHabitaciones =new ArrayList<>();
+				listaHabitaciones.addAll(getHabitacionesDeReserva(reserva));
+				reserva.setListaHabitacionesReservadas(listaHabitaciones);
 				reservas.add(reserva);
 			}
 			
@@ -222,6 +226,10 @@ public class BDmanager {
 				reserva.setFechaInicio(LocalDate.parse(rs.getString("fInicio")));
 				reserva.setFechaFinal(LocalDate.parse(rs.getString("fFinal")));
 				reserva.setEstaPagado(rs.getBoolean("estaPagado"));
+				List<Habitacion> listaHabitaciones =new ArrayList<>();
+				listaHabitaciones.addAll(getHabitacionesDeReserva(reserva));
+				reserva.setListaHabitacionesReservadas(listaHabitaciones);
+				reserva.setCliente(cliente);
 				reservas.add(reserva);
 			}
 			
@@ -247,7 +255,9 @@ public class BDmanager {
 				reserva.setFechaInicio(LocalDate.parse(rs.getString("fInicio")));
 				reserva.setFechaFinal(LocalDate.parse(rs.getString("fFinal")));
 				reserva.setEstaPagado(rs.getBoolean("estaPagado"));
-				
+				List<Habitacion> listaHabitaciones =new ArrayList<>();
+				listaHabitaciones.addAll(getHabitacionesDeReserva(reserva));
+				reserva.setListaHabitacionesReservadas(listaHabitaciones);
 				return reserva;
 			} else {
 				Reserva reserva = new Reserva();
@@ -269,7 +279,6 @@ public class BDmanager {
 			stmt.setString(3, reserva.getFechaInicio().toString());
 			stmt.setString(4,reserva.getFechaFinal().toString());
 			stmt.setBoolean(5, reserva.isEstaPagado());
-			
 			
 			stmt.executeUpdate();
 			
@@ -307,13 +316,16 @@ public class BDmanager {
 //	
 //	
 //	
-//	
-//	
-//	
-//	
-//	
-//	
 //	Metodos para gestionar la consulta o guardado de trabajadores
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
 	
 	public List<Trabajador> getTrabajadores() throws BDexception {
 		List<Trabajador> trabajadores = new ArrayList<Trabajador>();
@@ -465,17 +477,20 @@ public class BDmanager {
 //	
 //	
 	
+	//Metodos para obtener habitaciones de distinto tipo
+	
 	public List<Habitacion> getHabitacionesSimples() throws BDexception {
 		List<Habitacion> habitaciones = new ArrayList<Habitacion>();
 		try (Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery("SELECT id, ocupado, planta,"
-					+ " numero FROM habitaciones WHERE tipo='Simple'");
+					+ " numero, idReserva FROM habitaciones WHERE tipo='Simple'");
 			while(rs.next()) {
 				HabitacionSimple habitacion = new HabitacionSimple();
 				habitacion.setId(rs.getInt("id"));
 				habitacion.setOcupado(rs.getBoolean("ocupado"));
 				habitacion.setPlanta(rs.getInt("planta"));
 				habitacion.setNumero(rs.getInt("numero"));
+				habitacion.setReserva(getReserva(rs.getInt("idReserva")));
 				habitaciones.add(habitacion);
 				
 			}
@@ -489,13 +504,14 @@ public class BDmanager {
 		List<Habitacion> habitaciones = new ArrayList<Habitacion>();
 		try (Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery("SELECT id, ocupado, planta,"
-					+ " numero FROM habitaciones WHERE tipo='Doble'");
+					+ " numero, idReserva FROM habitaciones WHERE tipo='Doble'");
 			while(rs.next()) {
 				HabitacionDoble habitacion = new HabitacionDoble();
 				habitacion.setId(rs.getInt("id"));
 				habitacion.setOcupado(rs.getBoolean("ocupado"));
 				habitacion.setPlanta(rs.getInt("planta"));
 				habitacion.setNumero(rs.getInt("numero"));
+				habitacion.setReserva(getReserva(rs.getInt("idReserva")));
 				habitaciones.add(habitacion);
 				
 			}
@@ -508,13 +524,14 @@ public class BDmanager {
 		List<Habitacion> habitaciones = new ArrayList<Habitacion>();
 		try (Statement stmt = conn.createStatement()) {
 			ResultSet rs = stmt.executeQuery("SELECT id, ocupado, planta,"
-					+ " numero FROM habitaciones WHERE tipo='Suite'");
+					+ " numero, idReserva FROM habitaciones WHERE tipo='Suite'");
 			while(rs.next()) {
 				HabitacionSuite habitacion = new HabitacionSuite();
 				habitacion.setId(rs.getInt("id"));
 				habitacion.setOcupado(rs.getBoolean("ocupado"));
 				habitacion.setPlanta(rs.getInt("planta"));
 				habitacion.setNumero(rs.getInt("numero"));
+				habitacion.setReserva(getReserva(rs.getInt("idReserva")));
 				habitaciones.add(habitacion);
 				
 			}
@@ -523,6 +540,29 @@ public class BDmanager {
 			throw new BDexception("Error obteniendo todas las habitaciones suites", e);
 		}
 	}
+	public List<Habitacion> getHabitacionesDeReserva(Reserva reserva) throws BDexception {
+		List<Habitacion> habitaciones = new ArrayList<Habitacion>();
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, ocupado, planta,"
+				+ " numero, idReserva FROM habitaciones WHERE idReserva=?")){
+			stmt.setInt(1, reserva.getId());
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				HabitacionSuite habitacion = new HabitacionSuite();
+				habitacion.setId(rs.getInt("id"));
+				habitacion.setOcupado(rs.getBoolean("ocupado"));
+				habitacion.setPlanta(rs.getInt("planta"));
+				habitacion.setNumero(rs.getInt("numero"));
+				habitacion.setReserva(reserva);
+				habitaciones.add(habitacion);
+				
+			}
+			return habitaciones;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todas las habitaciones suites", e);
+		}
+	}
+	
+	
 	
 	public List<Habitacion> getHabitaciones(){
 		List<Habitacion> lista = new ArrayList<>();
@@ -544,8 +584,8 @@ public class BDmanager {
 	
 	public Habitacion getHabitacion(int id) throws BDexception {
 		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, ocupado, planta,"
-				+ " numero, tipo FROM habitaciones WHERE id = ?")) {
-			
+				+ " numero, tipo, idReserva FROM habitaciones WHERE id = ?")) {
+			stmt.setInt(1, id);
 			Habitacion habitacion;
 			ResultSet rs = stmt.executeQuery();
 
@@ -562,6 +602,7 @@ public class BDmanager {
 				habitacion.setOcupado(rs.getBoolean("ocupado"));
 				habitacion.setPlanta(rs.getInt("planta"));
 				habitacion.setNumero(rs.getInt("numero"));
+				habitacion.setReserva(getReserva(rs.getInt("idReserva")));
 				
 				
 				return habitacion;
@@ -577,16 +618,17 @@ public class BDmanager {
 	}
 	
 	
-	//Metodo para guardar trabajador en la base de datos
+	//Metodo para guardar habitaciones en la base de datos
 	
 	public void guardarHabitacion(Habitacion habitacion) throws BDexception {
 		try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO habitaciones (id, ocupado, planta,"
-				+ " numero, tipo) VALUES (?, ?, ?, ?, ?)");
+				+ " numero, tipo, idReserva) VALUES (?, ?, ?, ?, ?, ?)");
 			Statement stmtForId = conn.createStatement()) {
 			stmt.setInt(1, habitacion.getId());
 			stmt.setBoolean(2, habitacion.isOcupado());
 			stmt.setInt(3, habitacion.getPlanta());
 			stmt.setInt(4,habitacion.getNumero());
+			
 			if(habitacion instanceof HabitacionSimple) {
 				stmt.setString(5, "Simple");
 			}else if(habitacion instanceof HabitacionDoble) {
@@ -595,6 +637,7 @@ public class BDmanager {
 				stmt.setString(5, "Suite");
 			}
 			
+			stmt.setInt(6, habitacion.getReserva().getId());
 			stmt.executeUpdate();
 			
 			
@@ -604,11 +647,11 @@ public class BDmanager {
 	}
 	
 	
-	//Metodo para actualizar trabajadores
+	//Metodo para actualizar habitaciones
 	
 	public void actualizarHabitacion(Habitacion habitacion) throws BDexception {
 		try (PreparedStatement stmt = conn.prepareStatement("UPDATE habitaciones SET ocupado=?, planta=?"
-				+ ", numero=?, tipo=? WHERE id=?")) {
+				+ ", numero=?, tipo=?, idReserva=? WHERE id=?")) {
 			stmt.setBoolean(1, habitacion.isOcupado());
 			stmt.setInt(2, habitacion.getPlanta());
 			stmt.setInt(3, habitacion.getNumero());
@@ -620,7 +663,8 @@ public class BDmanager {
 				stmt.setString(4, "Suite");
 			}
 			
-			stmt.setInt(5, habitacion.getId());
+			stmt.setInt(5, habitacion.getReserva().getId());
+			stmt.setInt(6, habitacion.getId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new BDexception("No se pudo guardar la habitacion en la BD", e);
@@ -637,26 +681,181 @@ public class BDmanager {
 			throw new BDexception("No se pudo elimiar la habitacion con id " + habitacion.getId(), e);
 		}
 	}
+//	
+//	
+//	
+//	
+//	
+//	
+//	Metodos para gestionar el almacenamiento y consulta de las tareas
+//	
+//	
+//	
+//	
+//	
+	public List<Tarea> getTareas() throws BDexception {
+		List<Tarea> tareas = new ArrayList<Tarea>();
+		try (Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("SELECT id, rol, numHoras,"
+					+ " estaCompletada, descripcion, DNITrabajador FROM tareas");
+
+			while(rs.next()) {
+				Tarea tarea = new Tarea();
+				tarea.setId(rs.getInt("id"));
+				tarea.setRol(Rol.valueOf(rs.getString("rol")));
+				tarea.setNumHoras(rs.getInt("numHoras"));
+				tarea.setEstaCompletada(rs.getBoolean("estaCompletada"));
+				tarea.setDescripcion(rs.getString("descripcion"));
+				tarea.setCompletadaPor(getTrabajador(rs.getString("DNITrabajador")));
+				tareas.add(tarea);
+				
+			}
+			
+			return tareas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todos las tareas'", e);
+		}
+	}
+	public List<Tarea> getTareaTrabajador() throws BDexception {
+		//TODO falta la implementacion
+		List<Tarea> tareas = new ArrayList<Tarea>();
+		try (Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("SELECT id, rol, numHoras,"
+					+ " estaCompletada, descripcion, DNITrabajador FROM tareas");
+
+			while(rs.next()) {
+				Tarea tarea = new Tarea();
+				tarea.setId(rs.getInt("id"));
+				tarea.setRol(Rol.valueOf(rs.getString("rol")));
+				tarea.setNumHoras(rs.getInt("numHoras"));
+				tarea.setEstaCompletada(rs.getBoolean("estaCompletada"));
+				tarea.setDescripcion(rs.getString("descripcion"));
+				tarea.setCompletadaPor(getTrabajador(rs.getString("DNITrabajador")));
+				tareas.add(tarea);
+				
+			}
+			
+			return tareas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todos las tareas'", e);
+		}
+	}
+	
+	
+	//Metodo para obtener una tarea en concreto
+	
+	public Tarea getTarea(int id) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, rol, numHoras,"
+				+" estaCompletada, descripcion, DNITrabajador FROM tareas WHERE id = ?")) {
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Tarea tarea = new Tarea();
+				tarea.setId(rs.getInt("id"));
+				tarea.setRol(Rol.valueOf(rs.getString("rol")));
+				tarea.setNumHoras(rs.getInt("numHoras"));
+				tarea.setEstaCompletada(rs.getBoolean("estaCompletada"));
+				tarea.setDescripcion(rs.getString("descripcion"));
+				tarea.setCompletadaPor(getTrabajador(rs.getString("DNITrabajador")));
+				
+				return tarea;
+			} else {
+				Tarea tarea = new Tarea();
+				tarea.setId(-1);
+				return tarea;
+				
+			}
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo el trabajador con DNI " + id, e);
+		}
+	}
+	
+	
+	//Metodo para guardar tareas en la base de datos
+	
+	public void guardarTarea(Tarea tarea) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO tareas (id, rol, numHoras,"
+				+ " estaCompletada, descripcion, DNITrabajador) VALUES (?, ?, ?, ?, ?, ?)");
+			Statement stmtForId = conn.createStatement()) {
+			stmt.setInt(1, tarea.getId());
+			stmt.setString(2, tarea.getRol().toString());
+			stmt.setInt(3, tarea.getNumHoras());
+			stmt.setBoolean(4,tarea.isEstaCompletada());
+			stmt.setString(5, tarea.getDescripcion());
+			stmt.setString(6, tarea.getCompletadaPor().getDni());
+			
+			
+			stmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo guardar la tarea en la BD", e);
+		}
+	}
+	
+	
+	//Metodo para actualizar tareas
+	
+	public void actualizarTarea(Tarea tarea) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("UPDATE tareas SET rol=?, numHoras=?"
+				+ ", estaCompletada=?, descripcion=?, DNITrabajador=? WHERE id=?")) {
+			stmt.setString(1, tarea.getRol().toString());
+			stmt.setInt(2, tarea.getNumHoras());
+			stmt.setBoolean(3, tarea.isEstaCompletada());
+			stmt.setString(4, tarea.getDescripcion());
+			stmt.setString(5, tarea.getCompletadaPor().getDni());
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo guardar la tarea en la BD", e);
+		}
+	}
+	
+	//Metodo para borrar tareas
+	
+	public void deleteTarea(Tarea tarea) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM tareas WHERE id=?")) {
+			stmt.setInt(1,tarea.getId());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo elimiar la tarea con DNI " + tarea.getId(), e);
+		}
+	}
+	
+	
 	public static void main(String[] args) {
 		BDmanager manager = new BDmanager();
 
 		try {
 			manager.connect("bd/database.db");
 			
-			Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", LocalDate.now(), "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
-			manager.deleteTrabajador(t1);
+			Reserva r = new Reserva();
 			
+			r.setId(10);
 			
-			List<Habitacion> h = manager.getHabitaciones();
+			Habitacion h = new HabitacionSimple();
+			h.setReserva(r);
 			
-			System.out.println(h.size());
-			for (Habitacion habitacion : h) {
-				System.out.println(habitacion);
+			Cliente c = new Cliente();
+			
+			r.setCliente(c);
+			manager.guardarReserva(r);
+			
+			manager.guardarHabitacion(h);
+			
+			Reserva r2 = manager.getReserva(10);
+			
+			System.out.println(r2);
+			
+			for (Habitacion hab : r2.getListaHabitacionesReservadas()) {
+				System.out.println(hab);
 			}
 			
 			manager.disconnect();
 		} catch (BDexception e) {
-			System.err.println("Error conectando con la database");
+			System.err.println("Error en la main");
 			e.printStackTrace();
 		}
 	}

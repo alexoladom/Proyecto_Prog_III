@@ -53,18 +53,7 @@ public class TrabajadorTest {
 		trabajador.setListaTareasHechas(null);
 		assertNull(trabajador.getListaTareasHechas());
 	}
-	@Test
-	public void getListaTareasPorHacer() {
-		List<Tarea> a = new ArrayList<>();
-		a.add(new Tarea());
-		trabajador.setListaTareasPorHacer(a);
-		assertEquals(a, trabajador.getListaTareasPorHacer());
-	}
-	@Test
-	public void getListaTareasPorhacerNull() {
-		trabajador.setListaTareasPorHacer(null);
-		assertNull(trabajador.getListaTareasPorHacer());
-	}
+	
 	
 	@Test 
 	public void testToString() {

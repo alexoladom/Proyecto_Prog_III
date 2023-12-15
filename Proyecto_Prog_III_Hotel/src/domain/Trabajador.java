@@ -18,19 +18,18 @@ public class Trabajador extends Persona{
 	
 	
 	protected List<Tarea> listaTareasHechas;
-	protected List<Tarea> listaTareasPorHacer;
 	
 	
 	public Trabajador(String dni, String nombre, String apellido1, String email, String direccion,
 			LocalDate fNacimiento, String contraseña, String telefono, double salario, int numHorasTrabajadas,
-			List<Tarea> listaTareasHechas, List<Tarea> listaTareasPorHacer, String foto) {
+			List<Tarea> listaTareasHechas, String foto) {
 		
 		super(dni, nombre, apellido1, email, direccion, fNacimiento, contraseña, telefono,foto);
 		
 		this.salario = salario;
 		this.numHorasTrabajadas = numHorasTrabajadas;
 		this.listaTareasHechas = listaTareasHechas;
-		this.listaTareasPorHacer = listaTareasPorHacer;
+
 	}
 	
 	public Trabajador() {
@@ -40,7 +39,7 @@ public class Trabajador extends Persona{
 		this.salario = 0;
 		this.numHorasTrabajadas = 0;
 		this.listaTareasHechas = new ArrayList<Tarea>();
-		this.listaTareasPorHacer = new ArrayList<Tarea>();
+
 	}
 
 	public double getSalario() {
@@ -77,18 +76,7 @@ public class Trabajador extends Persona{
 		this.listaTareasHechas = listaTareasHechas;
 	}
 
-	public List<Tarea> getListaTareasPorHacer() {
-		if (this.listaTareasPorHacer==null) {
-			System.err.println("No existe lista de tareas por hacer para este trabajador");
-			return null;
-		}else {
-			return listaTareasPorHacer;
-		}
-	}
-
-	public void setListaTareasPorHacer(List<Tarea> listaTareasPorHacer) {
-		this.listaTareasPorHacer = listaTareasPorHacer;
-	}
+	
 
 	@Override
 	public String toString() {

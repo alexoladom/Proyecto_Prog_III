@@ -47,7 +47,7 @@ public abstract class Persona implements Serializable{
 		this.apellido1 = "";
 		this.email = "";
 		this.direccion = "";
-		this.fNacimiento = null;
+		this.fNacimiento = LocalDate.now();
 		this.contraseña = "";
 		this.telefono = "";
 		this.setFotoPerfil("src/Imagenes/imagenPerfilpng.png");

@@ -43,8 +43,8 @@ public class Reserva implements Serializable{
 		numId++;
 		this.id = numId;
 		this.cliente = null;
-		this.fechaInicio = null;
-		this.fechaFinal = null;
+		this.fechaInicio = LocalDate.now();
+		this.fechaFinal = LocalDate.now().plusDays(1);
 		this.estaPagado = false;
 		this.listaHabitacionesReservadas = new ArrayList<Habitacion>();
 		this.listaPlazasParking = new ArrayList<PlazaParking>();

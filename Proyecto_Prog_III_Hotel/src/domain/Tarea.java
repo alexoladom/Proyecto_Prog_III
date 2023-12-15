@@ -14,12 +14,13 @@ public class Tarea implements Serializable{
 	protected int numHoras;
 	protected boolean estaCompletada;
 	protected String descripcion;
+	protected Trabajador completadaPor;
 
 	
 	//Constructores
 	
 	
-	public Tarea(Rol rol, int numHoras, boolean estaCompletada, String descripcion) {
+	public Tarea(Rol rol, int numHoras, boolean estaCompletada, String descripcion, Trabajador trabajador) {
 		super();
 		numId++;
 		this.id = numId;
@@ -27,6 +28,7 @@ public class Tarea implements Serializable{
 		this.numHoras = numHoras;
 		this.estaCompletada = estaCompletada;
 		this.descripcion = descripcion;
+		this.completadaPor = trabajador;
 	}
 	
 	public Tarea() {
@@ -37,6 +39,7 @@ public class Tarea implements Serializable{
 		this.numHoras = 0;
 		this.estaCompletada = false;
 		this.descripcion = "";
+		this.completadaPor=null;
 	}
 
 	
@@ -48,6 +51,17 @@ public class Tarea implements Serializable{
 	}
 
 
+	public Trabajador getCompletadaPor() {
+		return completadaPor;
+	}
+
+	public void setCompletadaPor(Trabajador completadaPor) {
+		this.completadaPor = completadaPor;
+	}
+
+	public void setId(int id){
+		this.id=id;
+	}
 	public int getId() {
 		return id;
 	}
