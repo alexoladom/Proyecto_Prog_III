@@ -60,6 +60,11 @@ public class Reserva implements Serializable{
 		 numId=a;
 	}
 
+	public void setId(int id) {
+		this.id=id;
+	}
+
+	
 
 	public int getId() {
 		return id;
