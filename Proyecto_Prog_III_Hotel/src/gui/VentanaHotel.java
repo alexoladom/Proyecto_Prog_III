@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -31,6 +33,7 @@ import domain.Datos;
 import domain.Habitacion;
 import domain.HabitacionSimple;
 import domain.Mesa;
+import domain.Parking;
 import domain.Reserva;
 
 public class VentanaHotel extends JFrame{
@@ -94,6 +97,11 @@ public class VentanaHotel extends JFrame{
 			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				return false;
+//				if(calendar != null) {
+//			        editable =Habitacion.comprobarHabitacionDisponible(cliente, Habitacion.getDistribucion()[rowIndex-1][columnIndex-1]);
+//				}else {
+//					editable=false;
+//				}
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {

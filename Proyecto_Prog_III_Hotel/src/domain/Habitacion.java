@@ -72,7 +72,17 @@ public abstract class Habitacion implements Serializable{
 		}
 		
 	}
-	
+	//Metodo para comprobar si esta ocupada una habitación
+	public boolean comprobarHabitacionDisponible(Cliente cliente, Habitacion plaza) {
+		boolean esta = false;
+		for (Reserva reserva : cliente.getListaReservasCliente()) {
+			if (reserva.getListaHabitacionesReservadas().contains(plaza)||!plaza.isOcupado()) {
+				esta = true;
+			}
+		}
+		return esta;
+	}
+	/////////////////////////////////////////////////////////////
 	public abstract double getPrecioPorNoche();
 	
 	@Override
