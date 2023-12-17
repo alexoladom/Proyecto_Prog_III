@@ -18,21 +18,15 @@ public class ParkingTest {
 	
 	@Before
 	public void setUp() {
-		Parking.setNumId(0);
 		parking = new Parking();
 	}
 	
 	@Test 
 	public void testParkingAtrin() {
-		Parking a = new Parking( false,10,new PlazaParking[5][5] , LocalDate.now());
+		Parking a = new Parking( LocalDate.now(), false, 25);
 		assertNotNull(a);
 	}
 	
-	@Test
-	public void testGetNumId() {
-		Parking.setNumId(0);
-		assertEquals(0, Parking.getNumId());
-	}
 	
 	@Test
 	public void testIsCompleto() {
@@ -40,13 +34,7 @@ public class ParkingTest {
 		assertFalse(parking.isCompleto());
 	}
 	
-	@Test
-	public void testGetNumPlazasDisponibles() {
-		parking.setNumPlazasDisponibles(10);
-		parking.setNumPlazasDisponibles(-1);
-		assertEquals(10, parking.getNumPlazasDisponibles());
-		
-	}
+	
 	@Test
 	public void testGetDistribucion() {
 		PlazaParking[][] distribucion = new PlazaParking[7][7];
@@ -59,10 +47,7 @@ public class ParkingTest {
 		parking.setFecha(LocalDate.now());
 		assertEquals(LocalDate.now(), parking.getFecha());
 	}
-	@Test
-	public void testGetId() {
-		assertEquals(1, parking.getId());
-	}
+	
 	@Test
 	public void testComprobarPlazaDisponible() {
 		Cliente c = new Cliente();
@@ -75,21 +60,20 @@ public class ParkingTest {
 	}
 	@Test
 	public void testToString() {
-		String s= String.format("Parking %s, completo? %s, Plazad disponibles: %s", parking.id, parking.completo,
+		String s= String.format("Parking %s, completo? %s, Plazas disponibles: %s", parking.fecha, parking.completo,
 				parking.numPlazasDisponibles);
 		
 		assertEquals(parking.toString(), s);
 	}
 	@Test
 	public void testHashCode() {
-		int h =  Objects.hash(parking.fecha, parking.id);
+		int h =  Objects.hash(parking.fecha);
 		assertEquals(parking.hashCode(), h);
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")
 	@Test
 	public void testEquals() {
-		Parking.setNumId(0);
 		Parking p = new Parking();
 		assertTrue(parking.equals(parking));
 		assertFalse(parking.equals(null));

@@ -275,7 +275,11 @@ public class BDmanager {
 				+ " fFinal, estaPagado) VALUES (?, ?, ?, ?, ?)");
 			Statement stmtForId = conn.createStatement()) {
 			stmt.setInt(1, reserva.getId());
-			stmt.setString(2, reserva.getCliente().getDni());
+			if(reserva.getCliente()!=null) {
+				stmt.setString(2, reserva.getCliente().getDni());
+			}else {
+				stmt.setString(2, "-1");
+			}
 			stmt.setString(3, reserva.getFechaInicio().toString());
 			stmt.setString(4,reserva.getFechaFinal().toString());
 			stmt.setBoolean(5, reserva.isEstaPagado());
@@ -346,7 +350,9 @@ public class BDmanager {
 				trabajador.setFotoPerfil(rs.getString("FotoPerfil"));
 				trabajador.setSalario(rs.getDouble("Salario"));
 				trabajador.setNumHorasTrabajadas(rs.getInt("HorasTrabajadas"));
-				//TODO añadir las tareas a las listas
+				List<Tarea> listaTareas = new ArrayList<>();
+				listaTareas.addAll(getTareasTrabajador(trabajador));
+				trabajador.setListaTareasHechas(listaTareas);
 				trabajadores.add(trabajador);
 				
 			}
@@ -380,6 +386,9 @@ public class BDmanager {
 				trabajador.setFotoPerfil(rs.getString("FotoPerfil"));
 				trabajador.setSalario(rs.getDouble("Salario"));
 				trabajador.setNumHorasTrabajadas(rs.getInt("HorasTrabajadas"));
+				List<Tarea> listaTareas = new ArrayList<>();
+				listaTareas.addAll(getTareasTrabajador(trabajador));
+				trabajador.setListaTareasHechas(listaTareas);
 				
 				return trabajador;
 			} else {
@@ -636,8 +645,12 @@ public class BDmanager {
 			}else {
 				stmt.setString(5, "Suite");
 			}
+			if(habitacion.getReserva()!=null) {
+				stmt.setInt(6, habitacion.getReserva().getId());
+			}else {
+				stmt.setInt(6, -1);
+			}
 			
-			stmt.setInt(6, habitacion.getReserva().getId());
 			stmt.executeUpdate();
 			
 			
@@ -716,12 +729,12 @@ public class BDmanager {
 			throw new BDexception("Error obteniendo todos las tareas'", e);
 		}
 	}
-	public List<Tarea> getTareaTrabajador() throws BDexception {
-		//TODO falta la implementacion
+	public List<Tarea> getTareasTrabajador(Trabajador trabajador) throws BDexception {
 		List<Tarea> tareas = new ArrayList<Tarea>();
-		try (Statement stmt = conn.createStatement()) {
-			ResultSet rs = stmt.executeQuery("SELECT id, rol, numHoras,"
-					+ " estaCompletada, descripcion, DNITrabajador FROM tareas");
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, rol, numHoras,"
+				+ " estaCompletada, descripcion, DNITrabajador FROM tareas WHERE DNITrabajador=?")) {
+			stmt.setString(1, trabajador.getDni());
+			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				Tarea tarea = new Tarea();
@@ -730,14 +743,14 @@ public class BDmanager {
 				tarea.setNumHoras(rs.getInt("numHoras"));
 				tarea.setEstaCompletada(rs.getBoolean("estaCompletada"));
 				tarea.setDescripcion(rs.getString("descripcion"));
-				tarea.setCompletadaPor(getTrabajador(rs.getString("DNITrabajador")));
+				tarea.setCompletadaPor(trabajador);
 				tareas.add(tarea);
 				
 			}
 			
 			return tareas;
 		} catch (SQLException | DateTimeParseException e) {
-			throw new BDexception("Error obteniendo todos las tareas'", e);
+			throw new BDexception("Error obteniendo todas las tareas del trabajador'", e);
 		}
 	}
 	
@@ -824,6 +837,300 @@ public class BDmanager {
 		}
 	}
 	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	Metodos para gestionar el almacenamiento y la consulta de las plazas de parking;
+//	
+//	
+//	
+//	
+//	
+//	
+	public List<PlazaParking> getPlazasParkingTodas() throws BDexception {
+		List<PlazaParking> plazas = new ArrayList<PlazaParking>();
+		try (Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("SELECT id, row, column,"
+					+ " ocupada, idReserva, fechaParking FROM plazaparking");
+
+			while(rs.next()) {
+				PlazaParking plaza = new PlazaParking();
+				plaza.setId(rs.getInt("id"));
+				plaza.setRow(rs.getInt("row"));
+				plaza.setColumn(rs.getInt("column"));
+				plaza.setOcupada(rs.getBoolean("ocupada"));
+				Reserva r = getReserva(rs.getInt("idReserva"));
+				plaza.setReserva(r);
+				Parking p = getParking(LocalDate.parse(rs.getString("fechaParking")));
+				plaza.setParking(p);
+				plazas.add(plaza);
+				
+			}
+			
+			return plazas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todas las plazas de parking'", e);
+		}
+	}
+	public List<PlazaParking> getPlazasDeReserva(Reserva reserva) throws BDexception {
+		List<PlazaParking> plazas = new ArrayList<PlazaParking>();
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, row, column,"
+				+ " ocupada, idReserva, fechaParking FROM plazaparking WHERE idReserva=?")) {
+			stmt.setInt(1, reserva.getId());
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				PlazaParking plaza = new PlazaParking();
+				plaza.setId(rs.getInt("id"));
+				plaza.setRow(rs.getInt("row"));
+				plaza.setColumn(rs.getInt("column"));
+				plaza.setOcupada(rs.getBoolean("ocupada"));
+				plaza.setReserva(reserva);
+				Parking p = getParking(LocalDate.parse(rs.getString("fechaParking")));
+				plaza.setParking(p);
+				plazas.add(plaza);
+				
+			}
+			
+			return plazas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todas las plazas de parking de la Reserva'"+ reserva.getId(), e);
+		}
+	}
+	
+	public PlazaParking [][] getPlazasDeParking(Parking parking) throws BDexception {
+		PlazaParking [][] plazas = new PlazaParking [5][5];
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, row, column,"
+				+ " ocupada, idReserva, fechaParking FROM plazaparking WHERE fechaParking=?")) {
+			stmt.setString(1, parking.getFecha().toString());
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				PlazaParking plaza = new PlazaParking();
+				plaza.setId(rs.getInt("id"));
+				plaza.setRow(rs.getInt("row"));
+				plaza.setColumn(rs.getInt("column"));
+				plaza.setOcupada(rs.getBoolean("ocupada"));
+				Reserva r = getReserva(rs.getInt("idReserva"));
+				plaza.setReserva(r);
+				plaza.setParking(parking);
+				plazas[plaza.getRow()][plaza.getColumn()]= plaza;
+				
+			}
+			
+			return plazas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todas las plazas de parking de la Reserva'"+ parking.getFecha(), e);
+		}
+	}
+	
+	
+	//Metodo para obtener una plaza en concreto
+	
+	public PlazaParking getPlazaParking(int id) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT id, row, column,"
+				+" ocupada, idReserva, fechaParking FROM plazaparking WHERE id = ?")) {
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				PlazaParking plaza = new PlazaParking();
+				plaza.setId(rs.getInt("id"));
+				plaza.setRow(rs.getInt("row"));
+				plaza.setColumn(rs.getInt("column"));
+				plaza.setOcupada(rs.getBoolean("ocupada"));
+				Reserva r = getReserva(rs.getInt("idReserva"));
+				plaza.setReserva(r);
+				Parking p = getParking(LocalDate.parse(rs.getString("fechaParking")));
+				plaza.setParking(p);
+				
+				
+				return plaza;
+			} else {
+				PlazaParking plaza = new PlazaParking();
+				plaza.setId(-1);
+				return plaza;
+				
+			}
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo la plaza de parking con id " + id, e);
+		}
+	}
+	
+	
+	//Metodo para guardar plazas en la base de datos
+	
+	public void guardarPlaza(PlazaParking plaza) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO plazaparking (id, row, column,"
+				+ " ocupada, idReserva, fechaParking) VALUES (?, ?, ?, ?, ?, ?)");
+			Statement stmtForId = conn.createStatement()) {
+			stmt.setInt(1, plaza.getId());
+			stmt.setInt(2, plaza.getRow());
+			stmt.setInt(3, plaza.getColumn());
+			stmt.setBoolean(4,plaza.isOcupada());
+			if(plaza.getReserva()!=null) {
+				stmt.setInt(5, plaza.getReserva().getId());
+			}else {
+				stmt.setInt(5,-1);
+			}
+			stmt.setString(6, plaza.getParking().getFecha().toString());
+			
+			
+			stmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo guardar la plaza en la BD", e);
+		}
+	}
+	
+	
+	//Metodo para actualizar plazas
+	
+	public void actualizarPlazaparking(PlazaParking plaza) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("UPDATE plazaparking SET row=?, column=?"
+				+ ", ocupada=?, idReserva=?, fechaParking=? WHERE id=?")) {
+			stmt.setInt(1, plaza.getRow());
+			stmt.setInt(2, plaza.getColumn());
+			stmt.setBoolean(3, plaza.isOcupada());
+			if(plaza.getReserva()!=null) {
+				stmt.setInt(4, plaza.getReserva().getId());
+			}else {
+				stmt.setInt(4, -1);
+			}
+			stmt.setString(5, plaza.getParking().getFecha().toString());
+			stmt.setInt(6, plaza.getId());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo actualizar la plaza en la BD", e);
+		}
+	}
+	
+	//Metodo para borrar plazas
+	
+	public void deletePlaza(PlazaParking plaza) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM plazaparking WHERE id=?")) {
+			stmt.setInt(1,plaza.getId());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo elimiar la tarea con DNI " + plaza.getId(), e);
+		}
+	}
+	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	Metodos para gestionar el almacenamiento y la consulta de los Parkings
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+	
+	public List<Parking> getParkings() throws BDexception {
+		List<Parking> parkings = new ArrayList<Parking>();
+		try (Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("SELECT fecha, completo, numPlazasDisponibles"
+					+ "  FROM parkings");
+
+			while(rs.next()) {
+				Parking parking = new Parking();
+				parking.setFecha(LocalDate.parse(rs.getString("fecha")));
+				parking.setCompleto(rs.getBoolean("completo"));
+				parking.setNumPlazasDisponibles(rs.getInt("numPlazasDisponibles"));
+				parking.setDistribucion(getPlazasDeParking(parking));
+				parkings.add(parking);
+				
+			}
+			
+			return parkings;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todos los parkings de parking'", e);
+		}
+	}
+		
+	//Metodo para obtener un parking en concreto
+	
+	public Parking getParking(LocalDate date) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT fecha, completo, numPlazasDisponibles"
+				+"  FROM parkings WHERE fecha = ?")) {
+			stmt.setString(1, date.toString());
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Parking parking = new Parking();
+				parking.setFecha(LocalDate.parse(rs.getString("fecha")));
+				parking.setCompleto(rs.getBoolean("completo"));
+				parking.setNumPlazasDisponibles(rs.getInt("numPlazasDisponibles"));	
+				parking.setDistribucion(getPlazasDeParking(parking));
+				
+				return parking;
+			} else {
+				Parking parking = new Parking();
+				parking.setFecha(LocalDate.MIN);
+				return parking;
+				
+			}
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo el parking con fecha " + date, e);
+		}
+	}
+	
+	
+	//Metodo para guardar parkings en la base de datos
+	
+	public void guardarParking(Parking parking) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO parkings (fecha, completo, numPlazasDisponibles"
+				+ " ) VALUES (?, ?, ?)");
+			Statement stmtForId = conn.createStatement()) {
+			stmt.setString(1, parking.getFecha().toString());
+			stmt.setBoolean(2, parking.isCompleto());
+			stmt.setInt(3, parking.getNumPlazasDisponibles());
+				
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo guardar el parking en la BD", e);
+		}
+	}
+	
+	
+	//Metodo para actualizar parkings
+	
+	public void actualizarParking(Parking parking) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("UPDATE parkings SET completo=?, numPlazasDisponibles=?"
+				+ " WHERE fecha=?")) {
+			stmt.setBoolean(1, parking.isCompleto());
+			stmt.setInt(2, parking.getNumPlazasDisponibles());
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo actualizar la plaza en la BD", e);
+		}
+	}
+	
+	//Metodo para borrar parkings
+	
+	public void deleteParking(Parking parking) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM parking WHERE fecha=?")) {
+			stmt.setString(1,parking.getFecha().toString());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo elimiar la tarea con DNI " + parking.getFecha(), e);
+		}
+	}
 	
 	public static void main(String[] args) {
 		BDmanager manager = new BDmanager();
@@ -832,26 +1139,17 @@ public class BDmanager {
 			manager.connect("bd/database.db");
 			
 			Reserva r = new Reserva();
-			
-			r.setId(10);
-			
-			Habitacion h = new HabitacionSimple();
+			r.setId(-1);
+			Habitacion h =manager.getHabitacion(3);
+			h.setOcupado(false);
 			h.setReserva(r);
+			manager.actualizarHabitacion(h);
+			PlazaParking p=manager.getPlazaParking(375);
+			p.setOcupada(false);
+			p.setReserva(r);
+			manager.actualizarPlazaparking(p);
+		
 			
-			Cliente c = new Cliente();
-			
-			r.setCliente(c);
-			manager.guardarReserva(r);
-			
-			manager.guardarHabitacion(h);
-			
-			Reserva r2 = manager.getReserva(10);
-			
-			System.out.println(r2);
-			
-			for (Habitacion hab : r2.getListaHabitacionesReservadas()) {
-				System.out.println(hab);
-			}
 			
 			manager.disconnect();
 		} catch (BDexception e) {

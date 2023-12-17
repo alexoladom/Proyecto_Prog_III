@@ -41,7 +41,6 @@ public class DatosTest {
 	public void testInicializarDatos() {
 		Habitacion.setNumId(0);
 		Mesa.setNumId(0);
-		Parking.setNumId(0);
 		datos.inicializarDatos();
 		LocalDate a = LocalDate.of(1999, 9, 11);
 		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
@@ -138,8 +137,7 @@ public class DatosTest {
 		}
 		
 		assertEquals(datos.getMapaTrabajadoresPorDNI(),mapaTraDNI);
-		
-		Parking.setNumId(0);
+
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
 			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());
@@ -298,7 +296,6 @@ public class DatosTest {
 		Habitacion.setNumId(0);
 		Mesa.setNumId(0);
 		Reserva.setNumId(0);
-		Parking.setNumId(0);
 
 
 		datos.inicializarDatos();
@@ -392,8 +389,7 @@ public class DatosTest {
 			mapaTraDNI.putIfAbsent(trabajador.getDni(), trabajador);
 		}
 		
-		
-		Parking.setNumId(0);
+
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
 			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());

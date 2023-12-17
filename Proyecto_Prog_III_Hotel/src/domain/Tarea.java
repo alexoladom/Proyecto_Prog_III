@@ -35,7 +35,7 @@ public class Tarea implements Serializable{
 		super();
 		numId++;
 		this.id = numId;
-		this.rol = null;
+		this.rol = Rol.Cocinero;
 		this.numHoras = 0;
 		this.estaCompletada = false;
 		this.descripcion = "";
