@@ -23,6 +23,8 @@ import javax.swing.SwingUtilities;
 
 import org.jdatepicker.JDatePicker;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 
@@ -38,7 +40,7 @@ public class VentanaInicioCliente extends JFrame {
 	protected Map<String, Cliente> mapaClientesPorDNI;
 	protected Datos datos;
 
-	public VentanaInicioCliente(Datos datos, boolean seleccionDatos) {
+	public VentanaInicioCliente(Datos datos, String seleccionDatos, BDmanager bdManager) {
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,7 +131,7 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos,seleccionDatos);	
+					new VentanaSeleccion(datos,seleccionDatos,bdManager);	
 					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
@@ -142,7 +144,7 @@ public class VentanaInicioCliente extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaInicioCliente(datos,seleccionDatos);	
+					new VentanaInicioCliente(datos,seleccionDatos, bdManager);	
 					logger.info("Se vuelve a la anterior ventana");
 				}
 			});
@@ -176,18 +178,28 @@ public class VentanaInicioCliente extends JFrame {
 				cliente.setEmail(textoEmail.getText());
 				cliente.setContraseña(String.valueOf(textoContra2.getPassword()));
 				cliente.setDireccion(textoDireccion.getText());
+				
 				GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
 				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
 		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        
 				cliente.setfNacimiento(fechaLocal);
 				cliente.setTelefono(textoTelefono.getText());
 				datos.getListaClientes().add(cliente);
 				datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
+				if(seleccionDatos=="Base de datos") {
+					try {
+						bdManager.guardarCliente(cliente);
+					} catch (BDexception e1) {
+						System.err.println("Error guardando el cliente en la bd");
+						e1.printStackTrace();
+					}
+				}
 				SwingUtilities.invokeLater(new Runnable() {
 					
 					@Override
 					public void run() {
-						new VentanaInicioCliente(datos,seleccionDatos);	
+						new VentanaInicioCliente(datos,seleccionDatos,bdManager);	
 					}
 				});
 				
@@ -201,7 +213,7 @@ public class VentanaInicioCliente extends JFrame {
 				if(datos.comprobarContraseñaCliente(dni,String.valueOf(textoContra.getPassword()))) {
 					JOptionPane.showMessageDialog(null, "Bienvenido!!");
 					logger.info("Un usuario inicia sesión");
-					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni),seleccionDatos);
+					new VentanaCliente(datos, datos.getMapaClientesPorDNI().get(dni),seleccionDatos, bdManager);
 					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
@@ -217,10 +229,17 @@ public class VentanaInicioCliente extends JFrame {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(seleccionDatos) {
+				if(seleccionDatos=="Fichero de datos") {
 					datos.guardarDatos();
-					logger.info("Se guardan los datos");
-				}
+					logger.info("Se guardan los datos en el fichero");
+				}else if(seleccionDatos=="Base de datos") {
+					try {
+						bdManager.disconnect();
+					} catch (BDexception e1) {
+						System.err.println("Error desconectando la BD");
+						e1.printStackTrace();
+					}
+			    }
 				
 			}
 			

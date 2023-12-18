@@ -296,6 +296,20 @@ public class BDmanager {
 		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM reservas WHERE id=?")) {
 			stmt.setInt(1,reserva.getId());
 			stmt.executeUpdate();
+			
+			List<Habitacion> listaHabitaciones =reserva.getListaHabitacionesReservadas();
+			List<PlazaParking> listaPlazas = reserva.getListaPlazasParking();
+			
+			
+			for (Habitacion habitacion : listaHabitaciones) {
+				habitacion.setReserva(null);
+				actualizarHabitacion(habitacion);
+			}
+			for (PlazaParking plazaParking : listaPlazas) {
+				plazaParking.setReserva(null);
+				actualizarPlazaparking(plazaParking);
+			}
+			
 		} catch (SQLException e) {
 			throw new BDexception("No se pudo elimiar la resera con id " + reserva.getId(), e);
 		}
@@ -675,8 +689,11 @@ public class BDmanager {
 			}else {
 				stmt.setString(4, "Suite");
 			}
-			
-			stmt.setInt(5, habitacion.getReserva().getId());
+			if(habitacion.getReserva()!=null) {
+				stmt.setInt(5, habitacion.getReserva().getId());
+			}else {
+				stmt.setInt(5, -1);
+			}
 			stmt.setInt(6, habitacion.getId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -1130,6 +1147,50 @@ public class BDmanager {
 		} catch (SQLException e) {
 			throw new BDexception("No se pudo elimiar la tarea con DNI " + parking.getFecha(), e);
 		}
+	}
+	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	Metodo principal para rellenar los datos con los datos de la bd
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+	public void rellenarDatos(Datos datos) throws BDexception {
+		datos.listaTrabajadores.addAll(getTrabajadores());
+		
+		datos.listaClientes.addAll(getClientes());
+		
+		datos.listaReservas.addAll(getReservas());
+		
+		datos.listaTareas.addAll(getTareas());
+		
+		for (Trabajador trabajador : datos.getListaTrabajadores()) {
+			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
+		}
+		
+		for (Cliente cliente : datos.getListaClientes()) {
+			datos.getMapaClientesPorDNI().putIfAbsent(cliente.getDni(), cliente);
+		}
+		
+		for (Parking parking : getParkings()) {
+			datos.getMapaParkingPorFecha().putIfAbsent(parking.getFecha(), parking);
+		}
+		
+		for (Habitacion habitacion : getHabitaciones()) {
+			datos.getMapaHabitaciones().putIfAbsent(habitacion.getPlanta(), new ArrayList<>());
+			datos.getMapaHabitaciones().get(habitacion.getPlanta()).add(habitacion);
+		}
+			
 	}
 	
 	public static void main(String[] args) {

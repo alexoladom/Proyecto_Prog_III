@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
@@ -16,6 +18,8 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Datos;
 
 public class VentanaDeCarga extends JFrame{
@@ -26,8 +30,9 @@ public class VentanaDeCarga extends JFrame{
 	protected JPanel panelAbajo, panelCentro, panelFoto;
 	protected JProgressBar progressBar;
 	protected JLabel lblImagenHotel;
-	protected boolean seleccion = true; //true si es desde el fichero false si es desde los datos de prueba
+	protected String seleccion; //true si es desde el fichero false si es desde los datos de prueba
 	protected boolean flagAdvertencia = true;
+	protected BDmanager bdManager = new BDmanager();
 	
 	public VentanaDeCarga(Datos datos){
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
@@ -38,6 +43,7 @@ public class VentanaDeCarga extends JFrame{
 		JComboBox<String> combo = new JComboBox<>();
 		combo.addItem("Fichero de datos");
 		combo.addItem("Datos de prueba");
+		combo.addItem("Base de datos");
 		
 		
 		botonCerrar = new JButton("CERRAR");
@@ -68,6 +74,12 @@ public class VentanaDeCarga extends JFrame{
 		
 		botonCerrar.addActionListener((e) -> {
 			System.exit(0);
+			 try {
+					bdManager.disconnect();
+				} catch (BDexception ex) {
+					System.err.println("Error desconectando la BD");
+					ex.printStackTrace();
+				}
 			logger.info("Se cierra la ventana");
 		});
 		
@@ -92,24 +104,46 @@ public class VentanaDeCarga extends JFrame{
 						
 						@Override
 						public void run() {
-							if(seleccion) {
+							if(seleccion=="Fichero de datos") {
 								datos.cargarDatos();
-							}else {
+							}else if(seleccion =="Datos de prueba"){
 								datos.inicializarDatos();
+							}else {
+								//Conectar con la base de datos
+								try {
+									bdManager.connect("bd/database.db");	
+									bdManager.rellenarDatos(datos);
+								} catch (BDexception e) {
+									System.err.println("Error en la ventana de carga al intentar conectar con la BD");
+									e.printStackTrace();
+								}
 							}
-							new VentanaSeleccion(datos,seleccion);
-							logger.info("Se carga la Ventana de seleccion");
-							
+							new VentanaSeleccion(datos,seleccion,bdManager);
+							logger.info("Se carga la Ventana de seleccion");		
 						}
 					});
-                    
+           
                     dispose();
+                   
                 }
             };
 
             worker.execute();
         });
 
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				 try {
+						bdManager.disconnect();
+					} catch (BDexception ex) {
+						System.err.println("Error desconectando la BD");
+						ex.printStackTrace();
+					}
+			}
+			
+		});
 		setVisible(true);
 		setLocationRelativeTo(null);
 		ImageIcon imagenDatos = new ImageIcon("src/Imagenes/imagen_datos.png");
@@ -124,11 +158,7 @@ public class VentanaDeCarga extends JFrame{
 		int seleccionDatos = JOptionPane.showConfirmDialog(this,combo,"Elija el origen de los datos", JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.QUESTION_MESSAGE,new ImageIcon(imagenDatosEscala));
 		if (seleccionDatos==JOptionPane.YES_OPTION) {
-			if(combo.getSelectedItem()=="Fichero de datos") {
-				seleccion=true;
-			}else {
-				seleccion= false;
-			}
+			seleccion =(String) combo.getSelectedItem();
 		}
 	}
 	

@@ -34,6 +34,7 @@ import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
+import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 import domain.Tarea;
@@ -49,7 +50,9 @@ public class VentanaTrabajador extends JFrame {
     protected JButton botonCerrar, botonTareaHecha;
     protected List<Tarea> tareasPendientes; //= trabajador.getListaTareasPorHacer(); // ejemplo de tareas pendientes que tiene un trabajador
 
-    public VentanaTrabajador(Datos datos, Trabajador trabajador,boolean seleccionDatos) {
+    public VentanaTrabajador(Datos datos, Trabajador trabajador,String seleccionDatos, BDmanager bdManager) {
+		//TODO falta implementar la base de datos
+
     	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     	setSize(900,350);
     	setLocationRelativeTo(null);
@@ -100,7 +103,7 @@ public class VentanaTrabajador extends JFrame {
 				
 				@Override
 				public void run() {
-					new VentanaInicioTrabajador(datos, seleccionDatos);
+					new VentanaInicioTrabajador(datos, seleccionDatos,bdManager);
 					
 				}
 			});
@@ -427,7 +430,7 @@ public class VentanaTrabajador extends JFrame {
     	Datos datos = new Datos ();
     	datos.inicializarDatos();
     	Trabajador t = new Trabajador();
-		 new VentanaTrabajador(datos, t, true);
+//		 new VentanaTrabajador(datos, t, true);
 	}
     
 }

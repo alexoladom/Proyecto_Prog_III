@@ -34,6 +34,8 @@ import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 import domain.Parking;
@@ -49,7 +51,7 @@ public class VentanaParking extends JFrame {
 	protected Datos datos;
 	protected JDatePicker datePicker;
 
-	public VentanaParking(Datos datos, Reserva reserva, Cliente cliente,boolean seleccionDatos) {
+	public VentanaParking(Datos datos, Reserva reserva, Cliente cliente,String seleccionDatos, BDmanager bdManager) {
 		
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -75,10 +77,34 @@ public class VentanaParking extends JFrame {
 			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
 			        PlazaParking [][] distribucion =datos.getMapaParkingPorFecha().get(fechaLocal).getDistribucion();
 					if ((boolean) aValue==true) {
-						distribucion[rowIndex-1][columnIndex-1].setOcupada(true);
+						PlazaParking plaza = distribucion[rowIndex-1][columnIndex-1];
+						plaza.setOcupada(true);
+						plaza.setReserva(reserva);
+						
+						if(seleccionDatos=="Base de datos") {
+							try {
+								bdManager.actualizarPlazaparking(plaza);
+							} catch (BDexception e) {
+								System.err.println("Error actualizando la plaza");
+								e.printStackTrace();
+							}
+						}
+						
 						reserva.getListaPlazasParking().add(distribucion[rowIndex-1][columnIndex-1]);
 					}else if((boolean) aValue== false&& cliente.getListaReservasCliente().contains(reserva)){
-						distribucion[rowIndex-1][columnIndex-1].setOcupada(false);
+						PlazaParking plaza = distribucion[rowIndex-1][columnIndex-1];
+						plaza.setOcupada(false);
+						plaza.setReserva(null);
+						
+						if(seleccionDatos=="Base de datos") {
+							try {
+								bdManager.actualizarPlazaparking(plaza);
+							} catch (BDexception e) {
+								System.err.println("Error actualizando la plaza");
+								e.printStackTrace();
+							}
+						}
+						
 						reserva.getListaPlazasParking().remove(distribucion[rowIndex-1][columnIndex-1]);
 					}
 					
@@ -284,7 +310,7 @@ public class VentanaParking extends JFrame {
 				for (PlazaParking string : reserva.getListaPlazasParking()) {
 					System.out.println(string);
 				}
-				if(seleccionDatos) {
+				if(seleccionDatos=="Fichero de datos") {
 					datos.guardarDatos();
 				}
 				dispose();
@@ -336,10 +362,9 @@ public class VentanaParking extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(seleccionDatos) {
+				if(seleccionDatos=="Fichero de datos") {
 					datos.guardarDatos();
 				}
-	
 			}
 		});
         ImageIcon icono = new ImageIcon("src/Imagenes/parkingIcono.png");

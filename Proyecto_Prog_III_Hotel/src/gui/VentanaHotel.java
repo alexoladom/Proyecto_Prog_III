@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 import domain.Habitacion;
@@ -52,7 +54,7 @@ public class VentanaHotel extends JFrame{
 	private DefaultListModel<Habitacion> modeloLista;
 	private JList<Habitacion> listaReservas;
 	
-	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente) {
+	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		this.datos=datos;
@@ -109,6 +111,21 @@ public class VentanaHotel extends JFrame{
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
 					    h.setOcupado(ocupado);
+					    
+					    if(ocupado==true) {
+					    	h.setReserva(reserva);
+					    }else {
+					    	h.setReserva(null);
+					    }
+					    
+					    if(seleccionDatos=="Base de datos") {
+					    	try {
+								bdManager.actualizarHabitacion(h);
+							} catch (BDexception e) {
+								System.err.println("Error actualizando la habitacion en la bd");
+								e.printStackTrace();
+							}
+					    }
 				}
 
 			    fireTableCellUpdated(rowIndex, 0);
@@ -160,6 +177,21 @@ public class VentanaHotel extends JFrame{
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
 					    h.setOcupado(ocupado);
+					    
+					    if(ocupado==true) {
+					    	h.setReserva(reserva);
+					    }else {
+					    	h.setReserva(null);
+					    }
+					    
+					    if(seleccionDatos=="Base de datos") {
+					    	try {
+								bdManager.actualizarHabitacion(h);
+							} catch (BDexception e) {
+								System.err.println("Error actualizando la habitacion en la bd");
+								e.printStackTrace();
+							}
+					    }
 				}
 
 			    fireTableCellUpdated(rowIndex, 1);
@@ -211,6 +243,21 @@ public class VentanaHotel extends JFrame{
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
 					    h.setOcupado(ocupado);
+					    
+					    if(ocupado==true) {
+					    	h.setReserva(reserva);
+					    }else {
+					    	h.setReserva(null);
+					    }
+					    
+					    if(seleccionDatos=="Base de datos") {
+					    	try {
+								bdManager.actualizarHabitacion(h);
+							} catch (BDexception e) {
+								System.err.println("Error actualizando la habitacion en la bd");
+								e.printStackTrace();
+							}
+					    }
 				}
 
 			    fireTableCellUpdated(rowIndex, 2);
@@ -262,6 +309,7 @@ public class VentanaHotel extends JFrame{
 			   if(rowIndex!=-1) {
 				   Mesa c = datos.getListaComedor().get(rowIndex);
 				    c.setOcupado(ocupado);
+				    
 			   }
 			    fireTableCellUpdated(rowIndex, 1);
 			}

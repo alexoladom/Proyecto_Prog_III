@@ -43,6 +43,8 @@ import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Cliente;
 import domain.ComparadorReservasPorFecha;
 import domain.ComparadorReservasPorPagado;
@@ -65,9 +67,15 @@ public class VentanaCliente extends JFrame{
 	
 	
 
-	public VentanaCliente(Datos datos, Cliente cliente, boolean seleccionDatos) {
+	public VentanaCliente(Datos datos, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
 		if (cliente.getFotoPerfil()!=null) {
 			setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
+			try {
+				bdManager.actualizarCliente(cliente);
+			} catch (BDexception e1) {
+				System.err.println("Error actualizando cliente en la bd");
+				e1.printStackTrace();
+			}
 		}
 		System.out.println("Tamaño de la lista de reservas del cliente ->"+cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -276,9 +284,20 @@ public class VentanaCliente extends JFrame{
 							cliente.getListaReservasCliente().add(reserva);
 						}
 			        	datos.getListaReservas().add(reserva);
+			        	reserva.setCliente(cliente);
 			        	System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
 			        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
 			        	JOptionPane.showMessageDialog(this, "Reserva Guardada");
+			        	
+			        	if(seleccionDatos=="Base de datos") {
+				        	try {
+								bdManager.guardarReserva(reserva);
+							} catch (BDexception e1) {
+								System.err.println("Error guardando la reserva en la bd");
+								e1.printStackTrace();
+							}
+			        	}
+			        	
 			        	reserva = new Reserva();
 			        	
 			        }
@@ -292,7 +311,7 @@ public class VentanaCliente extends JFrame{
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
-					new VentanaParking(datos,reserva,cliente,seleccionDatos);
+					new VentanaParking(datos,reserva,cliente,seleccionDatos,bdManager);
 					
 				});
 				
@@ -301,7 +320,7 @@ public class VentanaCliente extends JFrame{
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
-					new VentanaHotel(datos,reserva,cliente);
+					new VentanaHotel(datos,reserva,cliente,seleccionDatos,bdManager);
 				});
 				
 			}
@@ -319,23 +338,32 @@ public class VentanaCliente extends JFrame{
 			        if(calendar2!=null) {
 			        	ZonedDateTime zonedDateTime = calendar2.toZonedDateTime();
 				        LocalDate fechaLocal = zonedDateTime.toLocalDate();
-				        reserva.setFechaFinal(fechaLocal);
-				        
+				        reserva.setFechaFinal(fechaLocal);     
 			        }
+			        
+			        if(seleccionDatos=="Base de datos") {
+			        	try {
+							bdManager.actualizarReserva(reserva);
+						} catch (BDexception e1) {
+							System.err.println("Error actualizando la reserva en la bd");
+							e1.printStackTrace();
+						}
+			        }
+			        
 				});
 				bReservarParking.addActionListener((e)->{
 					if (!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
 					
-					new VentanaParking(datos,reserva,cliente,seleccionDatos);
+					new VentanaParking(datos,reserva,cliente,seleccionDatos, bdManager);
 				});
 				
 				bReservarHabitacion.addActionListener((e)->{
 					if (!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
-					new VentanaHotel(datos,reserva,cliente);
+					new VentanaHotel(datos,reserva,cliente, seleccionDatos, bdManager);
 				});
 				
 				
@@ -373,8 +401,17 @@ public class VentanaCliente extends JFrame{
                  Image imagenPerfilEscala = (new ImageIcon(cliente.getFotoPerfil()).getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH));
                  menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
                  this.repaint();
-
+                 
                  System.out.println("Fichero seleccionado: " + file.toString());
+                 
+                 if(seleccionDatos=="Base de datos") {
+                	 try {
+						bdManager.actualizarCliente(cliente);
+					} catch (BDexception e1) {
+						System.err.println("Error actualizando el cliente en la bd");
+						e1.printStackTrace();
+					}
+                 }
              }
              logger.info("INFORMACION: cambiada la foto de perfil");
 		});
@@ -448,7 +485,6 @@ public class VentanaCliente extends JFrame{
 						date.getModel().setValue(null);
 					}
 		        }
-				
 			}
 		});
 
@@ -538,6 +574,15 @@ public class VentanaCliente extends JFrame{
 		        cliente.setfNacimiento(fechaLocal);
 	        }
 	        datos.getMapaClientesPorDNI().put(cliente.getDni(), cliente);
+	        
+	        if(seleccionDatos=="Base de datos") {
+	        	try {
+					bdManager.actualizarCliente(cliente);
+				} catch (BDexception e1) {
+					System.err.println("Error actualizando cliente");
+					e1.printStackTrace();
+				}
+	        }
 	        logger.info("INFORMACION: actualizados los datos del cliente");
 		});
 		pPerfil.add(botonEditar);
@@ -685,6 +730,16 @@ public class VentanaCliente extends JFrame{
 			cliente.getListaReservasCliente().remove(seleccionado);
 			modeloListaReservas.removeElement(seleccionado);
 			listaReservas.repaint();
+			
+			if(seleccionDatos=="Base de deatos") {
+				try {
+					bdManager.deleteReserva(seleccionado);
+				} catch (BDexception e1) {
+					System.err.println("Error borrando la reserva de la bd");
+					e1.printStackTrace();
+				}
+			}
+			
 		});
 		
 		
@@ -707,11 +762,11 @@ public class VentanaCliente extends JFrame{
 		});
 		
 		cerrarSesion.addActionListener((e)->{
-			if(seleccionDatos) {
+			if(seleccionDatos=="Fichero de datos") {
 				datos.guardarDatos();
 			}	
 			dispose();
-			new VentanaInicioCliente(datos,seleccionDatos);
+			new VentanaInicioCliente(datos,seleccionDatos,bdManager);
 		});
 		
 		informacionCliente.addActionListener((e)->{
@@ -736,8 +791,15 @@ public class VentanaCliente extends JFrame{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(seleccionDatos) {
+				if(seleccionDatos=="Fichero de datos") {
 					datos.guardarDatos();
+				}else if(seleccionDatos=="Base de datos") {
+					try {
+						bdManager.disconnect();
+					} catch (BDexception e1) {
+						System.err.println("Error desconectando la base de datos");
+						e1.printStackTrace();
+					}
 				}
 				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
