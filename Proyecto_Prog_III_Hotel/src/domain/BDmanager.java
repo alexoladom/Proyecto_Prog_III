@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 
@@ -294,8 +295,6 @@ public class BDmanager {
 	
 	public void deleteReserva(Reserva reserva) throws BDexception {
 		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM reservas WHERE id=?")) {
-			stmt.setInt(1,reserva.getId());
-			stmt.executeUpdate();
 			
 			List<Habitacion> listaHabitaciones =reserva.getListaHabitacionesReservadas();
 			List<PlazaParking> listaPlazas = reserva.getListaPlazasParking();
@@ -303,12 +302,18 @@ public class BDmanager {
 			
 			for (Habitacion habitacion : listaHabitaciones) {
 				habitacion.setReserva(null);
+				habitacion.setOcupado(false);
 				actualizarHabitacion(habitacion);
 			}
 			for (PlazaParking plazaParking : listaPlazas) {
 				plazaParking.setReserva(null);
+				plazaParking.setOcupada(false);
 				actualizarPlazaparking(plazaParking);
 			}
+			
+			stmt.setInt(1,reserva.getId());
+			stmt.executeUpdate();
+			
 			
 		} catch (SQLException e) {
 			throw new BDexception("No se pudo elimiar la resera con id " + reserva.getId(), e);
@@ -1134,18 +1139,18 @@ public class BDmanager {
 			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new BDexception("No se pudo actualizar la plaza en la BD", e);
+			throw new BDexception("No se pudo actualizar el parking en la BD", e);
 		}
 	}
 	
 	//Metodo para borrar parkings
 	
 	public void deleteParking(Parking parking) throws BDexception {
-		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM parking WHERE fecha=?")) {
+		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM parkings WHERE fecha=?")) {
 			stmt.setString(1,parking.getFecha().toString());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new BDexception("No se pudo elimiar la tarea con DNI " + parking.getFecha(), e);
+			throw new BDexception("No se pudo elimiar el Parking" + parking.getFecha(), e);
 		}
 	}
 	
@@ -1182,9 +1187,64 @@ public class BDmanager {
 			datos.getMapaClientesPorDNI().putIfAbsent(cliente.getDni(), cliente);
 		}
 		
-		for (Parking parking : getParkings()) {
+		
+		List<Parking> listaParkings = new ArrayList<>();
+		getParkings().forEach((p)->{
+			if(p.getFecha().isAfter(LocalDate.now().minusDays(1))) {
+				listaParkings.add(p);
+				
+			}else {
+				try {
+					deleteParking(p);
+				} catch (BDexception e) {
+					System.err.println("Error borrando el parking");
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+		
+		Stream<LocalDate> stream = LocalDate.now().datesUntil(LocalDate.now().plusDays(8));
+		
+		List<LocalDate> listaFechasQueFaltan = stream.toList();
+	
+		
+		for (Parking parking : listaParkings) {
 			datos.getMapaParkingPorFecha().putIfAbsent(parking.getFecha(), parking);
 		}
+		
+		if(!listaFechasQueFaltan.isEmpty()) {
+			listaFechasQueFaltan.forEach((f)->{
+				if(!datos.getMapaParkingPorFecha().keySet().contains(f)) {
+					Parking p = new Parking(f,false,25);
+					p.distribucion = new PlazaParking [5][5];
+					for (int i = 0; i < 5; i++) {
+						for (int j = 0; j < 5; j++) {
+							PlazaParking pl =new PlazaParking(i,j,false,null,p);
+							p.distribucion[i][j]= pl;
+							try {
+								guardarPlaza(pl);
+							} catch (BDexception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					listaParkings.add(p);
+					try {
+						guardarParking(p);
+					} catch (BDexception e) {
+						System.err.println("Error guardando el parking");
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+		
+		for (Parking parking : listaParkings) {
+			datos.getMapaParkingPorFecha().putIfAbsent(parking.getFecha(), parking);
+		}
+	
 		
 		for (Habitacion habitacion : getHabitaciones()) {
 			datos.getMapaHabitaciones().putIfAbsent(habitacion.getPlanta(), new ArrayList<>());
@@ -1193,31 +1253,7 @@ public class BDmanager {
 			
 	}
 	
-	public static void main(String[] args) {
-		BDmanager manager = new BDmanager();
-
-		try {
-			manager.connect("bd/database.db");
-			
-			Reserva r = new Reserva();
-			r.setId(-1);
-			Habitacion h =manager.getHabitacion(3);
-			h.setOcupado(false);
-			h.setReserva(r);
-			manager.actualizarHabitacion(h);
-			PlazaParking p=manager.getPlazaParking(375);
-			p.setOcupada(false);
-			p.setReserva(r);
-			manager.actualizarPlazaparking(p);
-		
-			
-			
-			manager.disconnect();
-		} catch (BDexception e) {
-			System.err.println("Error en la main");
-			e.printStackTrace();
-		}
-	}
+	
 	
 	
 	

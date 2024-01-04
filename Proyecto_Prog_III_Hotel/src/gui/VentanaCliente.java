@@ -596,7 +596,15 @@ public class VentanaCliente extends JFrame{
 		pListaReservas.setBackground(new Color(0,140,255));
 		
 		modeloListaReservas = new DefaultListModel<Reserva> ();
-		modeloListaReservas.addAll(cliente.getListaReservasCliente());
+		if(seleccionDatos=="Base de datos") {
+			try {
+				modeloListaReservas.addAll(bdManager.getReservasDeCliente(cliente));
+			} catch (BDexception e1) {
+				e1.printStackTrace();
+			}
+		}else {
+			modeloListaReservas.addAll(cliente.getListaReservasCliente());
+		}
 		
 		
 		listaReservas = new JList<Reserva>(modeloListaReservas);
@@ -731,9 +739,19 @@ public class VentanaCliente extends JFrame{
 			modeloListaReservas.removeElement(seleccionado);
 			listaReservas.repaint();
 			
-			if(seleccionDatos=="Base de deatos") {
+			if(seleccionDatos=="Base de datos") {
+				System.out.println(seleccionado.getId());
 				try {
 					bdManager.deleteReserva(seleccionado);
+					seleccionado.getListaPlazasParking().forEach(p->{
+						p.setOcupada(false);
+						p.setReserva(null);
+						try {
+							bdManager.actualizarPlazaparking(p);
+						} catch (BDexception e1) {
+							e1.printStackTrace();
+						}
+					});
 				} catch (BDexception e1) {
 					System.err.println("Error borrando la reserva de la bd");
 					e1.printStackTrace();

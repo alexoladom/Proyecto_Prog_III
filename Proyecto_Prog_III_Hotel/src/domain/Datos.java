@@ -172,6 +172,7 @@ public class Datos {
 		for (Cliente cliente : getListaClientes()) {
 			getMapaClientesPorDNI().putIfAbsent(cliente.getDni(), cliente);
 		}
+		
 		for (int i = 0; i < 15; i++) {
 			mapaParkingPorFecha.put(LocalDate.now().plusDays(i), new Parking(LocalDate.now().plusDays(i),false,25));
 		}
