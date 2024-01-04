@@ -87,7 +87,7 @@ public abstract class Habitacion implements Serializable{
 		}
 		
 	}
-	
+
 	public abstract double getPrecioPorNoche();
 	
 	@Override

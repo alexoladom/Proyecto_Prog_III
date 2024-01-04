@@ -261,9 +261,9 @@ public class BDmanager {
 				reserva.setListaHabitacionesReservadas(listaHabitaciones);
 				return reserva;
 			} else {
-				Reserva reserva = new Reserva();
-				reserva.setId(-1);
-				return reserva;
+				Reserva reserva2 = new Reserva();
+				reserva2.setId(-1);
+				return reserva2;
 				
 			}
 		} catch (SQLException | DateTimeParseException e) {
@@ -630,7 +630,14 @@ public class BDmanager {
 				habitacion.setOcupado(rs.getBoolean("ocupado"));
 				habitacion.setPlanta(rs.getInt("planta"));
 				habitacion.setNumero(rs.getInt("numero"));
-				habitacion.setReserva(getReserva(rs.getInt("idReserva")));
+				if(rs.getInt("idReserva")==-1) {
+					Reserva reserva = new Reserva();
+					reserva.setId(-1);
+					habitacion.setReserva(reserva);
+				}else {
+					habitacion.setReserva(getReserva(rs.getInt("idReserva")));
+				}
+				
 				
 				
 				return habitacion;
