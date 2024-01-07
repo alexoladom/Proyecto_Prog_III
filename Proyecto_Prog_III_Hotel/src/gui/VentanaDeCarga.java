@@ -40,11 +40,18 @@ public class VentanaDeCarga extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500,500);
 		setTitle("HOTEL");
+		setLocationRelativeTo(null);
+		
 		JComboBox<String> combo = new JComboBox<>();
 		combo.addItem("Fichero de datos");
 		combo.addItem("Datos de prueba");
 		combo.addItem("Base de datos");
 		
+		try {
+			bdManager.connect("bd/database.db");
+		} catch (BDexception e1) {
+			e1.printStackTrace();
+		}
 		
 		botonCerrar = new JButton("CERRAR");
 		botonEntrar = new JButton("ENTRAR");
@@ -106,12 +113,21 @@ public class VentanaDeCarga extends JFrame{
 						public void run() {
 							if(seleccion=="Fichero de datos") {
 								datos.cargarDatos();
+								try {
+									bdManager.disconnect();
+								} catch (BDexception e) {
+									e.printStackTrace();
+								}
 							}else if(seleccion =="Datos de prueba"){
 								datos.inicializarDatos();
+								try {
+									bdManager.disconnect();
+								} catch (BDexception e) {
+									e.printStackTrace();
+								}
 							}else {
 								//Conectar con la base de datos
-								try {
-									bdManager.connect("bd/database.db");	
+								try {										
 									bdManager.rellenarDatos(datos);
 								} catch (BDexception e) {
 									System.err.println("Error en la ventana de carga al intentar conectar con la BD");

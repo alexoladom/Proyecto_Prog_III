@@ -32,7 +32,6 @@ import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 import domain.Habitacion;
-import domain.HabitacionSimple;
 import domain.Mesa;
 import domain.Reserva;
 
@@ -56,14 +55,16 @@ public class VentanaHotel extends JFrame{
 	private JList<Habitacion> listaReservas;
 	
 	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
-		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
-		setIconImage(h.getImage());
+		ImageIcon image = new ImageIcon("src/Imagenes/h.png");
+		setIconImage(image.getImage());
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,800);
-		setTitle("Hotel");
+		setTitle("Hotel");		
+		setLocationRelativeTo(null);
 		
 		//Creo los botones
+		
 		botonReserva = new JButton ("Reserva");
 		botonTerminarReserva = new JButton ("Acabar reserva");
 		botonCerrar = new JButton ("Cerrar");
@@ -379,7 +380,6 @@ public class VentanaHotel extends JFrame{
 		
 		//Creacion de la JList
 		modeloLista = new DefaultListModel<Habitacion>();
-		modeloLista.addElement(new HabitacionSimple());
 		listaReservas = new JList<Habitacion>(modeloLista);
 
 	   
@@ -420,19 +420,19 @@ public class VentanaHotel extends JFrame{
 		        tablaComedor.repaint();
 		        //JList
 		        if(tablaA.getSelectedRow()!=-1) {
-		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());	
-		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
-		        			reserva.getListaHabitacionesReservadas().add(h);
-					        if(modeloLista.contains(h)) {
+		        	Habitacion h1 = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());	
+		        	if(h1.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h1)) {
+		        			reserva.getListaHabitacionesReservadas().add(h1);
+					        if(modeloLista.contains(h1)) {
 								  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
 					        }else {
-					        	modeloLista.addElement(h);
+					        	modeloLista.addElement(h1);
 					        }
 		        	}
 		        }
 		        if(tablaB.getSelectedRow()!=-1) {
-		        	Habitacion h = datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow());
-		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
+		        	Habitacion h2 = datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow());
+		        	if(h2.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h2)) {
 				        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
 				        if(modeloLista.contains(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()))) {
 							  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -442,8 +442,8 @@ public class VentanaHotel extends JFrame{
 		        	}
 		        }
 		        if(tablaC.getSelectedRow()!=-1) {
-		        	Habitacion h = datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow());
-		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
+		        	Habitacion h3 = datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow());
+		        	if(h3.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h3)) {
 				        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
 				        if(modeloLista.contains(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()))) {
 							  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -480,26 +480,37 @@ public class VentanaHotel extends JFrame{
 		        
 	       
 		        if(tablaA.getSelectedRow()!=-1) {
-		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());
-		        	 if(modeloLista.contains(h)) {
-				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
-				        modeloLista.removeElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+		        	Habitacion h1 = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());
+		        	 if(modeloLista.contains(h1)) {
+				        reserva.getListaHabitacionesReservadas().remove(h1);
+				        modeloLista.removeElement(h1);
+				        
 		        	 }
+		        	 tablaA.clearSelection();
+		        	 tablaB.clearSelection();
+		        	 tablaC.clearSelection();
 		        }
-		        if(tablaB.getSelectedRow()!=-1) {
-		        	 
-		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaB.getSelectedRow());
-		        	if(modeloLista.contains(h)) {
-				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
-				        modeloLista.removeElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+		        if(tablaB.getSelectedRow()!=-1) {		        	 
+		        	Habitacion h2 = datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow());
+		        	if(modeloLista.contains(h2)) {
+				        reserva.getListaHabitacionesReservadas().remove(h2);
+				        modeloLista.removeElement(h2);
+				        
 		        	}
+		        	tablaA.clearSelection();
+		        	tablaB.clearSelection();
+		        	tablaC.clearSelection();
 		        }
 		        if(tablaC.getSelectedRow()!=-1) {
-		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaC.getSelectedRow());
-		        	if(modeloLista.contains(h)) {
-				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
-				        modeloLista.removeElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+		        	Habitacion h3 = datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow());
+		        	if(modeloLista.contains(h3)) {
+				        reserva.getListaHabitacionesReservadas().remove(h3);
+				        modeloLista.removeElement(h3);
+				        
 		        	}
+		        	tablaA.clearSelection();
+		        	tablaB.clearSelection();
+		        	tablaC.clearSelection();
 		        }		
 		        listaReservas.setModel(modeloLista);
 		        listaReservas.repaint();
@@ -629,21 +640,38 @@ public class VentanaHotel extends JFrame{
 		                getContentPane().remove(scrollA);
 		            	getContentPane().remove(scrollB);
 		            	getContentPane().remove(scrollC);
+		            	
+		            	 tablaA.clearSelection();
+			        	 tablaB.clearSelection();
+			        	 tablaC.clearSelection();
+		            	
 		            } else if (nodo.equals("Planta A")) {
 		            	getContentPane().remove(scrollComedor);
 		            	getContentPane().remove(scrollB);
 		            	getContentPane().remove(scrollC);
 		                getContentPane().add(scrollA, BorderLayout.CENTER);
+		                
+		                tablaA.clearSelection();
+			        	 tablaB.clearSelection();
+			        	 tablaC.clearSelection();
 		            } else if (nodo.equals("Planta B")) {
 		            	getContentPane().remove(scrollA);
 		            	getContentPane().remove(scrollC);
 		            	getContentPane().remove(scrollComedor);
 		                getContentPane().add(scrollB, BorderLayout.CENTER);
+		                
+		                tablaA.clearSelection();
+			        	 tablaB.clearSelection();
+			        	 tablaC.clearSelection();
 		            } else if (nodo.equals("Planta C")) {
 		            	getContentPane().remove(scrollA);
 		            	getContentPane().remove(scrollB);
 		            	getContentPane().remove(scrollComedor);
 		                getContentPane().add(scrollC, BorderLayout.CENTER);
+		                
+		                tablaA.clearSelection();
+			        	 tablaB.clearSelection();
+			        	 tablaC.clearSelection();
 		            }
 		            pack();
 		        }

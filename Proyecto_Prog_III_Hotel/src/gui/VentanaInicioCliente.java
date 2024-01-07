@@ -45,6 +45,7 @@ public class VentanaInicioCliente extends JFrame {
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setLocationRelativeTo(null);
 
 		
 		this.datos = datos;
@@ -167,9 +168,11 @@ public class VentanaInicioCliente extends JFrame {
 
 		botonRegistro.addActionListener(e -> {
 			if(datos.getMapaClientesPorDNI().containsKey(textoDNI2.getText())){
-				JOptionPane.showMessageDialog(null, "El DNI introducido ya esta en uso");
+				JOptionPane.showMessageDialog(null, "El DNI introducido ya esta en uso","Advertencia",JOptionPane.WARNING_MESSAGE);
 			}else if(datos.getMapaClientesPorDNI().containsKey(textoEmail.getText())) {
-				JOptionPane.showMessageDialog(null, "El e-mail introducido ya esta en uso");
+				JOptionPane.showMessageDialog(null, "El e-mail introducido ya esta en uso","Advertencia",JOptionPane.WARNING_MESSAGE);
+			}else if(date.getModel().getValue()==null) {
+				JOptionPane.showMessageDialog(null, "Introduzca una fecha de nacimiento","Advertencia",JOptionPane.WARNING_MESSAGE);
 			}else {
 				Cliente cliente = new Cliente();
 				cliente.setNombre(textoNombre.getText());
