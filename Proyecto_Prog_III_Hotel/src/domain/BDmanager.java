@@ -58,6 +58,7 @@ public class BDmanager {
 			while(rs.next()) {
 				Cliente cliente = new Cliente();
 				cliente.setDni(rs.getString("DNI"));
+				cliente.setNombre(rs.getString("Nombre"));
 				cliente.setApellido1(rs.getString("Apellido"));
 				cliente.setEmail(rs.getString("Email"));
 				cliente.setDireccion(rs.getString("Direccion"));
@@ -68,6 +69,7 @@ public class BDmanager {
 				cliente.setUltimoLogin(LocalDate.parse(rs.getString("UltimoLogin")));
 				List<Reserva> reservas = new ArrayList<>();
 				reservas.addAll(getReservasDeCliente(cliente));
+				cliente.setListaReservasCliente(reservas);
 				clientes.add(cliente);
 			}
 			

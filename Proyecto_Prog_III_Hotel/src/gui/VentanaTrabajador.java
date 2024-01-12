@@ -4,28 +4,50 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -34,18 +56,21 @@ import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.constraints.DateSelectionConstraint;
 
+import domain.BDexception;
 import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
+import domain.Reserva;
 import domain.Tarea;
 import domain.Trabajador;
 
 
 public class VentanaTrabajador extends JFrame {
     
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	private static final long serialVersionUID = 1L;
 	protected JProgressBar tareasHacer;
-	protected JPanel pTrabajadores,pClientes;
+	protected JPanel pTrabajadores,pClientes,pPerfil,pInformacion;
     protected JTable tablaDatosTrabajadores, tablaDatosClientes;
     protected JButton botonCerrar, botonTareaHecha;
     protected List<Tarea> tareasPendientes; //= trabajador.getListaTareasPorHacer(); // ejemplo de tareas pendientes que tiene un trabajador
@@ -79,23 +104,67 @@ public class VentanaTrabajador extends JFrame {
 		//Listeners de los menuItems
 		
 		itemTrabajador.addActionListener((e)->{
-			pTrabajadores.setVisible(true);
-			pClientes.setVisible(false);
+			getContentPane().removeAll();
+			getContentPane().add(pTrabajadores);
+			repaint();
+		
 		});
 		
 		itemCliente.addActionListener((e)->{
-			pTrabajadores.setVisible(false);
-			pClientes.setVisible(true);
+			getContentPane().removeAll();
+			getContentPane().add(pClientes);
+			repaint();
 		});
 		
 		cambiarFotoPerfil.addActionListener((e)->{
-			pTrabajadores.setVisible(false);
-			pClientes.setVisible(false);
+
+			JFileChooser fileChooser = new JFileChooser();
+			 FileFilter filter = new FileNameExtensionFilter("Fichero jpg o png", "jpg","png");
+             fileChooser.setFileFilter(filter);
+             int result = fileChooser.showOpenDialog(VentanaTrabajador.this);
+             if (result == JFileChooser.APPROVE_OPTION) {
+            	 File file = fileChooser.getSelectedFile();
+            	 try {            		 
+                	 File destino =new File("src/Imagenes/"+trabajador.getDni()+file.getName());
+					 Files.copy(Paths.get(file.getPath()), Paths.get(destino.getPath()),StandardCopyOption.REPLACE_EXISTING);
+					 if(trabajador.getFotoPerfil()!="src/Imagenes/imagenPerfilpng.png") {
+						 Files.deleteIfExists(Paths.get(trabajador.getFotoPerfil()));
+					 }
+					 trabajador.setFotoPerfil("src/Imagenes/"+trabajador.getDni()+file.getName());
+					 
+				} catch (IOException e2) {
+					logger.log(Level.SEVERE, e2.getMessage());
+					e2.printStackTrace();
+				}
+                 this.setIconImage(new ImageIcon(trabajador.getFotoPerfil()).getImage());
+                 Image imagenPerfilEscala = (new ImageIcon(trabajador.getFotoPerfil()).getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH));
+                 menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
+                 this.repaint();
+                 
+                 
+                 logger.info("Fichero seleccionado: " + file.getPath());
+                 
+                 if(seleccionDatos=="Base de datos") {
+                	 try {
+						bdManager.actualizarTrabajador(trabajador);
+					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, e1.getMessage());
+						e1.printStackTrace();
+					}
+                 }
+             }
+             logger.info("INFORMACION: cambiada la foto de perfil");
 		});
 		
 		informacionTrabajador.addActionListener((e)->{
-			pTrabajadores.setVisible(false);
-			pClientes.setVisible(false);
+			getContentPane().remove(pTrabajadores);
+			getContentPane().remove(pClientes);
+			getContentPane().add(pPerfil,BorderLayout.CENTER);
+			pPerfil.repaint();
+			pPerfil.setVisible(true);
+			getContentPane().repaint();
+
+
 		});
 		
 		cerrarSesion.addActionListener((e)->{
@@ -124,10 +193,172 @@ public class VentanaTrabajador extends JFrame {
 		Image imagenTrabajadoresEscala = imagenTrabajadores.getImage().getScaledInstance(150, 45,Image.SCALE_SMOOTH);
 		menuTrabajador.setIcon(new ImageIcon(imagenTrabajadoresEscala));
 
+		//Panel del perfil
+		
+		
+
+		pPerfil= new JPanel();
+		pInformacion = new JPanel();
+		
+		pInformacion.setLayout(new GridLayout(9,2));
+		
+		JLabel lblNombre = new JLabel("Introduzca su Nombre: ");
+		JLabel lblContra = new JLabel("Introduzca su contraseña: ");
+		JLabel lblDNI = new JLabel("Introduzca su DNI: ");
+		JLabel lblApellido = new JLabel("Introdzca su apellido: ");
+		JLabel lblEmail = new JLabel("Introduzca su e-mail: ");
+		JLabel lblDireccion = new JLabel("Introduzca su direccion: ");
+		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ");
+		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ");
+		
+		JTextField textoNombre = new JTextField(20);
+		textoNombre.setEditable(false);
+		textoNombre.setText(trabajador.getNombre());
+		JPasswordField textoContra = new JPasswordField(20);
+		textoContra.setEditable(false);
+		textoContra.setText(trabajador.getContraseña());
+		JTextField textoDNI = new JTextField(20);
+		textoDNI.setEditable(false);
+		textoDNI.setText(trabajador.getDni());
+		JTextField textoApellido = new JTextField(20);
+		textoApellido.setEditable(false);
+		textoApellido.setText(trabajador.getApellido1());
+		JTextField textoEmail = new JTextField(20);
+		textoEmail.setEditable(false);
+		textoEmail.setText(trabajador.getEmail());
+		JTextField textoDireccion = new JTextField(20);
+		textoDireccion.setEditable(false);
+		textoDireccion.setText(trabajador.getDireccion());
+		JTextField textoTelefono= new JTextField(20);
+		textoTelefono.setEditable(false);
+		textoTelefono.setText(trabajador.getTelefono());
+		JDatePicker date = new JDatePicker();
+		date.setEnabled(false);
+		date.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
+				ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        if (calendar!=null) {
+			        if (fechaLocal.isAfter(LocalDate.now())) {
+						date.getModel().setValue(null);
+					}
+		        }
+			}
+		});
+
+		date.addDateSelectionConstraint(new DateSelectionConstraint() {
+			
+			@Override
+			public boolean isValidSelection(DateModel<?> arg0) {
+				
+				GregorianCalendar calendar = (GregorianCalendar) arg0.getValue();
+		        if(calendar!=null) {
+		        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+			        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+				    if (fechaLocal.isAfter(LocalDate.now())) {
+							return false;
+						}else {
+							return true;
+					}
+		        }else{
+		        	return true;
+		        }		         
+			}
+		});
+		
+		
+		
+		pInformacion.add(lblNombre);
+		pInformacion.add(textoNombre);
+		pInformacion.add(lblApellido);
+		pInformacion.add(textoApellido);
+		pInformacion.add(lblContra);
+		pInformacion.add(textoContra);
+		pInformacion.add(lblDNI);
+		pInformacion.add(textoDNI);
+		pInformacion.add(lblEmail);
+		pInformacion.add(textoEmail);
+		pInformacion.add(lblDireccion);
+		pInformacion.add(textoDireccion);
+		pInformacion.add(lblFechaNacimiento);
+		pInformacion.add(date);
+		pInformacion.add(lblTelefono);
+		pInformacion.add(textoTelefono);
+		
+		JButton botonEditar = new JButton("Editar datos");
+		JButton botonGuardar = new JButton("Guardar edicion");
+		botonGuardar.setEnabled(false);
+		
+		botonEditar.addActionListener((e)->{
+			textoNombre.setEditable(true);
+			textoApellido.setEditable(true);
+			textoContra.setEditable(true);
+			textoDireccion.setEditable(true);
+			textoDNI.setEditable(true);
+			textoEmail.setEditable(true);
+			textoTelefono.setEditable(true);
+			date.setEnabled(true);
+			
+			botonGuardar.setEnabled(true);
+			botonEditar.setEnabled(false);
+		});
+		
+		botonGuardar.addActionListener((e)->{
+			datos.getMapaTrabajadoresPorDNI().remove(trabajador.getDni());
+			textoNombre.setEditable(false);
+			textoApellido.setEditable(false);
+			textoContra.setEditable(false);
+			textoDireccion.setEditable(false);
+			textoDNI.setEditable(false);
+			textoEmail.setEditable(false);
+			textoTelefono.setEditable(false);
+			date.setEnabled(false);
+			
+			botonGuardar.setEnabled(false);
+			botonEditar.setEnabled(true);
+			
+			trabajador.setNombre(textoNombre.getText());
+			trabajador.setApellido1(textoApellido.getText());
+			trabajador.setDni(textoDNI.getText());
+			trabajador.setContraseña(String.valueOf(textoContra.getPassword()));
+			trabajador.setDireccion(textoDireccion.getText());
+			trabajador.setEmail(textoEmail.getText());
+			trabajador.setTelefono(textoTelefono.getText());
+			
+			GregorianCalendar calendar = (GregorianCalendar) date.getModel().getValue();
+	        if(calendar!=null) {
+	        	ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+		        LocalDate fechaLocal = zonedDateTime.toLocalDate();
+		        trabajador.setfNacimiento(fechaLocal);
+	        }
+	        datos.getMapaTrabajadoresPorDNI().put(trabajador.getDni(), trabajador);
+	        
+	        if(seleccionDatos=="Base de datos") {
+	        	try {
+					bdManager.actualizarTrabajador(trabajador);
+				} catch (BDexception e1) {
+					System.err.println("Error actualizando trabajador");
+					e1.printStackTrace();
+				}
+	        }
+	        logger.info("INFORMACION: actualizados los datos del trabajador");
+	        
+	        setTitle("Trabajador "+ trabajador.getNombre()+" "+trabajador.getApellido1());
+	    });
+		pPerfil.add(botonEditar);
+		pPerfil.add(botonGuardar);
+		
+		pPerfil.add(pInformacion);
+		
+		
+		
+		
         
         //Panel de la informacion de los trabajadores
 		pTrabajadores = new JPanel();
-		pTrabajadores.setVisible(false);
+
 		
 		
 		
@@ -229,7 +460,6 @@ public class VentanaTrabajador extends JFrame {
 		
 		
 		pClientes = new JPanel();
-		pClientes.setVisible(false);
 		
 		
 		//Creacion del modelo de tabla
@@ -254,7 +484,12 @@ public class VentanaTrabajador extends JFrame {
 			
 			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return true;
+			    if(columnIndex==7) {
+			    	return false;
+			    }else {
+					return true;
+
+			    }
 			}
 
 			@Override
@@ -320,12 +555,21 @@ public class VentanaTrabajador extends JFrame {
 					boolean hasFocus, int row, int column) {
 				JLabel label = new JLabel("",SwingConstants.CENTER);
 				label.setOpaque(true);
-				label.setText(value.toString());
+				if(value==null) {
+					label.setText("---");
+				}else {
+					label.setText(value.toString());
+
+				}
 				if(row%2==0) {
 					label.setBackground(new Color(153,204,255));
 				}else {
 					label.setBackground(new Color(153,153,255));
 
+				}
+				
+				if (isSelected) {
+					label.setBorder(BorderFactory.createLineBorder(Color.black,2));
 				}
 				return label;
 			}
@@ -337,16 +581,17 @@ public class VentanaTrabajador extends JFrame {
 			private static final long serialVersionUID = 1L;
 			private LocalDate fecha;
 			private JDatePicker picker;
+			
 			@Override
 			public Object getCellEditorValue() {
-				return fecha;
+				return fecha;	
 			}	
 
 			@Override
 			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
 					int column) {
 				picker = new JDatePicker();
-				
+								
 				picker.addActionListener(new ActionListener() {	
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -388,12 +633,40 @@ public class VentanaTrabajador extends JFrame {
 				
 				return picker;
 			}
-
-
-			
 		}
- 		
+		
+		
+		
 		tablaDatosClientes = new JTable(new ModeloTablaClientes());
+		
+	
+
+		tablaDatosClientes.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(tablaDatosClientes.getSelectedRow()!=-1) {
+					Cliente cliente = datos.getMapaClientesPorDNI().get(tablaDatosClientes.getValueAt(tablaDatosClientes.getSelectedRow(), 0));
+					if(tablaDatosClientes.getSelectedColumn()==7) {
+						
+						DefaultListModel<String> modelo = new DefaultListModel<>();
+						cliente.getListaReservasCliente().forEach(r->{
+							modelo.addElement(r.toString());
+						});
+						JList<String> lista = new JList<>();
+						if (modelo.isEmpty()) {
+							modelo.addElement("No hay reservas para este cliente");
+						}
+						lista.setModel(modelo);
+						JScrollPane scroll = new JScrollPane(lista);
+						
+						JOptionPane.showMessageDialog(VentanaTrabajador.this, scroll,"Reservas del cliente "+ cliente.getNombre()+" "+cliente.getApellido1(), JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+			}
+			
+		});
+		
 		
 		tablaDatosClientes.setDefaultRenderer(Object.class, new RendererTablaClientes());
 		
@@ -417,20 +690,18 @@ public class VentanaTrabajador extends JFrame {
 		pClientes.add(scrollClientes, BorderLayout.CENTER);
 		
 		
-		//Añadir los paneles a la frame
-		
-        add(pTrabajadores,BorderLayout.NORTH);
-        add(pClientes);
+
 
         setVisible(true);
         
     }
-  
+  /*
     public static void main(String[] args) {
     	Datos datos = new Datos ();
     	datos.inicializarDatos();
     	Trabajador t = new Trabajador();
-//		 new VentanaTrabajador(datos, t, true);
+		 new VentanaTrabajador(datos, t, "Fichero de datos", null);
 	}
+	*/
     
 }
