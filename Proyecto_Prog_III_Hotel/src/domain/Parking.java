@@ -11,48 +11,39 @@ public class Parking implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	//Atributos
-	//El parking es un array bidimensional de 10x10
-	protected static int numId;
-	protected int id;
-	protected boolean completo;
-	protected int numPlazasDisponibles = 100;
+	//El parking es un array bidimensional de 5x5
 	protected LocalDate fecha;
+	protected boolean completo;
+	protected int numPlazasDisponibles = 25;
 	protected PlazaParking[][] distribucion = new PlazaParking[5][5];
 	
+	
 	//Constructores
-	public Parking( boolean completo, int numPlazasDisponibles, PlazaParking[][] parking, LocalDate fecha) {
+	public Parking(LocalDate fecha, boolean completo, int numPlazas ) {
 		super();
-		numId++;
-		this.id = numId;
 		this.completo = completo;
-		this.numPlazasDisponibles = numPlazasDisponibles;
-		this.distribucion = parking;
+		this.numPlazasDisponibles = numPlazas;
 		this.fecha=fecha;
+		this.distribucion = new PlazaParking [5][5];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				distribucion[i][j]= new PlazaParking(i,j,false,null,this);
+			}
+		}
 	} 
 	public Parking() {
 		super();
-		numId++;
-		this.id = numId;
 		this.completo = false;
-		this.numPlazasDisponibles = 100;
+		this.numPlazasDisponibles = 25;
+		this.distribucion = new PlazaParking [5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				distribucion[i][j]= new PlazaParking(i,j,false);
+				distribucion[i][j]= new PlazaParking(i,j,false,null,this);
 			}
 		}
 		this.fecha= LocalDate.now();
 	}
 	//Getters y setters
-	
-	public static int getNumId() {
-		return numId;
-	}
-	public static void setNumId(int a) {
-		 numId = a;
-	}
-	public int getId() {
-		return id;
-	}
 	
 	public boolean isCompleto() {
 		return completo;
@@ -61,15 +52,22 @@ public class Parking implements Serializable{
 		this.completo = completo;
 	}
 	public int getNumPlazasDisponibles() {
-		return numPlazasDisponibles;
-	}
-	public void setNumPlazasDisponibles(int numPlazasDisponibles) {
-		if (numPlazasDisponibles<0) {
-			System.err.println("El numero de plazas debe de ser positivo");
-		}else {
-			this.numPlazasDisponibles = numPlazasDisponibles;
+		int cont =0;
+		for (int i = 0; i < distribucion.length; i++) {
+			for (int j = 0; j < distribucion.length; j++) {
+				PlazaParking p = distribucion [i][j];
+				if(p.isOcupada()) {
+					cont++;
+				}
+			}
 		}
-		
+		return 25-cont;
+	}
+	
+	
+	
+	public void setNumPlazasDisponibles(int numPlazasDisponibles) {
+		this.numPlazasDisponibles = numPlazasDisponibles;
 	}
 	public PlazaParking[][] getDistribucion() {
 		return distribucion;
@@ -101,13 +99,13 @@ public class Parking implements Serializable{
 	
 	@Override
 	public String toString() {
-		return String.format("Parking %s, completo? %s, Plazad disponibles: %s", id, completo,
+		return String.format("Parking %s, completo? %s, Plazas disponibles: %s", fecha, completo,
 				numPlazasDisponibles);
 	} 
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(fecha, id);
+		return Objects.hash(fecha);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -118,7 +116,7 @@ public class Parking implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Parking other = (Parking) obj;
-		return Objects.equals(fecha, other.fecha) && id == other.id;
+		return Objects.equals(fecha, other.fecha);
 	}
 	
 	

@@ -12,15 +12,17 @@ public abstract class Habitacion implements Serializable{
 	protected boolean ocupado;
 	protected int planta;
 	protected int numero;
+	protected Reserva reserva;
 	
 	
-	public Habitacion(boolean ocupado, int planta, int numero) {
+	public Habitacion(boolean ocupado, int planta, int numero, Reserva reserva) {
 		super();
 		numId++;
 		this.id = numId;
 		this.ocupado = ocupado;
 		this.planta = planta;
 		this.numero = numero;
+		this.reserva=reserva;
 	}
 	
 	public Habitacion() {
@@ -30,6 +32,7 @@ public abstract class Habitacion implements Serializable{
 		this.ocupado = false;
 		this.planta = 0;
 		this.numero = 0;
+		this.reserva=null;
 	}
 
 	public static int getNumId() {
@@ -43,6 +46,18 @@ public abstract class Habitacion implements Serializable{
 		return id;
 	}
 
+	
+	public Reserva getReserva() {
+		return reserva;
+	}
+
+	public void setReserva(Reserva reserva) {
+		this.reserva = reserva;
+	}
+
+	public void setId(int id) {
+		this.id=id;
+	}
 	public boolean isOcupado() {
 		return ocupado;
 	}
@@ -72,6 +87,7 @@ public abstract class Habitacion implements Serializable{
 		}
 		
 	}
+<<<<<<< HEAD
 	//Metodo para comprobar si esta ocupada una habitación
 	public boolean comprobarHabitacionDisponible(Cliente cliente, Habitacion plaza) {
 		boolean esta = false;
@@ -83,6 +99,9 @@ public abstract class Habitacion implements Serializable{
 		return esta;
 	}
 	/////////////////////////////////////////////////////////////
+=======
+
+>>>>>>> branch 'master' of https://github.com/alexoladom/Proyecto_Prog_III_E1-08.git
 	public abstract double getPrecioPorNoche();
 	
 	@Override

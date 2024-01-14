@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import domain.BDmanager;
 import domain.Datos;
 
 
@@ -27,7 +28,9 @@ public class VentanaInicioTrabajador extends JFrame{
 	protected JPasswordField textoContra;
 	protected Datos datos;
 
-	public VentanaInicioTrabajador(Datos datos,boolean seleccionDatos) {
+	public VentanaInicioTrabajador(Datos datos,String seleccionDatos, BDmanager bdManager) {
+		
+		//TODO falta implementar la base de datos
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,7 +69,7 @@ public class VentanaInicioTrabajador extends JFrame{
 				
 				@Override
 				public void run() {
-					new VentanaSeleccion(datos,seleccionDatos);	
+					new VentanaSeleccion(datos,seleccionDatos,bdManager);	
 					logger.info("Se vuelve a la ventana de selección");
 				}
 			});
@@ -83,7 +86,7 @@ public class VentanaInicioTrabajador extends JFrame{
 						
 						@Override
 						public void run() {
-							new VentanaTrabajador(datos, datos.getMapaTrabajadoresPorDNI().get(dni),seleccionDatos);
+							new VentanaTrabajador(datos, datos.getMapaTrabajadoresPorDNI().get(dni),seleccionDatos,bdManager);
 							
 						}
 					});

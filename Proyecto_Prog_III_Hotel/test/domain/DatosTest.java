@@ -41,20 +41,19 @@ public class DatosTest {
 	public void testInicializarDatos() {
 		Habitacion.setNumId(0);
 		Mesa.setNumId(0);
-		Parking.setNumId(0);
 		datos.inicializarDatos();
 		LocalDate a = LocalDate.of(1999, 9, 11);
-		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate b = LocalDate.of(1989, 7, 23);
-		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate c = LocalDate.of(1995, 3, 18);
-		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate d = LocalDate.of(1993, 2, 6);
-		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate e = LocalDate.of(1991, 1, 12);
-		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate f = LocalDate.of(2000, 3, 7);
-		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		List <Trabajador> listaTrabajadores = new ArrayList<Trabajador>();
 		listaTrabajadores.add(t1);
 		listaTrabajadores.add(t2);
@@ -68,10 +67,10 @@ public class DatosTest {
 		
 		//Habitaciones planta A
 		Habitacion.setNumId(0);
-		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101);
-		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102);
-		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103);
-		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104);
+		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101,null);
+		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102,null);
+		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103,null);
+		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104,null);
 		Map<Integer,List<Habitacion>> mapaHabitaciones = new HashMap<>();
 		mapaHabitaciones.put(0, new ArrayList<>());
 		mapaHabitaciones.get(0).add(h1);
@@ -79,20 +78,20 @@ public class DatosTest {
 		mapaHabitaciones.get(0).add(h3);
 		mapaHabitaciones.get(0).add(h4);
 		//Habitaciones planta B
-		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201);
-		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202);
-		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203);
-		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204);
+		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201,null);
+		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202,null);
+		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203,null);
+		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204,null);
 		mapaHabitaciones.put(1, new ArrayList<>());
 		mapaHabitaciones.get(1).add(h5);
 		mapaHabitaciones.get(1).add(h6);
 		mapaHabitaciones.get(1).add(h7);
 		mapaHabitaciones.get(1).add(h8);
 		//Habitaciones planta C
-		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301);
-		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302);
-		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303);
-		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304);
+		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301,null);
+		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302,null);
+		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303,null);
+		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304,null);
 		mapaHabitaciones.put(2, new ArrayList<>());
 		mapaHabitaciones.get(2).add(h9);
 		mapaHabitaciones.get(2).add(h10);
@@ -138,8 +137,7 @@ public class DatosTest {
 		}
 		
 		assertEquals(datos.getMapaTrabajadoresPorDNI(),mapaTraDNI);
-		
-		Parking.setNumId(0);
+
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
 			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());
@@ -298,22 +296,21 @@ public class DatosTest {
 		Habitacion.setNumId(0);
 		Mesa.setNumId(0);
 		Reserva.setNumId(0);
-		Parking.setNumId(0);
 
 
 		datos.inicializarDatos();
 		LocalDate a = LocalDate.of(1999, 9, 11);
-		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate b = LocalDate.of(1989, 7, 23);
-		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t2 = new Trabajador("18177653W", "Jorge", "Gonzalez","jorge@gmail.com", "Avenida de la Paz", b, "123", "673927462", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate c = LocalDate.of(1995, 3, 18);
-		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t3 = new Trabajador("18087826Y", "Alex", "Merino","alex@gmail.com", "Calle Deusto", c, "123", "673826592", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate d = LocalDate.of(1993, 2, 6);
-		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t4 = new Trabajador("18072643T", "Iñigo", "Jimenez","iñigo@gmail.com", "Calle Adolfo Dominguez", d, "123", "673826392", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate e = LocalDate.of(1991, 1, 12);
-		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t5 = new Trabajador("18562153W", "Gonzalo", "Mitegui","gonzalo@gmail.com", "Calle Ubayar", e, "123", "623627462", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		LocalDate f = LocalDate.of(2000, 3, 7);
-		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(), new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
+		Trabajador t6 = new Trabajador("18927456Y", "Daniel", "Larrea","daniel@gmail.com", "Calle Ugasko Bidea", f, "123", "676127592", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
 		List <Trabajador> listaTrabajadores = new ArrayList<Trabajador>();
 		listaTrabajadores.add(t1);
 		listaTrabajadores.add(t2);
@@ -325,10 +322,10 @@ public class DatosTest {
 		
 		//Habitaciones planta A
 		Habitacion.setNumId(0);
-		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101);
-		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102);
-		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103);
-		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104);
+		HabitacionSimple h1 = new HabitacionSimple(false, 1, 101,null);
+		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102,null);
+		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103,null);
+		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104,null);
 		Map<Integer,List<Habitacion>> mapaHabitaciones = new HashMap<>();
 		mapaHabitaciones.put(0, new ArrayList<>());
 		mapaHabitaciones.get(0).add(h1);
@@ -336,20 +333,20 @@ public class DatosTest {
 		mapaHabitaciones.get(0).add(h3);
 		mapaHabitaciones.get(0).add(h4);
 		//Habitaciones planta B
-		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201);
-		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202);
-		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203);
-		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204);
+		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201,null);
+		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202,null);
+		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203,null);
+		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204,null);
 		mapaHabitaciones.put(1, new ArrayList<>());
 		mapaHabitaciones.get(1).add(h5);
 		mapaHabitaciones.get(1).add(h6);
 		mapaHabitaciones.get(1).add(h7);
 		mapaHabitaciones.get(1).add(h8);
 		//Habitaciones planta C
-		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301);
-		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302);
-		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303);
-		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304);
+		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301,null);
+		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302,null);
+		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303,null);
+		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304,null);
 		mapaHabitaciones.put(2, new ArrayList<>());
 		mapaHabitaciones.get(2).add(h9);
 		mapaHabitaciones.get(2).add(h10);
@@ -392,8 +389,7 @@ public class DatosTest {
 			mapaTraDNI.putIfAbsent(trabajador.getDni(), trabajador);
 		}
 		
-		
-		Parking.setNumId(0);
+
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
 			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());

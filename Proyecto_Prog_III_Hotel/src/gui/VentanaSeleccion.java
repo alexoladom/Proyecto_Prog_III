@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
@@ -11,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Datos;
 
 public class VentanaSeleccion extends JFrame{
@@ -22,11 +26,12 @@ public class VentanaSeleccion extends JFrame{
 	protected JTextField textoIdentificacion;
 	protected JLabel lblIdentificacion, lblImagenTrabajador, lblImagenCliente;
 	
-	public VentanaSeleccion(Datos datos,boolean seleccionDatos) {
+	public VentanaSeleccion(Datos datos,String seleccionDatos, BDmanager bdManager) {
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setLocationRelativeTo(null);
 		
 		botonCerrar = new JButton("CERRAR");
 		botonCliente = new JButton("SOY CLIENTE");
@@ -61,7 +66,7 @@ public class VentanaSeleccion extends JFrame{
 			SwingUtilities.invokeLater(new Runnable() {
 			    @Override
 				public void run() {
-					new VentanaInicioTrabajador(datos,seleccionDatos);	
+					new VentanaInicioTrabajador(datos,seleccionDatos,bdManager);	
 					logger.info("Se ha abierto la ventana de inicio del trabajador");
 				}
 			});	
@@ -72,12 +77,25 @@ public class VentanaSeleccion extends JFrame{
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new VentanaInicioCliente(datos,seleccionDatos);
+					new VentanaInicioCliente(datos,seleccionDatos,bdManager);
 					logger.info("Se ha abierto la ventana de inicio del cliente");
 				}
 			});
 			
             dispose();
+		});
+		
+		addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				 try {
+						bdManager.disconnect();
+					} catch (BDexception ex) {
+						System.err.println("Error desconectando la BD");
+						ex.printStackTrace();
+					}
+			}
 		});
 		pack();
 		setVisible(true);

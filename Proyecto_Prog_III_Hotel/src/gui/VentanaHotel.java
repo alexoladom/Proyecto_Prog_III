@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +29,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import domain.BDexception;
+import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
 import domain.Habitacion;
@@ -55,7 +58,7 @@ public class VentanaHotel extends JFrame{
 	private DefaultListModel<Habitacion> modeloLista;
 	private JList<Habitacion> listaReservas;
 	
-	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente) {
+	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		this.datos=datos;
@@ -107,7 +110,14 @@ public class VentanaHotel extends JFrame{
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return String.valueOf(h.isOcupado()); 
+					case 0: if(h.getReserva()==reserva){
+						return "Reservado"; 
+					}else if(h.getReserva()!=reserva && h.getReserva().getId()!=-1){
+						return "Ocupado por otra reserva o cliente";
+					}else{
+						return "Libre";
+					}
+					
 					case 1: return String.valueOf(h.getPlanta()); 
 					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
@@ -116,7 +126,29 @@ public class VentanaHotel extends JFrame{
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(0).get(rowIndex);
-					    h.setOcupado(ocupado);
+					  if(h.getReserva()==null||h.getReserva()==reserva||h.getReserva().getId()==-1) {
+						  h.setOcupado(ocupado);
+						    
+						    if(ocupado==true) {
+						    	h.setReserva(reserva);
+						    }else {
+						    	Reserva r = new Reserva();
+						    	r.setId(-1);
+						    	h.setReserva(r);
+						    }
+						    
+						    if(seleccionDatos=="Base de datos") {
+						    	try {
+									bdManager.actualizarHabitacion(h);
+								} catch (BDexception e) {
+									System.err.println("Error actualizando la habitacion en la bd");
+									e.printStackTrace();
+								}
+						    }
+					  }else {
+						  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta ocupada por otra reserva cliente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+					  }
+					   
 				}
 
 			    fireTableCellUpdated(rowIndex, 0);
@@ -158,7 +190,13 @@ public class VentanaHotel extends JFrame{
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return String.valueOf(h.isOcupado()); 
+					case 0: if(h.getReserva()==reserva){
+						return "Reservado"; 
+					}else if(h.getReserva()!=reserva && h.getReserva().getId()!=-1){
+						return "Ocupado por otra reserva o cliente";
+					}else{
+						return "Libre";
+					}
 					case 1: return String.valueOf(h.getPlanta()); 
 					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
@@ -167,7 +205,28 @@ public class VentanaHotel extends JFrame{
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(1).get(rowIndex);
-					    h.setOcupado(ocupado);
+					  if(h.getReserva()==null||h.getReserva()==reserva||h.getReserva().getId()==-1) {
+						  h.setOcupado(ocupado);
+						    
+						    if(ocupado==true) {
+						    	h.setReserva(reserva);
+						    }else {
+						    	Reserva r = new Reserva();
+						    	r.setId(-1);
+						    	h.setReserva(r);
+						    }
+						    
+						    if(seleccionDatos=="Base de datos") {
+						    	try {
+									bdManager.actualizarHabitacion(h);
+								} catch (BDexception e) {
+									System.err.println("Error actualizando la habitacion en la bd");
+									e.printStackTrace();
+								}
+						    }
+					  }else {
+						  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta ocupada por otra reserva cliente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+					  }
 				}
 
 			    fireTableCellUpdated(rowIndex, 1);
@@ -209,7 +268,13 @@ public class VentanaHotel extends JFrame{
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
 				switch(columnIndex) {
-					case 0: return String.valueOf(h.isOcupado()); 
+					case 0: if(h.getReserva()==reserva){
+						return "Reservado"; 
+					}else if(h.getReserva()!=reserva &&h.getReserva().getId()!=-1){					
+						return "Ocupado por otra reserva o cliente";
+					}else{
+						return "Libre";
+					}
 					case 1: return String.valueOf(h.getPlanta()); 
 					case 2: return String.valueOf(h.getNumero()); 
 					default: return null;
@@ -218,7 +283,28 @@ public class VentanaHotel extends JFrame{
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
 				if (rowIndex!=-1) {
 					  Habitacion h = datos.getMapaHabitaciones().get(2).get(rowIndex);
-					    h.setOcupado(ocupado);
+					  if(h.getReserva()==null||h.getReserva()==reserva||h.getReserva().getId()==-1) {
+						    h.setOcupado(ocupado);
+						    
+						    if(ocupado==true) {
+						    	h.setReserva(reserva);
+						    }else {
+						    	Reserva r = new Reserva();
+						    	r.setId(-1);
+						    	h.setReserva(r);
+						    }
+						    
+						    if(seleccionDatos=="Base de datos") {
+						    	try {
+									bdManager.actualizarHabitacion(h);
+								} catch (BDexception e) {
+									System.err.println("Error actualizando la habitacion en la bd");
+									e.printStackTrace();
+								}
+						    }
+					  }else {
+						  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta ocupada por otra reserva o cliente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+					  }
 				}
 
 			    fireTableCellUpdated(rowIndex, 2);
@@ -270,6 +356,7 @@ public class VentanaHotel extends JFrame{
 			   if(rowIndex!=-1) {
 				   Mesa c = datos.getListaComedor().get(rowIndex);
 				    c.setOcupado(ocupado);
+				    
 			   }
 			    fireTableCellUpdated(rowIndex, 1);
 			}
@@ -341,28 +428,37 @@ public class VentanaHotel extends JFrame{
 		        tablaComedor.repaint();
 		        //JList
 		        if(tablaA.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
-			        if(modeloLista.contains(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()))) {
-			        	System.err.println("La reserva ya esta añadida en la Planta A");
-			        }else {
-			        	modeloLista.addElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
-			        }
+		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());	
+		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
+		        			reserva.getListaHabitacionesReservadas().add(h);
+					        if(modeloLista.contains(h)) {
+								  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
+					        }else {
+					        	modeloLista.addElement(h);
+					        }
+		        	}
 		        }
 		        if(tablaB.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
-			        if(modeloLista.contains(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()))) {
-			        	System.err.println("La reserva ya esta añadida en la Planta B");
-			        }else {
-			        	modeloLista.addElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
-			        }
+		        	Habitacion h = datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow());
+		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
+				        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+				        if(modeloLista.contains(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()))) {
+							  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
+				        }else {
+				        	modeloLista.addElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+				        }
+		        	}
 		        }
 		        if(tablaC.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
-			        if(modeloLista.contains(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()))) {
-			        	System.err.println("La reserva ya esta añadida en la Planta C");
-			        }else {
-			        	modeloLista.addElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
-			        }
+		        	Habitacion h = datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow());
+		        	if(h.getReserva()==reserva||reserva.getListaHabitacionesReservadas().contains(h)) {
+				        reserva.getListaHabitacionesReservadas().add(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+				        if(modeloLista.contains(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()))) {
+							  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta habitacion ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
+				        }else {
+				        	modeloLista.addElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+				        }
+		        	}
 		        }
 		        
 		        listaReservas.setModel(modeloLista);
@@ -389,21 +485,34 @@ public class VentanaHotel extends JFrame{
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), false);
 		        tablaComedor.repaint();
 		        //Jlist
+		        
+	       
 		        if(tablaA.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
-			        modeloLista.removeElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow());
+		        	 if(modeloLista.contains(h)) {
+				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+				        modeloLista.removeElement(datos.getMapaHabitaciones().get(0).get(tablaA.getSelectedRow()));
+		        	 }
 		        }
 		        if(tablaB.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
-			        modeloLista.removeElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+		        	 
+		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaB.getSelectedRow());
+		        	if(modeloLista.contains(h)) {
+				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+				        modeloLista.removeElement(datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow()));
+		        	}
 		        }
 		        if(tablaC.getSelectedRow()!=-1) {
-			        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
-			        modeloLista.removeElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
-		        }
+		        	Habitacion h = datos.getMapaHabitaciones().get(0).get(tablaC.getSelectedRow());
+		        	if(modeloLista.contains(h)) {
+				        reserva.getListaHabitacionesReservadas().remove(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+				        modeloLista.removeElement(datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow()));
+		        	}
+		        }		
 		        listaReservas.setModel(modeloLista);
 		        listaReservas.repaint();
-		       
+			    
+		        
 			}
 		});
 		
@@ -418,16 +527,16 @@ public class VentanaHotel extends JFrame{
 		        
 		        l.setOpaque(true);
 		        l.setText(value.toString());
-		        
-		        MiModeloA modelo = (MiModeloA) table.getModel();
-		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+		       
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		        }
-		        if (ocupado) {
+		        if (tablaA.getModel().getValueAt(row, 0)=="Reservado") {
 		            l.setBackground(Color.RED);
-		        } else {
+		        } else if (tablaA.getModel().getValueAt(row, 0)=="Libre"){
 		            l.setBackground(Color.GREEN);
+		        }else {
+		        	 l.setBackground(Color.GRAY);
 		        }
 		        
 		        return l;
@@ -444,15 +553,16 @@ public class VentanaHotel extends JFrame{
 		        l.setOpaque(true);
 		        l.setText(value.toString());
 		        
-		        MiModeloB modelo = (MiModeloB) table.getModel();
-		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+		       
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		        }
-		        if (ocupado) {
+		        if (tablaB.getModel().getValueAt(row, 0)=="Reservado") {
 		            l.setBackground(Color.RED);
-		        } else {
+		        } else if (tablaB.getModel().getValueAt(row, 0)=="Libre"){
 		            l.setBackground(Color.GREEN);
+		        }else {
+		        	 l.setBackground(Color.GRAY);
 		        }
 		        
 		        return l;
@@ -469,15 +579,16 @@ public class VentanaHotel extends JFrame{
 		        l.setOpaque(true);
 		        l.setText(value.toString());
 		        
-		        MiModeloC modelo = (MiModeloC) table.getModel();
-		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 0).toString());
+		        
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		        }
-		        if (ocupado) {
+		        if (tablaC.getModel().getValueAt(row, 0)=="Reservado") {
 		            l.setBackground(Color.RED);
-		        } else {
+		        } else if (tablaC.getModel().getValueAt(row, 0)=="Libre"){
 		            l.setBackground(Color.GREEN);
+		        }else {
+		        	 l.setBackground(Color.GRAY);
 		        }
 		        
 		        return l;
@@ -508,6 +619,8 @@ public class VentanaHotel extends JFrame{
 		        return l;
 		    }
 		});
+		
+		
 		
 		
 		//Funcionamiento del arbol
@@ -544,6 +657,9 @@ public class VentanaHotel extends JFrame{
 		        }
 		    }
 		});
+		
+		
+		
 		pack();
 		setVisible(true);
 	}	

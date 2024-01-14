@@ -7,8 +7,8 @@ public class HabitacionSuite extends Habitacion{
 	protected final static double precioPorNoche = 100;
 	
 	
-	public HabitacionSuite(boolean ocupado, int planta, int numero) {
-		super(ocupado,planta,numero);
+	public HabitacionSuite(boolean ocupado, int planta, int numero, Reserva reserva) {
+		super(ocupado,planta,numero, reserva);
 	}
 	
 	public HabitacionSuite() {

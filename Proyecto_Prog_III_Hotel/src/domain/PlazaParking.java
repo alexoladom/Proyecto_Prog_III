@@ -12,14 +12,18 @@ public class PlazaParking implements Serializable{
 	protected int id;
 	protected int row,column;
 	protected boolean ocupada;
+	protected Reserva reserva;
+	protected Parking parking;
 	
-	public PlazaParking( int row, int column, boolean ocupada) {
+	public PlazaParking( int row, int column, boolean ocupada, Reserva reserva, Parking parking) {
 		super();
 		contador++;
 		this.id = contador;
 		this.row = row;
 		this.column = column;
 		this.ocupada = ocupada;
+		this.reserva = reserva;
+		this.parking = parking;
 	}
 	
 	public PlazaParking() {
@@ -29,6 +33,8 @@ public class PlazaParking implements Serializable{
 		this.row = 0;
 		this.column = 0;
 		this.ocupada = false;
+		this.reserva = null;
+		this.parking = null;
 	}
 
 	public int getId() {
@@ -37,6 +43,26 @@ public class PlazaParking implements Serializable{
 
 	public int getRow() {
 		return row;
+	}
+
+	public static int getContador() {
+		return contador;
+	}
+
+	public static void setContador(int contador) {
+		PlazaParking.contador = contador;
+	}
+
+	public Reserva getReserva() {
+		return reserva;
+	}
+
+	public void setReserva(Reserva reserva) {
+		this.reserva = reserva;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public void setRow(int row) {
@@ -59,6 +85,14 @@ public class PlazaParking implements Serializable{
 		this.ocupada = ocupada;
 	}
 
+	public Parking getParking() {
+		return parking;
+	}
+
+	public void setParking(Parking parking) {
+		this.parking = parking;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(column, id, ocupada, row);
@@ -73,7 +107,7 @@ public class PlazaParking implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		PlazaParking other = (PlazaParking) obj;
-		return  id == other.id;
+		return  id == other.id && this.parking.equals(other.getParking());
 	}
 
 	@Override

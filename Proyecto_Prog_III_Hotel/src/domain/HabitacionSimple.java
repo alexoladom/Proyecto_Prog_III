@@ -8,8 +8,8 @@ public class HabitacionSimple extends Habitacion{
 	
 	
 	
-	public HabitacionSimple(boolean ocupado, int planta, int numero) {
-		super(ocupado,planta,numero);
+	public HabitacionSimple(boolean ocupado, int planta, int numero, Reserva reserva) {
+		super(ocupado,planta,numero, reserva);
 	}
 	
 	public HabitacionSimple() {
