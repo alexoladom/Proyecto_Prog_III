@@ -87,7 +87,6 @@ public abstract class Habitacion implements Serializable{
 		}
 		
 	}
-<<<<<<< HEAD
 	//Metodo para comprobar si esta ocupada una habitación
 	public boolean comprobarHabitacionDisponible(Cliente cliente, Habitacion plaza) {
 		boolean esta = false;
@@ -98,10 +97,7 @@ public abstract class Habitacion implements Serializable{
 		}
 		return esta;
 	}
-	/////////////////////////////////////////////////////////////
-=======
-
->>>>>>> branch 'master' of https://github.com/alexoladom/Proyecto_Prog_III_E1-08.git
+	
 	public abstract double getPrecioPorNoche();
 	
 	@Override

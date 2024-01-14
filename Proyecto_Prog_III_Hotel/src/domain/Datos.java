@@ -62,6 +62,7 @@ public class Datos {
 	}
 	
 	public void inicializarDatos() {
+		
 		setFichero("resources/data/datosHotel.dat");
 		LocalDate a = LocalDate.of(1999, 9, 11);
 		Trabajador t1 = new Trabajador("18087363T", "Mario", "Martinez","mario@gmail.com", "Calle Alfonso 2", a, "123", "673821992", 1200.00, 0, new ArrayList<>(),"src/Imagenes/imagenPerfilpng.png");
@@ -110,31 +111,33 @@ public class Datos {
 		getListaClientes().add(cliente10);
 		
 		
+		Reserva rNull = new Reserva();
+		rNull.setId(-1);
 		//Habitaciones planta A
-		HabitacionSimple h1 = new HabitacionSimple(true, 1, 101,null);
-		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102,null);
-		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103,null);
-		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104,null);
+		HabitacionSimple h1 = new HabitacionSimple(true, 1, 101,rNull);
+		HabitacionSimple h2 = new HabitacionSimple(false, 1, 102,rNull);
+		HabitacionDoble h3 = new HabitacionDoble(false, 1, 103,rNull);
+		HabitacionSuite h4 = new HabitacionSuite(false, 1, 104,rNull);
 		getMapaHabitaciones().put(0, new ArrayList<>());
 		getMapaHabitaciones().get(0).add(h1);
 		getMapaHabitaciones().get(0).add(h2);
 		getMapaHabitaciones().get(0).add(h3);
 		getMapaHabitaciones().get(0).add(h4);
 		//Habitaciones planta B
-		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201,null);
-		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202,null);
-		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203,null);
-		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204,null);
+		HabitacionSimple h5 = new HabitacionSimple(false, 2, 201,rNull);
+		HabitacionSimple h6 = new HabitacionSimple(false, 2, 202,rNull);
+		HabitacionDoble h7 = new HabitacionDoble(false, 2, 203,rNull);
+		HabitacionSuite h8 = new HabitacionSuite(false, 2, 204,rNull);
 		getMapaHabitaciones().put(1, new ArrayList<>());
 		getMapaHabitaciones().get(1).add(h5);
 		getMapaHabitaciones().get(1).add(h6);
 		getMapaHabitaciones().get(1).add(h7);
 		getMapaHabitaciones().get(1).add(h8);
 		//Habitaciones planta C
-		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301,null);
-		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302,null);
-		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303,null);
-		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304,null);
+		HabitacionSimple h9 = new HabitacionSimple(false, 3, 301,rNull);
+		HabitacionSimple h10 = new HabitacionSimple(false, 3, 302,rNull);
+		HabitacionDoble h11 = new HabitacionDoble(false, 3, 303,rNull);
+		HabitacionSuite h12 = new HabitacionSuite(false, 3, 304,rNull);
 		getMapaHabitaciones().put(2, new ArrayList<>());
 		getMapaHabitaciones().get(2).add(h9);
 		getMapaHabitaciones().get(2).add(h10);
