@@ -113,6 +113,7 @@ public class VentanaDeCarga extends JFrame{
 						public void run() {
 							if(seleccion=="Fichero de datos") {
 								datos.cargarDatos();
+								
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {
