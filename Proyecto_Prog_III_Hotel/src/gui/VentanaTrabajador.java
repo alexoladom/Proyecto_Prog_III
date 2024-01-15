@@ -8,9 +8,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,9 +23,11 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,10 +38,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -60,7 +63,7 @@ import domain.BDexception;
 import domain.BDmanager;
 import domain.Cliente;
 import domain.Datos;
-import domain.Reserva;
+import domain.Rol;
 import domain.Tarea;
 import domain.Trabajador;
 
@@ -69,19 +72,19 @@ public class VentanaTrabajador extends JFrame {
     
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	private static final long serialVersionUID = 1L;
-	protected JProgressBar tareasHacer;
-	protected JPanel pTrabajadores,pClientes,pPerfil,pInformacion;
+	protected JPanel pTrabajadores,pClientes,pPerfil,pInformacion,pTareas;
     protected JTable tablaDatosTrabajadores, tablaDatosClientes;
-    protected JButton botonCerrar, botonTareaHecha;
-    protected List<Tarea> tareasPendientes; //= trabajador.getListaTareasPorHacer(); // ejemplo de tareas pendientes que tiene un trabajador
+    protected JList<Tarea> listaTareas;
+    protected static List<List<Tarea>> listaRecursiva = new ArrayList<>();;
 
     public VentanaTrabajador(Datos datos, Trabajador trabajador,String seleccionDatos, BDmanager bdManager) {
-		//TODO falta implementar la base de datos
+		
 
     	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     	setSize(900,350);
     	setLocationRelativeTo(null);
     	setTitle("Trabajador: "+ trabajador.getNombre()+" "+trabajador.getApellido1());
+    	setIconImage(new ImageIcon(trabajador.getFotoPerfil()).getImage());
     	JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		JMenu menuCliente = new JMenu();
@@ -92,6 +95,10 @@ public class VentanaTrabajador extends JFrame {
 		menuBar.add(menuTrabajador);
 		JMenuItem itemTrabajador = new JMenuItem("INFORMACION DE LOS TRABAJADORES");
 		menuTrabajador.add(itemTrabajador);
+		JMenu menuTareas = new JMenu();
+		menuBar.add(menuTareas);
+		JMenuItem itemTareas = new JMenuItem("TAREAS");
+		menuTareas.add(itemTareas);
 		JMenu menuPerfil = new JMenu();
 		menuBar.add(menuPerfil);
 		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
@@ -100,20 +107,30 @@ public class VentanaTrabajador extends JFrame {
 		menuPerfil.add(informacionTrabajador);
 		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
 		menuPerfil.add(cerrarSesion);
+		
 
 		//Listeners de los menuItems
 		
+		itemTareas.addActionListener(e->{
+			pTrabajadores.setVisible(false);
+			pClientes.setVisible(false);
+			pPerfil.setVisible(false);
+			pTareas.setVisible(true);
+		});
+		
 		itemTrabajador.addActionListener((e)->{
-			getContentPane().removeAll();
-			getContentPane().add(pTrabajadores);
-			repaint();
+			pClientes.setVisible(false);
+			pPerfil.setVisible(false);
+			pTareas.setVisible(false);
+			pTrabajadores.setVisible(true);
 		
 		});
 		
 		itemCliente.addActionListener((e)->{
-			getContentPane().removeAll();
-			getContentPane().add(pClientes);
-			repaint();
+			pPerfil.setVisible(false);
+			pTareas.setVisible(false);
+			pTrabajadores.setVisible(false);
+			pClientes.setVisible(true);
 		});
 		
 		cambiarFotoPerfil.addActionListener((e)->{
@@ -157,12 +174,11 @@ public class VentanaTrabajador extends JFrame {
 		});
 		
 		informacionTrabajador.addActionListener((e)->{
-			getContentPane().remove(pTrabajadores);
-			getContentPane().remove(pClientes);
-			getContentPane().add(pPerfil,BorderLayout.CENTER);
-			pPerfil.repaint();
+			
+			pTareas.setVisible(false);
+			pTrabajadores.setVisible(false);
+			pClientes.setVisible(false);
 			pPerfil.setVisible(true);
-			getContentPane().repaint();
 
 
 		});
@@ -192,12 +208,17 @@ public class VentanaTrabajador extends JFrame {
 		ImageIcon imagenTrabajadores = new ImageIcon("src/Imagenes/iconoMenuTrabajadores.png");
 		Image imagenTrabajadoresEscala = imagenTrabajadores.getImage().getScaledInstance(150, 45,Image.SCALE_SMOOTH);
 		menuTrabajador.setIcon(new ImageIcon(imagenTrabajadoresEscala));
+		
+		ImageIcon imagenTareas = new ImageIcon("src/Imagenes/imagenTasks.png");
+		Image imagenTasksEscala = imagenTareas.getImage().getScaledInstance(100, 45,Image.SCALE_SMOOTH);
+		menuTareas.setIcon(new ImageIcon(imagenTasksEscala));
 
 		//Panel del perfil
 		
 		
 
 		pPerfil= new JPanel();
+		pPerfil.setVisible(false);
 		pInformacion = new JPanel();
 		
 		pInformacion.setLayout(new GridLayout(9,2));
@@ -358,6 +379,7 @@ public class VentanaTrabajador extends JFrame {
         
         //Panel de la informacion de los trabajadores
 		pTrabajadores = new JPanel();
+		pTrabajadores.setVisible(false);
 
 		
 		
@@ -460,6 +482,7 @@ public class VentanaTrabajador extends JFrame {
 		
 		
 		pClientes = new JPanel();
+		pClientes.setVisible(false);
 		
 		
 		//Creacion del modelo de tabla
@@ -521,6 +544,13 @@ public class VentanaTrabajador extends JFrame {
 				break;
 				case 8: c.setUltimoLogin((LocalDate) aValue);
 				break;
+				}
+				if(seleccionDatos=="Base de datos") {
+					try {
+						bdManager.actualizarCliente(c);
+					} catch (BDexception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -690,18 +720,213 @@ public class VentanaTrabajador extends JFrame {
 		pClientes.add(scrollClientes, BorderLayout.CENTER);
 		
 		
+		
+		
+		//Creacion del panel de tareas
+		
+		
+		pTareas = new JPanel();
+		pTareas.setVisible(false);
 
+		JLabel horas = new JLabel(String.valueOf("----- HORAS TRABAJADAS EN TAREAS TOTALES DE "+ trabajador.getNombre()+" "+trabajador.getApellido1()+": "+trabajador.getNumHorasTrabajadas())+" -----",SwingConstants.CENTER);
+		pTareas.add(horas,BorderLayout.NORTH);
+		
+		listaTareas = new JList<Tarea>();
+		
+		DefaultListModel<Tarea> modelo = new DefaultListModel<Tarea>();
+		datos.getListaTareas().forEach(t->{
+			if (!t.isEstaCompletada()) {
+				modelo.addElement(t);
+			}
+		});
+		
+		
+		listaTareas.setModel(modelo);
+		
+		JScrollPane scroll = new JScrollPane(listaTareas);
+		listaTareas.setSize(listaTareas.getWidth(), listaTareas.getHeight()+100);
+		pTareas.add(scroll,BorderLayout.CENTER);
+		
+		
+		JPanel pBotones = new JPanel();
+		
+		JButton verTareasCompletadas = new JButton("Ver Completadas");
+		JButton completarTarea = new JButton ("Completar Tarea");
+		JButton botonBusquedaRecursiva = new JButton ("Buscar");
+		JButton botonAñadir = new JButton ("Añadir");
+		JButton botonBorrar = new JButton("Borrar");
+		
+		
+		verTareasCompletadas.addActionListener(e->{
+			DefaultListModel<String> modelo2 = new DefaultListModel<>();
+			trabajador.getListaTareasHechas().forEach(t->{
+				modelo2.addElement(t.toString());
+			});
+			JList<String> lista = new JList<>();
+			if (modelo2.isEmpty()) {
+				modelo2.addElement("No tienes tareas completadas de momento");
+			}
+			lista.setModel(modelo2);
+			JScrollPane scroll2 = new JScrollPane(lista);
+			
+			JOptionPane.showMessageDialog(VentanaTrabajador.this, scroll2,"Tareas completadas de "+ trabajador.getNombre()+" "+trabajador.getApellido1(), JOptionPane.PLAIN_MESSAGE);
+		});
+		
+		completarTarea.addActionListener(e->{
+			Tarea seleccion = listaTareas.getSelectedValue();
+			if(seleccion!=null) {
+				trabajador.getListaTareasHechas().add(seleccion);
+				trabajador.setNumHorasTrabajadas(trabajador.getNumHorasTrabajadas()+seleccion.getNumHoras());
+				horas.setText(String.valueOf("----- HORAS TRABAJADAS EN TAREAS TOTALES DE "+ trabajador.getNombre()+" "+trabajador.getApellido1()+": "+trabajador.getNumHorasTrabajadas()+" -----"));
+				
+				
+				modelo.removeElement(seleccion);
+				seleccion.setCompletadaPor(trabajador);
+				seleccion.setEstaCompletada(true);
+				
+				datos.getListaTareas().remove(seleccion);
+				
+				if(seleccionDatos=="Base de datos") {
+					try {
+						System.out.println("guardado");
+						bdManager.actualizarTarea(seleccion);
+						bdManager.actualizarTrabajador(trabajador);
+					} catch (BDexception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			
+		});
+		
+		botonBusquedaRecursiva.addActionListener(e->{
+			DefaultListModel<String> modelo3 = new DefaultListModel<>();
+			JPanel panel = new JPanel();
+			JComboBox<Rol> comboRoles = new JComboBox<>();
+			comboRoles.setModel(new DefaultComboBoxModel<Rol>(Rol.values()));
+			SpinnerModel mSpinner = new SpinnerNumberModel(1, 1, 6, 1);
+			JSpinner spiner = new JSpinner(mSpinner);
+			
+			panel.add(comboRoles);
+			panel.add(spiner);
+			
+			int rol = JOptionPane.showConfirmDialog(VentanaTrabajador.this, panel, "Seleccione el rol y el numero de tareas", JOptionPane.OK_CANCEL_OPTION);
+			
+			if (rol!=JOptionPane.CANCEL_OPTION) {
+				listaRecursiva.clear();
+				buscarTareas((Rol)comboRoles.getSelectedItem(), (int)spiner.getValue(), new ArrayList<Tarea>(), datos.getListaTareas());
+				listaRecursiva.forEach(l->{
+					l.forEach(t->{
+						System.out.println(t);
+					});
+					modelo3.addElement(l.toString());
+					System.out.println(l.toString());
+				});
+				JList<String> lista = new JList<>();
+				if (modelo3.isEmpty()) {
+					modelo3.addElement("No hay combinaciones de tareas con esas caracteristicas");
+				}
+				lista.setModel(modelo3);
+				
+				JScrollPane scroll2 = new JScrollPane(lista);
+				scroll2.setHorizontalScrollBar(scroll2.createHorizontalScrollBar());
+				scroll2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				scroll2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+				
+				scroll2.setPreferredSize(new Dimension(1000,300));
+				
+				
+				JOptionPane.showMessageDialog(VentanaTrabajador.this, scroll2,"Combinaciones de " +spiner.getValue()+ " tareas de "+ comboRoles.getSelectedItem(), JOptionPane.PLAIN_MESSAGE);
+			}
+			
+			
+		});
+		
+		botonAñadir.addActionListener(e->{
+			JPanel panel = new JPanel();
+			JComboBox<Rol> comboRoles = new JComboBox<>();
+			comboRoles.setModel(new DefaultComboBoxModel<Rol>(Rol.values()));
+			SpinnerModel mSpinner = new SpinnerNumberModel(0, 0, 100, 1);
+			JSpinner spiner = new JSpinner(mSpinner);
+			
+			panel.add(comboRoles);
+			panel.add(spiner);
+			
+			int rol = JOptionPane.showConfirmDialog(VentanaTrabajador.this, panel, "Seleccione el rol y el numero de horas de la tarea", JOptionPane.OK_CANCEL_OPTION);
+			if(rol!=JOptionPane.CANCEL_OPTION) {
+				JTextField field = new JTextField();
+				int descp =JOptionPane.showConfirmDialog(VentanaTrabajador.this, field, "Describa brevemente la tarea", JOptionPane.OK_CANCEL_OPTION);
+				if(descp!=JOptionPane.CANCEL_OPTION) {
+					Tarea tarea = new Tarea();
+					tarea.setRol((Rol)comboRoles.getSelectedItem());
+					tarea.setDescripcion(field.getText());
+					tarea.setNumHoras((int)spiner.getValue());
+					modelo.addElement(tarea);
+					datos.getListaTareas().add(tarea);
+					if (seleccionDatos=="Base de datos") {
+						try {
+							bdManager.guardarTarea(tarea);
+						} catch (BDexception e1) {
+							e1.printStackTrace();
+						}
+					}
+					
+					
+				}
+			}
+		});
+		
+		botonBorrar.addActionListener(e->{
+			Tarea seleccion = listaTareas.getSelectedValue();
+			
+			datos.getListaTareas().remove(seleccion);
+			modelo.removeElement(seleccion);
+			
+			if (seleccionDatos=="Base de datos"&&seleccion!=null) {
+				try {
+					bdManager.deleteTarea(seleccion);
+				} catch (BDexception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		
+		pBotones.add(verTareasCompletadas);
+		pBotones.add(completarTarea);
+		pBotones.add(botonBusquedaRecursiva);
+		pBotones.add(botonAñadir);
+		pBotones.add(botonBorrar);
+		
+		pTareas.add(pBotones,BorderLayout.SOUTH);
+		
+		add(pClientes,BorderLayout.EAST);
+		add(pTrabajadores,BorderLayout.NORTH);
+		add(pPerfil,BorderLayout.SOUTH);
+		add(pTareas,BorderLayout.CENTER);
+		
+		
 
         setVisible(true);
         
     }
-  /*
-    public static void main(String[] args) {
-    	Datos datos = new Datos ();
-    	datos.inicializarDatos();
-    	Trabajador t = new Trabajador();
-		 new VentanaTrabajador(datos, t, "Fichero de datos", null);
-	}
-	*/
     
+    
+    
+    public static void buscarTareas(Rol rol, int numTareas, List<Tarea> lista, List<Tarea> todasTareas) {
+		if (lista.size()==numTareas) {
+			listaRecursiva.add(new ArrayList<Tarea>(lista));
+		}else {
+			for (Tarea tarea : todasTareas) {
+				if(tarea.getRol().equals(rol)) {
+					if(!lista.contains(tarea)) {
+						lista.add(tarea);
+						buscarTareas(rol,numTareas, lista, todasTareas);
+						lista.remove(lista.size()-1);
+					}									
+				}
+			}
+		}	
+	}
+	
 }
