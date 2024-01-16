@@ -1177,6 +1177,116 @@ public class BDmanager {
 		}
 	}
 	
+
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//			Metodos para gestionar las mesas
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+	
+	public List<Mesa> getMesas() throws BDexception {
+		List<Mesa> mesas = new ArrayList<Mesa>();
+		try (Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("SELECT * FROM mesas ORDER BY id");
+
+			while(rs.next()) {
+				Mesa mesa = new Mesa();
+				mesa.setId(rs.getInt("id"));
+				mesa.setNumero(rs.getInt("numero"));
+				mesa.setOcupado(rs.getBoolean("ocupada"));
+				Reserva r = getReserva(rs.getInt("idReserva"));
+				mesa.setReserva(r);
+				mesas.add(mesa);
+			}
+			
+			return mesas;
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo todos las mesas'", e);
+		}
+	}
+	
+	public Mesa getMesa(int id) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM mesas WHERE id = ?")) {
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Mesa mesa = new Mesa();
+				mesa.setId(rs.getInt("id"));
+				mesa.setNumero(rs.getInt("numero"));
+				mesa.setOcupado(rs.getBoolean("ocupada"));
+				mesa.setReserva(getReserva(rs.getInt("idReserva")));
+				
+				return mesa;
+			} else {
+				Mesa mesa = new Mesa();
+				mesa.setId(-1);
+				return mesa;
+				
+			}
+		} catch (SQLException | DateTimeParseException e) {
+			throw new BDexception("Error obteniendo el mesa con id= " + id, e);
+		}
+	}
+	public void guardarMesa(Mesa mesa) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO mesas (id, numero, ocupada, idReserva"
+				+ " ) VALUES (?, ?, ?,?)");
+			Statement stmtForId = conn.createStatement()) {
+			stmt.setInt(1, mesa.getId());
+			stmt.setInt(2, mesa.getNumero());
+			stmt.setBoolean(3, mesa.isOcupado());
+			if (mesa.getReserva()==null) {
+				stmt.setInt(4, -1);
+			}else {
+				stmt.setInt(4, mesa.getReserva().getId());
+			}
+			
+				
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo guardar la mesa en la BD", e);
+		}
+	}
+	
+	
+	public void actualizarMesa(Mesa mesa) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("UPDATE mesas SET numero=?, ocupada=?, idReserva=? WHERE id=?")){
+			stmt.setInt(1, mesa.getNumero());
+			stmt.setBoolean(2, mesa.isOcupado());
+			stmt.setInt(3,mesa.getReserva().getId());
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo actualizar la mesa en la BD", e);
+		}
+	}
+	
+	public void deleteMesa(Mesa mesa) throws BDexception {
+		try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM mesas WHERE id=?")) {
+			stmt.setInt(1,mesa.getId());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new BDexception("No se pudo elimiar la mesa" + mesa.getId(), e);
+		}
+	}
+	
 //	
 //	
 //	
@@ -1201,6 +1311,8 @@ public class BDmanager {
 		datos.listaReservas.addAll(getReservas());
 		
 		datos.listaTareas.addAll(getTareas());
+		
+		datos.listaComedor.addAll(getMesas());
 		
 		
 		for (Trabajador trabajador : datos.getListaTrabajadores()) {

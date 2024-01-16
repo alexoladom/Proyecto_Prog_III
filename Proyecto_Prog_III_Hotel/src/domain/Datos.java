@@ -146,7 +146,7 @@ public class Datos {
 		//Lugares del comedor
 		Mesa m1 = new Mesa(0, false);
 		getListaComedor().add(m1);
-		Mesa m2 = new Mesa(1, true);
+		Mesa m2 = new Mesa(1, false);
 		getListaComedor().add(m2);
 		Mesa m3 = new Mesa(2, false);
 		getListaComedor().add(m3);

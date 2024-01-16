@@ -9,7 +9,6 @@ import java.util.Objects;
 public class Reserva implements Serializable{
 
 	
-	//TODO metodo sacarFactura()
 	
 	//Atributos
 	private static final long serialVersionUID = 1L;

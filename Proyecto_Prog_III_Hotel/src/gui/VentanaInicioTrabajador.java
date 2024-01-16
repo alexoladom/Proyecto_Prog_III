@@ -100,6 +100,7 @@ public class VentanaInicioTrabajador extends JFrame{
 				logger.warning("El trabajador introducido no existe");
 			}
 		}); 
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 

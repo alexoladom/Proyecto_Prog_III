@@ -31,7 +31,7 @@ public class VentanaSeleccion extends JFrame{
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		setLocationRelativeTo(null);
+		
 		
 		botonCerrar = new JButton("CERRAR");
 		botonCliente = new JButton("SOY CLIENTE");
@@ -98,6 +98,7 @@ public class VentanaSeleccion extends JFrame{
 			}
 		});
 		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 }

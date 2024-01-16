@@ -219,6 +219,60 @@ public class VentanaCliente extends JFrame{
 				bCancelarReserva = new JButton("Cancelar Reserva");
 				bCancelarReserva.addActionListener((e)->{
 		
+					
+					if(reserva!=null) {
+						reserva.getListaHabitacionesReservadas().forEach(h->{
+							h.setOcupado(false);
+							Reserva r = new Reserva();
+							r.setId(-1);
+							h.setReserva(r);
+							
+							if(seleccionDatos=="Base de datos") {
+								try {
+									bdManager.actualizarHabitacion(h);
+								} catch (BDexception e1) {
+									e1.printStackTrace();
+								}
+							}
+						});
+						datos.getListaComedor().forEach(m->{
+							if(m.getReserva()==reserva) {
+								m.setOcupado(false);
+								Reserva r = new Reserva();
+								r.setId(-1);
+								m.setReserva(r);
+								if(seleccionDatos=="Base de datos") {
+									try {
+										bdManager.actualizarMesa(m);
+									} catch (BDexception e1) {
+										e1.printStackTrace();
+									}
+								}
+							}
+						});
+						if(seleccionDatos=="Base de datos") {
+							try {
+								bdManager.deleteReserva(reserva);
+							} catch (BDexception e1) {
+								e1.printStackTrace();
+							}
+						}
+						
+						reserva.getListaPlazasParking().forEach(p->{
+							p.setOcupada(false);
+							Reserva r = new Reserva();
+							r.setId(-1);
+							p.setReserva(r);
+							
+							if(seleccionDatos=="Base de datos") {
+								try {
+									bdManager.actualizarPlazaparking(p);
+								} catch (BDexception e1) {
+									e1.printStackTrace();
+								}
+							}
+						});
+					}
 					if (pCrearEditarReserva != null) {
 						pCrearEditarReserva.setVisible(false);
 					}
@@ -297,7 +351,12 @@ public class VentanaCliente extends JFrame{
 			        	}
 			        	
 			        	reserva = new Reserva();
-			        	
+			        	if (pCrearEditarReserva != null) {
+							pCrearEditarReserva.setVisible(false);
+						}
+						pListaReservas.setVisible(false);
+						pPerfil.setVisible(true);
+						setSize(700,300);
 			        }
 
 				});
@@ -347,7 +406,12 @@ public class VentanaCliente extends JFrame{
 							e1.printStackTrace();
 						}
 			        }
-			        
+			        if (pCrearEditarReserva != null) {
+						pCrearEditarReserva.setVisible(false);
+					}
+					pListaReservas.setVisible(false);
+					pPerfil.setVisible(true);
+					setSize(700,300);
 				});
 				bReservarParking.addActionListener((e)->{
 					if (!cliente.getListaReservasCliente().contains(reserva)) {
@@ -452,14 +516,14 @@ public class VentanaCliente extends JFrame{
 		
 		pInformacion.setLayout(new GridLayout(9,2));
 		
-		JLabel lblNombre = new JLabel("Introduzca su Nombre: ");
-		JLabel lblContra = new JLabel("Introduzca su contraseña: ");
-		JLabel lblDNI = new JLabel("Introduzca su DNI: ");
-		JLabel lblApellido = new JLabel("Introdzca su apellido: ");
-		JLabel lblEmail = new JLabel("Introduzca su e-mail: ");
-		JLabel lblDireccion = new JLabel("Introduzca su direccion: ");
-		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ");
-		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ");
+		JLabel lblNombre = new JLabel("Introduzca su Nombre: ",SwingConstants.CENTER);
+		JLabel lblContra = new JLabel("Introduzca su contraseña: ",SwingConstants.CENTER);
+		JLabel lblDNI = new JLabel("Introduzca su DNI: ",SwingConstants.CENTER);
+		JLabel lblApellido = new JLabel("Introdzca su apellido: ",SwingConstants.CENTER);
+		JLabel lblEmail = new JLabel("Introduzca su e-mail: ",SwingConstants.CENTER);
+		JLabel lblDireccion = new JLabel("Introduzca su direccion: ",SwingConstants.CENTER);
+		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ",SwingConstants.CENTER);
+		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ",SwingConstants.CENTER);
 		
 		JTextField textoNombre = new JTextField(20);
 		textoNombre.setEditable(false);
@@ -751,6 +815,21 @@ public class VentanaCliente extends JFrame{
 			modeloListaReservas.removeElement(seleccionado);
 			listaReservas.repaint();
 			
+			datos.getListaComedor().forEach(m->{
+				if(m.getReserva()==seleccionado) {
+					m.setOcupado(false);
+					Reserva r = new Reserva();
+					r.setId(-1);
+					m.setReserva(r);
+					if(seleccionDatos=="Base de datos") {
+						try {
+							bdManager.actualizarMesa(m);
+						} catch (BDexception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			});
 			if(seleccionDatos=="Base de datos") {
 				try {
 					bdManager.deleteReserva(seleccionado);
@@ -774,6 +853,8 @@ public class VentanaCliente extends JFrame{
 				}
 				
 			});
+			
+			
 			
 			seleccionado.getListaHabitacionesReservadas().forEach(h->{
 				h.setOcupado(false);

@@ -129,7 +129,8 @@ public class VentanaDeCarga extends JFrame{
 							}else {
 								//Conectar con la base de datos
 								
-								try {										
+								try {
+									
 									bdManager.rellenarDatos(datos);
 								} catch (BDexception e) {
 									System.err.println("Error en la ventana de carga al intentar conectar con la BD");
