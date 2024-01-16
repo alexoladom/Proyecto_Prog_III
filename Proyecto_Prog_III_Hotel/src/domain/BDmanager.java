@@ -323,7 +323,7 @@ public class BDmanager {
 	}
 	
 	public void actualizarReserva(Reserva reserva) throws BDexception {
-		try (PreparedStatement stmt = conn.prepareStatement("UPDATE resrvas SET DNICliente=?, fInicio=?"
+		try (PreparedStatement stmt = conn.prepareStatement("UPDATE reservas SET DNICliente=?, fInicio=?"
 				+ ", fFinal=?, estaPagado=? WHERE id=?")) {
 			stmt.setString(1, reserva.getCliente().getDni());
 			stmt.setString(2, reserva.getFechaInicio().toString());
@@ -1271,6 +1271,7 @@ public class BDmanager {
 			stmt.setInt(1, mesa.getNumero());
 			stmt.setBoolean(2, mesa.isOcupado());
 			stmt.setInt(3,mesa.getReserva().getId());
+			stmt.setInt(4, mesa.getId());
 			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
