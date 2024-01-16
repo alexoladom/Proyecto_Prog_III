@@ -76,7 +76,7 @@ public class VentanaDeCarga extends JFrame{
 		
 		panelFoto = new JPanel();
 		panelFoto.setLayout(new FlowLayout(FlowLayout.CENTER));
-		ImageIcon imHotel = new ImageIcon("src\\Imagenes\\hotel.jpeg");
+		ImageIcon imHotel = new ImageIcon("src/Imagenes/hotel.jpeg");
 		Image imagen = imHotel.getImage();
 		Image imagenRedimensionada = imagen.getScaledInstance(325, 350, Image.SCALE_SMOOTH);
 		ImageIcon imagenRedimensionadaIcon = new ImageIcon(imagenRedimensionada);
