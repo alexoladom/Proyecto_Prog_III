@@ -391,6 +391,7 @@ public class Datos {
 				oos.writeObject(mapaParkingPorFecha);
 				oos.writeObject(mapaHabitaciones);
 				oos.writeObject(Reserva.getNumId());
+				oos.writeObject(listaComedor);
 				logger.info("GUARDANDO DATOS...");
 
 			}catch (FileNotFoundException e) {
@@ -417,6 +418,7 @@ public class Datos {
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
 			this.mapaHabitaciones=(Map<Integer, List<Habitacion>>) ois.readObject();
 			Reserva.setNumId((int) ois.readObject());
+			this.listaComedor=(List<Mesa>) ois.readObject();
 			logger.info("CARGANDO DATOS...");
 
 			

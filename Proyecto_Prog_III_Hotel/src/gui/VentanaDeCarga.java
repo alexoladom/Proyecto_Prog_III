@@ -25,6 +25,8 @@ import javax.swing.SwingWorker;
 import domain.BDexception;
 import domain.BDmanager;
 import domain.Datos;
+import domain.Reserva;
+import domain.Tarea;
 
 public class VentanaDeCarga extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
@@ -128,8 +130,22 @@ public class VentanaDeCarga extends JFrame{
 						@Override
 						public void run() {
 							if(seleccion=="Fichero de datos") {
-								datos.cargarDatos();
 								
+								datos.cargarDatos();
+								int idR =0;
+								for (Reserva r : datos.getListaReservas()) {
+									if(r.getId()>idR) {
+										idR= r.getId();
+									}
+								}
+								Reserva.setNumId(idR);
+								int idT =0;
+								for (Tarea t : datos.getListaTareas()) {
+									if(t.getId()>idT) {
+										idT= t.getId();
+									}
+								}
+								Tarea.setNumId(idT);
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {

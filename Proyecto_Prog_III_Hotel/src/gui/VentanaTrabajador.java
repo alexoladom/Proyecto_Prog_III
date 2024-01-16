@@ -8,6 +8,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -102,22 +105,34 @@ public class VentanaTrabajador extends JFrame {
 		JMenu menuCliente = new JMenu();
 		menuBar.add(menuCliente);
 		JMenuItem itemCliente = new JMenuItem("INFORMACION DE CLIENTES");
+		itemCliente.setMnemonic(KeyEvent.VK_1);
+		itemCliente.setToolTipText("Alt+1");
 		menuCliente.add(itemCliente);
 		JMenu menuTrabajador = new JMenu();
 		menuBar.add(menuTrabajador);
 		JMenuItem itemTrabajador = new JMenuItem("INFORMACION DE LOS TRABAJADORES");
+		itemTrabajador.setMnemonic(KeyEvent.VK_2);
+		itemTrabajador.setToolTipText("Alt+2");
 		menuTrabajador.add(itemTrabajador);
 		JMenu menuTareas = new JMenu();
 		menuBar.add(menuTareas);
 		JMenuItem itemTareas = new JMenuItem("TAREAS");
+		itemTareas.setMnemonic(KeyEvent.VK_3);
+		itemTareas.setToolTipText("Alt+3");
 		menuTareas.add(itemTareas);
 		JMenu menuPerfil = new JMenu();
 		menuBar.add(menuPerfil);
 		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
+		cambiarFotoPerfil.setMnemonic(KeyEvent.VK_4);
+		cambiarFotoPerfil.setToolTipText("Alt+4");
 		menuPerfil.add(cambiarFotoPerfil);
 		JMenuItem informacionTrabajador = new JMenuItem("VER/EDITAR MIS DATOS");
+		informacionTrabajador.setMnemonic(KeyEvent.VK_5);
+		informacionTrabajador.setToolTipText("Alt+5");
 		menuPerfil.add(informacionTrabajador);
 		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
+		cerrarSesion.setMnemonic(KeyEvent.VK_6);
+		cerrarSesion.setToolTipText("Alt+6");
 		menuPerfil.add(cerrarSesion);
 		
 
@@ -923,7 +938,24 @@ public class VentanaTrabajador extends JFrame {
 		add(pPerfil,BorderLayout.SOUTH);
 		add(pTareas,BorderLayout.CENTER);
 		
-		
+		addWindowListener(new WindowAdapter() {
+			
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if(seleccionDatos=="Fichero de datos") {
+					datos.guardarDatos();
+				}else if(seleccionDatos=="Base de datos") {
+					try {
+						bdManager.disconnect();
+					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error desconectando la bd");
+						e1.printStackTrace();
+					}
+				}
+			}
+			
+		});
 
         setVisible(true);
         

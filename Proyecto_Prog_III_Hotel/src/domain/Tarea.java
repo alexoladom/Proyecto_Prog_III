@@ -31,6 +31,10 @@ public class Tarea implements Serializable{
 		this.completadaPor = trabajador;
 	}
 	
+	public static void setNumId(int numId) {
+		Tarea.numId = numId;
+	}
+
 	public Tarea() {
 		super();
 		numId++;

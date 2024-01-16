@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -112,6 +113,8 @@ public class VentanaInicioTrabajador extends JFrame{
 				logger.warning("El trabajador introducido no existe");
 			}
 		}); 
+		botonIniSesion.setMnemonic(KeyEvent.VK_ENTER);
+		botonIniSesion.setToolTipText("Alt+Enter");
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}

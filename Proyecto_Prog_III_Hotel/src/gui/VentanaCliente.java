@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -65,7 +66,7 @@ public class VentanaCliente extends JFrame{
 	private static final long serialVersionUID = 1L;
 	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pPerfil,pCambiarPerfil,pBotonesVerReservas;
 	protected JList<Reserva> listaReservas;
-	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva,bInvertirLista;
+	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva,bInvertirLista,bPagar;
 	protected JComboBox<String>  comboOrdenar;
 	protected JSpinner numeroDeHabitaciones;
 	protected DefaultListModel<Reserva> modeloListaReservas;
@@ -448,18 +449,28 @@ public class VentanaCliente extends JFrame{
 		JMenu menuCrearReservas = new JMenu();
 		menuBar.add(menuCrearReservas);
 		JMenuItem crearReservas = new JMenuItem("CREAR RESERVA");
+		crearReservas.setMnemonic(KeyEvent.VK_1);
+		crearReservas.setToolTipText("Alt+1");
 		menuCrearReservas.add(crearReservas);
 		JMenu menuVerReservas = new JMenu();
 		menuBar.add(menuVerReservas);
 		JMenuItem verReservas = new JMenuItem("VER RESERVAS");
+		verReservas.setMnemonic(KeyEvent.VK_2);
+		verReservas.setToolTipText("Alt+2");
 		menuVerReservas.add(verReservas);
 		JMenu menuPerfil = new JMenu();
 		menuBar.add(menuPerfil);
 		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
+		cambiarFotoPerfil.setMnemonic(KeyEvent.VK_3);
+		cambiarFotoPerfil.setToolTipText("Alt+3");
 		menuPerfil.add(cambiarFotoPerfil);
 		JMenuItem informacionCliente = new JMenuItem("VER/EDITAR MIS DATOS");
+		informacionCliente.setMnemonic(KeyEvent.VK_4);
+		informacionCliente.setToolTipText("Alt+4");
 		menuPerfil.add(informacionCliente);
 		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
+		cerrarSesion.setMnemonic(KeyEvent.VK_5);
+		cerrarSesion.setToolTipText("Alt+5");
 		menuPerfil.add(cerrarSesion);
 		
 		cambiarFotoPerfil.addActionListener((e)->{
@@ -750,6 +761,7 @@ public class VentanaCliente extends JFrame{
 		bBorrarReserva.setBackground(Color.white);
 		bBorrarReserva.setBorder(null);
 		bBorrarReserva.setOpaque(false);
+		bBorrarReserva.setToolTipText("Borrar reserva");
 		ImageIcon basura = new ImageIcon("src/Imagenes/basura.png");
 		Image basuraResized = basura.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bBorrarReserva.setIcon(new ImageIcon(basuraResized));
@@ -759,6 +771,7 @@ public class VentanaCliente extends JFrame{
 		bEditarReserva.setBackground(Color.white);
 		bEditarReserva.setBorder(null);
 		bEditarReserva.setOpaque(false);
+		bEditarReserva.setToolTipText("Editar reserva");
 		ImageIcon editar = new ImageIcon("src/Imagenes/editar.png");
 		Image editarResized = editar.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bEditarReserva.setIcon(new ImageIcon(editarResized));
@@ -777,6 +790,7 @@ public class VentanaCliente extends JFrame{
 		bInvertirLista.setBackground(Color.white);
 		bInvertirLista.setBorder(null);
 		bInvertirLista.setOpaque(false);
+		bInvertirLista.setToolTipText("Invertir lista");
 		ImageIcon flecha = new ImageIcon("src/Imagenes/flechaHaciaArriba.png");
 		Image flechaResized = flecha.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bInvertirLista.setIcon(new ImageIcon(flechaResized));
@@ -806,11 +820,38 @@ public class VentanaCliente extends JFrame{
 			}
 		});
 		
+		bPagar  = new JButton();
+		bPagar.setBackground(Color.white);
+		bPagar.setBorder(null);
+		bPagar.setOpaque(false);
+		bPagar.setToolTipText("Pagar reserva");
+		ImageIcon pagar = new ImageIcon("src/Imagenes/pagar.png");
+		Image pagarResized = pagar.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		bPagar.setIcon(new ImageIcon(pagarResized));
+		bPagar.addActionListener(e->{
+			Reserva seleccion = listaReservas.getSelectedValue();
+			
+			seleccion.setEstaPagado(true);
+			
+			listaReservas.repaint();
+			
+			if(seleccionDatos=="Base de datos") {
+				try {
+					bdManager.actualizarReserva(seleccion);
+				} catch (BDexception e1) {
+					logger.log(Level.SEVERE, "Error al actualizar la reserva en la BD");
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
 		pBotonesVerReservas.add(bBorrarReserva);
 		pBotonesVerReservas.add(bEditarReserva);
 		pBotonesVerReservas.add(new JLabel("Ordenar por:"));
 		pBotonesVerReservas.add(comboOrdenar);
 		pBotonesVerReservas.add(bInvertirLista);
+		pBotonesVerReservas.add(bPagar);
 		
 		
 		bInvertirLista.addActionListener((e)->{

@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -245,6 +246,9 @@ public class VentanaInicioCliente extends JFrame {
 				logger.warning("El usuario no esta registrado");
 			}
 		});
+		
+		botonIniSesion.setMnemonic(KeyEvent.VK_ENTER);
+		botonIniSesion.setToolTipText("Alt+Enter");
 		
 		this.addWindowListener(new WindowAdapter() {
 			
