@@ -18,8 +18,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -78,6 +80,16 @@ public class VentanaTrabajador extends JFrame {
     protected static List<List<Tarea>> listaRecursiva = new ArrayList<>();;
 
     public VentanaTrabajador(Datos datos, Trabajador trabajador,String seleccionDatos, BDmanager bdManager) {
+    	try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
 
     	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -360,7 +372,8 @@ public class VentanaTrabajador extends JFrame {
 	        	try {
 					bdManager.actualizarTrabajador(trabajador);
 				} catch (BDexception e1) {
-					System.err.println("Error actualizando trabajador");
+					logger.log(Level.SEVERE, "Error actualizando el trabajador en la bd");
+
 					e1.printStackTrace();
 				}
 	        }
@@ -788,10 +801,11 @@ public class VentanaTrabajador extends JFrame {
 				
 				if(seleccionDatos=="Base de datos") {
 					try {
-						System.out.println("guardado");
 						bdManager.actualizarTarea(seleccion);
 						bdManager.actualizarTrabajador(trabajador);
 					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error actualizando la tarea y el trabajador en la bd");
+
 						e1.printStackTrace();
 					}
 				}
@@ -867,6 +881,8 @@ public class VentanaTrabajador extends JFrame {
 						try {
 							bdManager.guardarTarea(tarea);
 						} catch (BDexception e1) {
+							logger.log(Level.SEVERE, "Error guardando la tarea en la bd");
+
 							e1.printStackTrace();
 						}
 					}
@@ -886,6 +902,8 @@ public class VentanaTrabajador extends JFrame {
 				try {
 					bdManager.deleteTarea(seleccion);
 				} catch (BDexception e1) {
+					logger.log(Level.SEVERE, "Error borrando la tarea en la bd");
+
 					e1.printStackTrace();
 				}
 			}

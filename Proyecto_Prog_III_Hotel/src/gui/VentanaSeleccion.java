@@ -3,7 +3,11 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +31,16 @@ public class VentanaSeleccion extends JFrame{
 	protected JLabel lblIdentificacion, lblImagenTrabajador, lblImagenCliente;
 	
 	public VentanaSeleccion(Datos datos,String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,6 +107,7 @@ public class VentanaSeleccion extends JFrame{
 						bdManager.disconnect();
 					} catch (BDexception ex) {
 						System.err.println("Error desconectando la BD");
+						logger.log(Level.SEVERE, "Error desconectando la BD");
 						ex.printStackTrace();
 					}
 			}

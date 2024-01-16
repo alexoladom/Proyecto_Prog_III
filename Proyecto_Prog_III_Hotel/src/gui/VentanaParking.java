@@ -8,10 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import java.util.GregorianCalendar;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -43,6 +48,7 @@ import domain.PlazaParking;
 import domain.Reserva;
 
 public class VentanaParking extends JFrame {
+	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 
 	private static final long serialVersionUID = 1L;
 	protected JButton botonReserva, botonTerminarReserva;
@@ -52,6 +58,16 @@ public class VentanaParking extends JFrame {
 	protected JDatePicker datePicker;
 
 	public VentanaParking(Datos datos, Reserva reserva, Cliente cliente,String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -85,7 +101,8 @@ public class VentanaParking extends JFrame {
 							try {
 								bdManager.actualizarPlazaparking(plaza);
 							} catch (BDexception e) {
-								System.err.println("Error actualizando la plaza");
+								logger.log(Level.SEVERE, "Error actualizando la plaza en la bd");
+
 								e.printStackTrace();
 							}
 						}
@@ -100,7 +117,7 @@ public class VentanaParking extends JFrame {
 							try {
 								bdManager.actualizarPlazaparking(plaza);
 							} catch (BDexception e) {
-								System.err.println("Error actualizando la plaza");
+								logger.log(Level.SEVERE, "Error actualizando la plaza en la bd");
 								e.printStackTrace();
 							}
 						}

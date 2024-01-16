@@ -17,8 +17,10 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -72,10 +74,19 @@ public class VentanaCliente extends JFrame{
 	
 
 	public VentanaCliente(Datos datos, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
 		
 		setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
-		System.out.println("Tamaño de la lista de reservas del cliente ->"+cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(700,300);
 		setLocationRelativeTo(null);
@@ -231,6 +242,7 @@ public class VentanaCliente extends JFrame{
 								try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e1) {
+									logger.log(Level.SEVERE, "Error actualizando habitacion en la bd");
 									e1.printStackTrace();
 								}
 							}
@@ -245,6 +257,7 @@ public class VentanaCliente extends JFrame{
 									try {
 										bdManager.actualizarMesa(m);
 									} catch (BDexception e1) {
+										logger.log(Level.SEVERE, "Error actualizando  la mesa en la bd");
 										e1.printStackTrace();
 									}
 								}
@@ -254,6 +267,7 @@ public class VentanaCliente extends JFrame{
 							try {
 								bdManager.deleteReserva(reserva);
 							} catch (BDexception e1) {
+								logger.log(Level.SEVERE, "Error borrando la mesa en la bd");
 								e1.printStackTrace();
 							}
 						}
@@ -268,6 +282,7 @@ public class VentanaCliente extends JFrame{
 								try {
 									bdManager.actualizarPlazaparking(p);
 								} catch (BDexception e1) {
+									logger.log(Level.SEVERE, "Error actualizando el parking en la bd");
 									e1.printStackTrace();
 								}
 							}
@@ -305,8 +320,7 @@ public class VentanaCliente extends JFrame{
 				init();	
 				reserva = new Reserva();
 				bConfirmarReserva.addActionListener((e)->{
-					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-				        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+
 					boolean ini = false;
 					boolean fin = false;
 					
@@ -337,8 +351,7 @@ public class VentanaCliente extends JFrame{
 						}
 			        	datos.getListaReservas().add(reserva);
 			        	reserva.setCliente(cliente);
-			        	System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-			        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+	
 			        	JOptionPane.showMessageDialog(this, "Reserva Guardada");
 			        	
 			        	if(seleccionDatos=="Base de datos") {
@@ -362,9 +375,7 @@ public class VentanaCliente extends JFrame{
 				});
 				bReservarParking.addActionListener((e)->{
 					reserva.setCliente(cliente);
-					System.out.println("ID de la reserva creada ->"+reserva.getId());
-					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-				    cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+		
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
@@ -402,7 +413,7 @@ public class VentanaCliente extends JFrame{
 			        	try {
 							bdManager.actualizarReserva(reserva);
 						} catch (BDexception e1) {
-							System.err.println("Error actualizando la reserva en la bd");
+							logger.log(Level.SEVERE, "Error actualizando la reserva en la bd");
 							e1.printStackTrace();
 						}
 			        }
@@ -653,7 +664,7 @@ public class VentanaCliente extends JFrame{
 	        	try {
 					bdManager.actualizarCliente(cliente);
 				} catch (BDexception e1) {
-					System.err.println("Error actualizando cliente");
+					logger.log(Level.SEVERE, "Error actualizando el cliente en la bd");
 					e1.printStackTrace();
 				}
 	        }
@@ -676,6 +687,7 @@ public class VentanaCliente extends JFrame{
 			try {
 				modeloListaReservas.addAll(bdManager.getReservasDeCliente(cliente));
 			} catch (BDexception e1) {
+				logger.log(Level.SEVERE, "Error recogiendo las reservas de la bd");
 				e1.printStackTrace();
 			}
 		}else {
@@ -825,6 +837,7 @@ public class VentanaCliente extends JFrame{
 						try {
 							bdManager.actualizarMesa(m);
 						} catch (BDexception e1) {
+							logger.log(Level.SEVERE, "Error actualizando la mesa en la bd");
 							e1.printStackTrace();
 						}
 					}
@@ -834,6 +847,7 @@ public class VentanaCliente extends JFrame{
 				try {
 					bdManager.deleteReserva(seleccionado);
 				} catch (BDexception e1) {
+					logger.log(Level.SEVERE, "Error borrando la reserva en la bd");
 					e1.printStackTrace();
 				}
 			}
@@ -848,6 +862,7 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.actualizarPlazaparking(p);
 					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error actualizando la plaza de parking en la bd");
 						e1.printStackTrace();
 					}
 				}
@@ -866,6 +881,7 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.actualizarHabitacion(h);
 					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 						e1.printStackTrace();
 					}
 				}
@@ -928,11 +944,10 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.disconnect();
 					} catch (BDexception e1) {
-						System.err.println("Error desconectando la base de datos");
+						logger.log(Level.SEVERE, "Error desconectando la bd");
 						e1.printStackTrace();
 					}
 				}
-				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
 
 		});

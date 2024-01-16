@@ -1,7 +1,10 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,8 +32,17 @@ public class VentanaInicioTrabajador extends JFrame{
 	protected Datos datos;
 
 	public VentanaInicioTrabajador(Datos datos,String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
-		//TODO falta implementar la base de datos
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -5,7 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,6 +29,7 @@ import domain.Datos;
 public class VentanaDeCarga extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
 	
+	
 	private static final long serialVersionUID = 1L;
 	protected JButton botonCerrar, botonEntrar;
 	protected JPanel panelAbajo, panelCentro, panelFoto;
@@ -35,6 +40,17 @@ public class VentanaDeCarga extends JFrame{
 	protected BDmanager bdManager = new BDmanager();
 	
 	public VentanaDeCarga(Datos datos){
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,7 +100,7 @@ public class VentanaDeCarga extends JFrame{
 			 try {
 					bdManager.disconnect();
 				} catch (BDexception ex) {
-					System.err.println("Error desconectando la BD");
+					logger.log(Level.SEVERE, "Error desconectando la BD");
 					ex.printStackTrace();
 				}
 			logger.info("Se cierra la ventana");
@@ -117,6 +133,7 @@ public class VentanaDeCarga extends JFrame{
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {
+									logger.log(Level.SEVERE, "Error desconectando la BD");
 									e.printStackTrace();
 								}
 							}else if(seleccion =="Datos de prueba"){
@@ -124,6 +141,7 @@ public class VentanaDeCarga extends JFrame{
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {
+									logger.log(Level.SEVERE, "Error desconectando la BD");
 									e.printStackTrace();
 								}
 							}else {
@@ -133,7 +151,7 @@ public class VentanaDeCarga extends JFrame{
 									
 									bdManager.rellenarDatos(datos);
 								} catch (BDexception e) {
-									System.err.println("Error en la ventana de carga al intentar conectar con la BD");
+									logger.log(Level.SEVERE, "Error rellenando datos a la BD");
 									e.printStackTrace();
 								}
 							}
@@ -157,7 +175,7 @@ public class VentanaDeCarga extends JFrame{
 				 try {
 						bdManager.disconnect();
 					} catch (BDexception ex) {
-						System.err.println("Error desconectando la BD");
+						logger.log(Level.SEVERE, "Error desconectando la BD");
 						ex.printStackTrace();
 					}
 			}
@@ -179,6 +197,7 @@ public class VentanaDeCarga extends JFrame{
 		if (seleccionDatos==JOptionPane.YES_OPTION) {
 			seleccion =(String) combo.getSelectedItem();
 		}
+		logger.log(Level.INFO, "Ventana de carga cargada");
 	}
 	
 

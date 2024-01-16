@@ -5,11 +5,15 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,6 +46,16 @@ public class VentanaInicioCliente extends JFrame {
 	protected Datos datos;
 
 	public VentanaInicioCliente(Datos datos, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -198,7 +212,7 @@ public class VentanaInicioCliente extends JFrame {
 					try {
 						bdManager.guardarCliente(cliente);
 					} catch (BDexception e1) {
-						System.err.println("Error guardando el cliente en la bd");
+						logger.log(Level.SEVERE, "Error guardando el cliente en la bd");
 						e1.printStackTrace();
 					}
 				}
@@ -243,7 +257,7 @@ public class VentanaInicioCliente extends JFrame {
 					try {
 						bdManager.disconnect();
 					} catch (BDexception e1) {
-						System.err.println("Error desconectando la BD");
+						logger.log(Level.SEVERE, "Error desconectando la bd");
 						e1.printStackTrace();
 					}
 			    }

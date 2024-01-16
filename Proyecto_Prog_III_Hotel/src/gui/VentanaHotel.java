@@ -5,7 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -56,6 +60,16 @@ public class VentanaHotel extends JFrame{
 	private JList<Habitacion> listaReservas;
 	
 	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		ImageIcon image = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(image.getImage());
 		this.datos=datos;
@@ -140,7 +154,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -219,7 +233,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -297,7 +311,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -376,7 +390,7 @@ public class VentanaHotel extends JFrame{
 					    	try {
 								bdManager.actualizarMesa(c);
 							} catch (BDexception e) {
-								System.err.println("Error actualizando la mesa en la bd");
+								logger.log(Level.SEVERE, "Error actualizando la mesa en la bd");
 								e.printStackTrace();
 							}
 					    }
