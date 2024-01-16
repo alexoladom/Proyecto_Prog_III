@@ -129,6 +129,7 @@ public class VentanaDeCarga extends JFrame{
 								}
 							}else {
 								//Conectar con la base de datos
+								
 								try {										
 									bdManager.rellenarDatos(datos);
 								} catch (BDexception e) {

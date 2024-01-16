@@ -58,6 +58,7 @@ public class BDmanager {
 			while(rs.next()) {
 				Cliente cliente = new Cliente();
 				cliente.setDni(rs.getString("DNI"));
+				cliente.setNombre(rs.getString("Nombre"));
 				cliente.setApellido1(rs.getString("Apellido"));
 				cliente.setEmail(rs.getString("Email"));
 				cliente.setDireccion(rs.getString("Direccion"));
@@ -68,6 +69,7 @@ public class BDmanager {
 				cliente.setUltimoLogin(LocalDate.parse(rs.getString("UltimoLogin")));
 				List<Reserva> reservas = new ArrayList<>();
 				reservas.addAll(getReservasDeCliente(cliente));
+				cliente.setListaReservasCliente(reservas);
 				clientes.add(cliente);
 			}
 			
@@ -360,6 +362,7 @@ public class BDmanager {
 			while(rs.next()) {
 				Trabajador trabajador = new Trabajador();
 				trabajador.setDni(rs.getString("DNI"));
+				trabajador.setNombre(rs.getString("Nombre"));
 				trabajador.setApellido1(rs.getString("Apellido"));
 				trabajador.setEmail(rs.getString("Email"));
 				trabajador.setDireccion(rs.getString("Direccion"));
@@ -396,6 +399,7 @@ public class BDmanager {
 			if (rs.next()) {
 				Trabajador trabajador = new Trabajador();
 				trabajador.setDni(rs.getString("DNI"));
+				trabajador.setNombre(rs.getString("Nombre"));
 				trabajador.setApellido1(rs.getString("Apellido"));
 				trabajador.setEmail(rs.getString("Email"));
 				trabajador.setDireccion(rs.getString("Direccion"));
@@ -826,7 +830,13 @@ public class BDmanager {
 			stmt.setInt(3, tarea.getNumHoras());
 			stmt.setBoolean(4,tarea.isEstaCompletada());
 			stmt.setString(5, tarea.getDescripcion());
-			stmt.setString(6, tarea.getCompletadaPor().getDni());
+			if(tarea.getCompletadaPor()==null) {
+				stmt.setString(6, "-1");
+			}else {
+				stmt.setString(6, tarea.getCompletadaPor().getDni());
+
+			}
+			
 			
 			
 			stmt.executeUpdate();
@@ -847,11 +857,17 @@ public class BDmanager {
 			stmt.setInt(2, tarea.getNumHoras());
 			stmt.setBoolean(3, tarea.isEstaCompletada());
 			stmt.setString(4, tarea.getDescripcion());
-			stmt.setString(5, tarea.getCompletadaPor().getDni());
+			if(tarea.getCompletadaPor()==null) {
+				stmt.setString(5, "-1");
+			}else {
+				stmt.setString(5, tarea.getCompletadaPor().getDni());
+
+			}
+			stmt.setInt(6, tarea.getId());
 			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new BDexception("No se pudo guardar la tarea en la BD", e);
+			throw new BDexception("No se pudo actualizar la tarea en la BD", e);
 		}
 	}
 	
@@ -862,7 +878,7 @@ public class BDmanager {
 			stmt.setInt(1,tarea.getId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new BDexception("No se pudo elimiar la tarea con DNI " + tarea.getId(), e);
+			throw new BDexception("No se pudo elimiar la tarea con ID " + tarea.getId(), e);
 		}
 	}
 	
@@ -1047,7 +1063,7 @@ public class BDmanager {
 			stmt.setInt(1,plaza.getId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new BDexception("No se pudo elimiar la tarea con DNI " + plaza.getId(), e);
+			throw new BDexception("No se pudo elimiar la plaza con ID " + plaza.getId(), e);
 		}
 	}
 	
@@ -1186,6 +1202,7 @@ public class BDmanager {
 		
 		datos.listaTareas.addAll(getTareas());
 		
+		
 		for (Trabajador trabajador : datos.getListaTrabajadores()) {
 			datos.getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
@@ -1257,6 +1274,8 @@ public class BDmanager {
 			datos.getMapaHabitaciones().putIfAbsent(habitacion.getPlanta(), new ArrayList<>());
 			datos.getMapaHabitaciones().get(habitacion.getPlanta()).add(habitacion);
 		}
+		
+		
 			
 	}
 	

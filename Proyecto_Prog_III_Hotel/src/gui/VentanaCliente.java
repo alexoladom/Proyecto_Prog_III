@@ -10,9 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
@@ -397,20 +395,24 @@ public class VentanaCliente extends JFrame{
              if (result == JFileChooser.APPROVE_OPTION) {
             	 File file = fileChooser.getSelectedFile();
             	 try {            		 
-                	 File destino =new File( "src/Imagenes/"+file.getName());
+                	 File destino =new File("src/Imagenes/"+cliente.getDni()+file.getName());
 					 Files.copy(Paths.get(file.getPath()), Paths.get(destino.getPath()),StandardCopyOption.REPLACE_EXISTING);
+					 if(cliente.getFotoPerfil()!="src/Imagenes/imagenPerfilpng.png") {
+						 Files.deleteIfExists(Paths.get(cliente.getFotoPerfil()));
+					 }
+					 cliente.setFotoPerfil("src/Imagenes/"+cliente.getDni()+file.getName());
+					 
 				} catch (IOException e2) {
 					logger.log(Level.SEVERE, e2.getMessage());
 					e2.printStackTrace();
 				}
-                 cliente.setFotoPerfil(file.getPath());
                  this.setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
                  Image imagenPerfilEscala = (new ImageIcon(cliente.getFotoPerfil()).getImage().getScaledInstance(60, 45,Image.SCALE_SMOOTH));
                  menuPerfil.setIcon(new ImageIcon(imagenPerfilEscala));
                  this.repaint();
                  
                  
-                 System.out.println("Fichero seleccionado: " + file.getPath());
+                 logger.info("Fichero seleccionado: " + file.getPath());
                  
                  if(seleccionDatos=="Base de datos") {
                 	 try {

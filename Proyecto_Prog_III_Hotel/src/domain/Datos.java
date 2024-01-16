@@ -169,6 +169,70 @@ public class Datos {
 		Mesa m12 = new Mesa(11, false);
 		getListaComedor().add(m12);
 		
+		//Creacion de tareas de prueba
+		
+		 Tarea tarea1 = new Tarea(Rol.Cocinero, 4, false, "Preparar menú especial", null);
+	        Tarea tarea2 = new Tarea(Rol.Camarero, 3, false, "Atender mesas de eventos", null);
+	        Tarea tarea3 = new Tarea(Rol.Limpiador, 5, false, "Limpiar y desinfectar áreas comunes", null);
+	        Tarea tarea4 = new Tarea(Rol.Recepcionista, 6, false, "Registrar llegada de huéspedes VIP", null);
+	        Tarea tarea5 = new Tarea(Rol.Cocinero, 2, false, "Crear postres gourmet", null);
+	        Tarea tarea6 = new Tarea(Rol.Camarero, 8, false, "Coordinar servicio en eventos privados", null);
+	        Tarea tarea7 = new Tarea(Rol.Limpiador, 7, false, "Organizar y mantener la sala de reuniones", null);
+	        Tarea tarea8 = new Tarea(Rol.Recepcionista, 1, false, "Brindar información turística a clientes", null);
+	        Tarea tarea9 = new Tarea(Rol.Cocinero, 4, false, "Inventar nuevas recetas", null);
+	        Tarea tarea10 = new Tarea(Rol.Camarero, 3, false, "Preparar cócteles especiales", null);
+	        Tarea tarea11 = new Tarea(Rol.Limpiador, 5, false, "Desinfectar áreas de juego infantil", null);
+	        Tarea tarea12 = new Tarea(Rol.Recepcionista, 6, false, "Asistir en el check-in de grupos grandes", null);
+	        Tarea tarea13 = new Tarea(Rol.Cocinero, 2, false, "Elaborar platillos de la cocina internacional", null);
+	        Tarea tarea14 = new Tarea(Rol.Camarero, 8, false, "Atender pedidos especiales de clientes", null);
+	        Tarea tarea15 = new Tarea(Rol.Limpiador, 7, false, "Mantener áreas de recreación impecables", null);
+	        Tarea tarea16 = new Tarea(Rol.Recepcionista, 1, false, "Coordinar servicios de transporte para clientes", null);
+	        Tarea tarea17 = new Tarea(Rol.Cocinero, 4, false, "Experimentar con ingredientes exóticos", null);
+	        Tarea tarea18 = new Tarea(Rol.Camarero, 3, false, "Organizar degustación de vinos", null);
+	        Tarea tarea19 = new Tarea(Rol.Limpiador, 5, false, "Desinfectar zonas de piscina", null);
+	        Tarea tarea20 = new Tarea(Rol.Recepcionista, 6, false, "Atender solicitudes especiales de habitaciones", null);
+	        Tarea tarea21 = new Tarea(Rol.Cocinero, 2, false, "Diseñar menús temáticos", null);
+	        Tarea tarea22 = new Tarea(Rol.Camarero, 8, false, "Atender eventos gastronómicos", null);
+	        Tarea tarea23 = new Tarea(Rol.Limpiador, 7, false, "Desinfectar equipos de gimnasio", null);
+	        Tarea tarea24 = new Tarea(Rol.Recepcionista, 1, false, "Brindar asistencia a clientes con reservas especiales", null);
+	        Tarea tarea25 = new Tarea(Rol.Cocinero, 4, false, "Preparar platillos saludables", null);
+	        Tarea tarea26 = new Tarea(Rol.Camarero, 3, false, "Atender eventos culturales", null);
+	        Tarea tarea27 = new Tarea(Rol.Limpiador, 5, false, "Mantener la sala de conferencias en perfecto estado", null);
+	        Tarea tarea28 = new Tarea(Rol.Recepcionista, 6, false, "Coordinar servicios de spa para clientes", null);
+	        Tarea tarea29 = new Tarea(Rol.Cocinero, 2, false, "Crear experiencias gastronómicas únicas", null);
+	        Tarea tarea30 = new Tarea(Rol.Camarero, 8, false, "Atender solicitudes especiales de eventos", null);
+
+	        listaTareas.add(tarea1);
+	        listaTareas.add(tarea2);
+	        listaTareas.add(tarea3);
+	        listaTareas.add(tarea4);
+	        listaTareas.add(tarea5);
+	        listaTareas.add(tarea6);
+	        listaTareas.add(tarea7);
+	        listaTareas.add(tarea8);
+	        listaTareas.add(tarea9);
+	        listaTareas.add(tarea10);
+	        listaTareas.add(tarea11);
+	        listaTareas.add(tarea12);
+	        listaTareas.add(tarea13);
+	        listaTareas.add(tarea14);
+	        listaTareas.add(tarea15);
+	        listaTareas.add(tarea16);
+	        listaTareas.add(tarea17);
+	        listaTareas.add(tarea18);
+	        listaTareas.add(tarea19);
+	        listaTareas.add(tarea20);
+	        listaTareas.add(tarea21);
+	        listaTareas.add(tarea22);
+	        listaTareas.add(tarea23);
+	        listaTareas.add(tarea24);
+	        listaTareas.add(tarea25);
+	        listaTareas.add(tarea26);
+	        listaTareas.add(tarea27);
+	        listaTareas.add(tarea28);
+	        listaTareas.add(tarea29);
+	        listaTareas.add(tarea30);
+		
 		for (Trabajador trabajador : getListaTrabajadores()) {
 			getMapaTrabajadoresPorDNI().putIfAbsent(trabajador.getDni(), trabajador);
 		}
