@@ -86,7 +86,6 @@ public class VentanaDeCarga extends JFrame{
 				new VentanaInfo();
 			}
 		});
-		panelAbajo.add(botonAyuda);
 		
 		panelFoto = new JPanel();
 		panelFoto.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -102,6 +101,7 @@ public class VentanaDeCarga extends JFrame{
 		
 		panelAbajo.add(botonCerrar);
 		panelAbajo.add(botonEntrar);
+		panelAbajo.add(botonAyuda);
 		
 		progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true); // Muestra el porcentaje en la barra
