@@ -36,7 +36,7 @@ public class VentanaDeCarga extends JFrame{
 	
 	
 	private static final long serialVersionUID = 1L;
-	protected JButton botonCerrar, botonEntrar, botonAyuda;
+	protected JButton botonCerrar, botonEntrar, botonAyuda, botonValoracion;
 	protected JPanel panelAbajo, panelCentro, panelFoto;
 	protected JProgressBar progressBar;
 	protected JLabel lblImagenHotel;
@@ -86,6 +86,14 @@ public class VentanaDeCarga extends JFrame{
 				new VentanaInfo();
 			}
 		});
+		botonValoracion = new JButton("Valoranos");
+		botonValoracion.setForeground(Color.YELLOW);
+		botonValoracion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaValoracion();
+			}
+		});
 		
 		panelFoto = new JPanel();
 		panelFoto.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -102,6 +110,7 @@ public class VentanaDeCarga extends JFrame{
 		panelAbajo.add(botonCerrar);
 		panelAbajo.add(botonEntrar);
 		panelAbajo.add(botonAyuda);
+		panelAbajo.add(botonValoracion);
 		
 		progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true); // Muestra el porcentaje en la barra
