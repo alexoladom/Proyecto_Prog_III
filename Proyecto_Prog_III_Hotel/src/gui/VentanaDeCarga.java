@@ -1,8 +1,11 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -33,7 +36,7 @@ public class VentanaDeCarga extends JFrame{
 	
 	
 	private static final long serialVersionUID = 1L;
-	protected JButton botonCerrar, botonEntrar;
+	protected JButton botonCerrar, botonEntrar, botonAyuda;
 	protected JPanel panelAbajo, panelCentro, panelFoto;
 	protected JProgressBar progressBar;
 	protected JLabel lblImagenHotel;
@@ -73,6 +76,17 @@ public class VentanaDeCarga extends JFrame{
 		
 		botonCerrar = new JButton("CERRAR");
 		botonEntrar = new JButton("ENTRAR");
+		
+		//Añadido
+		botonAyuda = new JButton("Necesitas Ayuda?");
+		botonAyuda.setForeground(Color.GREEN);
+		botonAyuda.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaInfo();
+			}
+		});
+		panelAbajo.add(botonAyuda);
 		
 		panelFoto = new JPanel();
 		panelFoto.setLayout(new FlowLayout(FlowLayout.CENTER));
