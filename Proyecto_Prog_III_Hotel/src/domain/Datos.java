@@ -146,7 +146,7 @@ public class Datos {
 		//Lugares del comedor
 		Mesa m1 = new Mesa(0, false);
 		getListaComedor().add(m1);
-		Mesa m2 = new Mesa(1, true);
+		Mesa m2 = new Mesa(1, false);
 		getListaComedor().add(m2);
 		Mesa m3 = new Mesa(2, false);
 		getListaComedor().add(m3);
@@ -391,6 +391,7 @@ public class Datos {
 				oos.writeObject(mapaParkingPorFecha);
 				oos.writeObject(mapaHabitaciones);
 				oos.writeObject(Reserva.getNumId());
+				oos.writeObject(listaComedor);
 				logger.info("GUARDANDO DATOS...");
 
 			}catch (FileNotFoundException e) {
@@ -417,6 +418,7 @@ public class Datos {
 			this.mapaParkingPorFecha= (Map<LocalDate, Parking>) ois.readObject();
 			this.mapaHabitaciones=(Map<Integer, List<Habitacion>>) ois.readObject();
 			Reserva.setNumId((int) ois.readObject());
+			this.listaComedor=(List<Mesa>) ois.readObject();
 			logger.info("CARGANDO DATOS...");
 
 			

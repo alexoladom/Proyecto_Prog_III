@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -17,8 +18,10 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -63,7 +66,7 @@ public class VentanaCliente extends JFrame{
 	private static final long serialVersionUID = 1L;
 	protected JPanel pListaReservas, pCrearEditarReserva,pInformacion,pPerfil,pCambiarPerfil,pBotonesVerReservas;
 	protected JList<Reserva> listaReservas;
-	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva,bInvertirLista;
+	protected JButton botonCerrar, botonReserva,bBorrarReserva,bEditarReserva,bInvertirLista,bPagar;
 	protected JComboBox<String>  comboOrdenar;
 	protected JSpinner numeroDeHabitaciones;
 	protected DefaultListModel<Reserva> modeloListaReservas;
@@ -72,10 +75,19 @@ public class VentanaCliente extends JFrame{
 	
 
 	public VentanaCliente(Datos datos, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
 		
 		setIconImage(new ImageIcon(cliente.getFotoPerfil()).getImage());
-		System.out.println("Tamaño de la lista de reservas del cliente ->"+cliente.getListaReservasCliente().size());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(700,300);
 		setLocationRelativeTo(null);
@@ -219,6 +231,64 @@ public class VentanaCliente extends JFrame{
 				bCancelarReserva = new JButton("Cancelar Reserva");
 				bCancelarReserva.addActionListener((e)->{
 		
+					
+					if(reserva!=null) {
+						reserva.getListaHabitacionesReservadas().forEach(h->{
+							h.setOcupado(false);
+							Reserva r = new Reserva();
+							r.setId(-1);
+							h.setReserva(r);
+							
+							if(seleccionDatos=="Base de datos") {
+								try {
+									bdManager.actualizarHabitacion(h);
+								} catch (BDexception e1) {
+									logger.log(Level.SEVERE, "Error actualizando habitacion en la bd");
+									e1.printStackTrace();
+								}
+							}
+						});
+						datos.getListaComedor().forEach(m->{
+							if(m.getReserva()==reserva) {
+								m.setOcupado(false);
+								Reserva r = new Reserva();
+								r.setId(-1);
+								m.setReserva(r);
+								if(seleccionDatos=="Base de datos") {
+									try {
+										bdManager.actualizarMesa(m);
+									} catch (BDexception e1) {
+										logger.log(Level.SEVERE, "Error actualizando  la mesa en la bd");
+										e1.printStackTrace();
+									}
+								}
+							}
+						});
+						if(seleccionDatos=="Base de datos") {
+							try {
+								bdManager.deleteReserva(reserva);
+							} catch (BDexception e1) {
+								logger.log(Level.SEVERE, "Error borrando la mesa en la bd");
+								e1.printStackTrace();
+							}
+						}
+						
+						reserva.getListaPlazasParking().forEach(p->{
+							p.setOcupada(false);
+							Reserva r = new Reserva();
+							r.setId(-1);
+							p.setReserva(r);
+							
+							if(seleccionDatos=="Base de datos") {
+								try {
+									bdManager.actualizarPlazaparking(p);
+								} catch (BDexception e1) {
+									logger.log(Level.SEVERE, "Error actualizando el parking en la bd");
+									e1.printStackTrace();
+								}
+							}
+						});
+					}
 					if (pCrearEditarReserva != null) {
 						pCrearEditarReserva.setVisible(false);
 					}
@@ -251,8 +321,7 @@ public class VentanaCliente extends JFrame{
 				init();	
 				reserva = new Reserva();
 				bConfirmarReserva.addActionListener((e)->{
-					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-				        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+
 					boolean ini = false;
 					boolean fin = false;
 					
@@ -283,8 +352,7 @@ public class VentanaCliente extends JFrame{
 						}
 			        	datos.getListaReservas().add(reserva);
 			        	reserva.setCliente(cliente);
-			        	System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-			        	cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+	
 			        	JOptionPane.showMessageDialog(this, "Reserva Guardada");
 			        	
 			        	if(seleccionDatos=="Base de datos") {
@@ -297,15 +365,18 @@ public class VentanaCliente extends JFrame{
 			        	}
 			        	
 			        	reserva = new Reserva();
-			        	
+			        	if (pCrearEditarReserva != null) {
+							pCrearEditarReserva.setVisible(false);
+						}
+						pListaReservas.setVisible(false);
+						pPerfil.setVisible(true);
+						setSize(700,300);
 			        }
 
 				});
 				bReservarParking.addActionListener((e)->{
 					reserva.setCliente(cliente);
-					System.out.println("ID de la reserva creada ->"+reserva.getId());
-					System.out.println("Tamaño de la lista de reservas del cliente "+cliente.getNombre()+" "+
-				    cliente.getApellido1()+" -> "+cliente.getListaReservasCliente().size());
+		
 					if(!cliente.getListaReservasCliente().contains(reserva)) {
 						cliente.getListaReservasCliente().add(reserva);
 					}
@@ -343,11 +414,16 @@ public class VentanaCliente extends JFrame{
 			        	try {
 							bdManager.actualizarReserva(reserva);
 						} catch (BDexception e1) {
-							System.err.println("Error actualizando la reserva en la bd");
+							logger.log(Level.SEVERE, "Error actualizando la reserva en la bd");
 							e1.printStackTrace();
 						}
 			        }
-			        
+			        if (pCrearEditarReserva != null) {
+						pCrearEditarReserva.setVisible(false);
+					}
+					pListaReservas.setVisible(false);
+					pPerfil.setVisible(true);
+					setSize(700,300);
 				});
 				bReservarParking.addActionListener((e)->{
 					if (!cliente.getListaReservasCliente().contains(reserva)) {
@@ -373,18 +449,28 @@ public class VentanaCliente extends JFrame{
 		JMenu menuCrearReservas = new JMenu();
 		menuBar.add(menuCrearReservas);
 		JMenuItem crearReservas = new JMenuItem("CREAR RESERVA");
+		crearReservas.setMnemonic(KeyEvent.VK_1);
+		crearReservas.setToolTipText("Alt+1");
 		menuCrearReservas.add(crearReservas);
 		JMenu menuVerReservas = new JMenu();
 		menuBar.add(menuVerReservas);
 		JMenuItem verReservas = new JMenuItem("VER RESERVAS");
+		verReservas.setMnemonic(KeyEvent.VK_2);
+		verReservas.setToolTipText("Alt+2");
 		menuVerReservas.add(verReservas);
 		JMenu menuPerfil = new JMenu();
 		menuBar.add(menuPerfil);
 		JMenuItem cambiarFotoPerfil = new JMenuItem("CAMBIAR FOTO DE PERFIL");
+		cambiarFotoPerfil.setMnemonic(KeyEvent.VK_3);
+		cambiarFotoPerfil.setToolTipText("Alt+3");
 		menuPerfil.add(cambiarFotoPerfil);
 		JMenuItem informacionCliente = new JMenuItem("VER/EDITAR MIS DATOS");
+		informacionCliente.setMnemonic(KeyEvent.VK_4);
+		informacionCliente.setToolTipText("Alt+4");
 		menuPerfil.add(informacionCliente);
 		JMenuItem cerrarSesion = new JMenuItem("CERRAR SESION");
+		cerrarSesion.setMnemonic(KeyEvent.VK_5);
+		cerrarSesion.setToolTipText("Alt+5");
 		menuPerfil.add(cerrarSesion);
 		
 		cambiarFotoPerfil.addActionListener((e)->{
@@ -452,14 +538,14 @@ public class VentanaCliente extends JFrame{
 		
 		pInformacion.setLayout(new GridLayout(9,2));
 		
-		JLabel lblNombre = new JLabel("Introduzca su Nombre: ");
-		JLabel lblContra = new JLabel("Introduzca su contraseña: ");
-		JLabel lblDNI = new JLabel("Introduzca su DNI: ");
-		JLabel lblApellido = new JLabel("Introdzca su apellido: ");
-		JLabel lblEmail = new JLabel("Introduzca su e-mail: ");
-		JLabel lblDireccion = new JLabel("Introduzca su direccion: ");
-		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ");
-		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ");
+		JLabel lblNombre = new JLabel("Introduzca su Nombre: ",SwingConstants.CENTER);
+		JLabel lblContra = new JLabel("Introduzca su contraseña: ",SwingConstants.CENTER);
+		JLabel lblDNI = new JLabel("Introduzca su DNI: ",SwingConstants.CENTER);
+		JLabel lblApellido = new JLabel("Introdzca su apellido: ",SwingConstants.CENTER);
+		JLabel lblEmail = new JLabel("Introduzca su e-mail: ",SwingConstants.CENTER);
+		JLabel lblDireccion = new JLabel("Introduzca su direccion: ",SwingConstants.CENTER);
+		JLabel lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento: ",SwingConstants.CENTER);
+		JLabel lblTelefono = new JLabel("Introduzca su teléfono: ",SwingConstants.CENTER);
 		
 		JTextField textoNombre = new JTextField(20);
 		textoNombre.setEditable(false);
@@ -589,7 +675,7 @@ public class VentanaCliente extends JFrame{
 	        	try {
 					bdManager.actualizarCliente(cliente);
 				} catch (BDexception e1) {
-					System.err.println("Error actualizando cliente");
+					logger.log(Level.SEVERE, "Error actualizando el cliente en la bd");
 					e1.printStackTrace();
 				}
 	        }
@@ -612,6 +698,7 @@ public class VentanaCliente extends JFrame{
 			try {
 				modeloListaReservas.addAll(bdManager.getReservasDeCliente(cliente));
 			} catch (BDexception e1) {
+				logger.log(Level.SEVERE, "Error recogiendo las reservas de la bd");
 				e1.printStackTrace();
 			}
 		}else {
@@ -674,6 +761,7 @@ public class VentanaCliente extends JFrame{
 		bBorrarReserva.setBackground(Color.white);
 		bBorrarReserva.setBorder(null);
 		bBorrarReserva.setOpaque(false);
+		bBorrarReserva.setToolTipText("Borrar reserva");
 		ImageIcon basura = new ImageIcon("src/Imagenes/basura.png");
 		Image basuraResized = basura.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bBorrarReserva.setIcon(new ImageIcon(basuraResized));
@@ -683,6 +771,7 @@ public class VentanaCliente extends JFrame{
 		bEditarReserva.setBackground(Color.white);
 		bEditarReserva.setBorder(null);
 		bEditarReserva.setOpaque(false);
+		bEditarReserva.setToolTipText("Editar reserva");
 		ImageIcon editar = new ImageIcon("src/Imagenes/editar.png");
 		Image editarResized = editar.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bEditarReserva.setIcon(new ImageIcon(editarResized));
@@ -701,6 +790,7 @@ public class VentanaCliente extends JFrame{
 		bInvertirLista.setBackground(Color.white);
 		bInvertirLista.setBorder(null);
 		bInvertirLista.setOpaque(false);
+		bInvertirLista.setToolTipText("Invertir lista");
 		ImageIcon flecha = new ImageIcon("src/Imagenes/flechaHaciaArriba.png");
 		Image flechaResized = flecha.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		bInvertirLista.setIcon(new ImageIcon(flechaResized));
@@ -730,11 +820,38 @@ public class VentanaCliente extends JFrame{
 			}
 		});
 		
+		bPagar  = new JButton();
+		bPagar.setBackground(Color.white);
+		bPagar.setBorder(null);
+		bPagar.setOpaque(false);
+		bPagar.setToolTipText("Pagar reserva");
+		ImageIcon pagar = new ImageIcon("src/Imagenes/pagar.png");
+		Image pagarResized = pagar.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		bPagar.setIcon(new ImageIcon(pagarResized));
+		bPagar.addActionListener(e->{
+			Reserva seleccion = listaReservas.getSelectedValue();
+			
+			seleccion.setEstaPagado(true);
+			
+			listaReservas.repaint();
+			
+			if(seleccionDatos=="Base de datos") {
+				try {
+					bdManager.actualizarReserva(seleccion);
+				} catch (BDexception e1) {
+					logger.log(Level.SEVERE, "Error al actualizar la reserva en la BD");
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
 		pBotonesVerReservas.add(bBorrarReserva);
 		pBotonesVerReservas.add(bEditarReserva);
 		pBotonesVerReservas.add(new JLabel("Ordenar por:"));
 		pBotonesVerReservas.add(comboOrdenar);
 		pBotonesVerReservas.add(bInvertirLista);
+		pBotonesVerReservas.add(bPagar);
 		
 		
 		bInvertirLista.addActionListener((e)->{
@@ -751,10 +868,27 @@ public class VentanaCliente extends JFrame{
 			modeloListaReservas.removeElement(seleccionado);
 			listaReservas.repaint();
 			
+			datos.getListaComedor().forEach(m->{
+				if(m.getReserva()==seleccionado) {
+					m.setOcupado(false);
+					Reserva r = new Reserva();
+					r.setId(-1);
+					m.setReserva(r);
+					if(seleccionDatos=="Base de datos") {
+						try {
+							bdManager.actualizarMesa(m);
+						} catch (BDexception e1) {
+							logger.log(Level.SEVERE, "Error actualizando la mesa en la bd");
+							e1.printStackTrace();
+						}
+					}
+				}
+			});
 			if(seleccionDatos=="Base de datos") {
 				try {
 					bdManager.deleteReserva(seleccionado);
 				} catch (BDexception e1) {
+					logger.log(Level.SEVERE, "Error borrando la reserva en la bd");
 					e1.printStackTrace();
 				}
 			}
@@ -769,11 +903,14 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.actualizarPlazaparking(p);
 					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error actualizando la plaza de parking en la bd");
 						e1.printStackTrace();
 					}
 				}
 				
 			});
+			
+			
 			
 			seleccionado.getListaHabitacionesReservadas().forEach(h->{
 				h.setOcupado(false);
@@ -785,6 +922,7 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.actualizarHabitacion(h);
 					} catch (BDexception e1) {
+						logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 						e1.printStackTrace();
 					}
 				}
@@ -847,11 +985,10 @@ public class VentanaCliente extends JFrame{
 					try {
 						bdManager.disconnect();
 					} catch (BDexception e1) {
-						System.err.println("Error desconectando la base de datos");
+						logger.log(Level.SEVERE, "Error desconectando la bd");
 						e1.printStackTrace();
 					}
 				}
-				System.out.println("Tamaño de lista de reservas del cliente ->" +cliente.getListaReservasCliente().size());
 			}
 
 		});

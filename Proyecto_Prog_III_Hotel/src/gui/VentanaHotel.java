@@ -5,9 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -22,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -35,7 +38,6 @@ import domain.Cliente;
 import domain.Datos;
 import domain.Habitacion;
 import domain.Mesa;
-import domain.Parking;
 import domain.Reserva;
 
 public class VentanaHotel extends JFrame{
@@ -58,13 +60,23 @@ public class VentanaHotel extends JFrame{
 	private JList<Habitacion> listaReservas;
 	
 	public VentanaHotel(Datos datos,Reserva reserva, Cliente cliente, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		ImageIcon image = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(image.getImage());
 		this.datos=datos;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(900,800);
 		setTitle("Hotel");		
-		setLocationRelativeTo(null);
+		
 		
 		//Creo los botones
 		
@@ -142,7 +154,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -221,7 +233,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -299,7 +311,7 @@ public class VentanaHotel extends JFrame{
 						    	try {
 									bdManager.actualizarHabitacion(h);
 								} catch (BDexception e) {
-									System.err.println("Error actualizando la habitacion en la bd");
+									logger.log(Level.SEVERE, "Error actualizando la habitacion en la bd");
 									e.printStackTrace();
 								}
 						    }
@@ -348,15 +360,43 @@ public class VentanaHotel extends JFrame{
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				Mesa c = datos.getListaComedor().get(rowIndex);
 				switch(columnIndex) {
-					case 0: return c.getNumero(); 
-					case 1: return c.isOcupado(); 
-					default: return null;
+				case 0: return c.getNumero();
+				case 1: if(c.getReserva()==reserva){
+					return "Reservado"; 
+				}else if(c.getReserva()!=reserva &&c.getReserva().getId()!=-1){					
+					return "Ocupado por otra reserva o cliente";
+				}else{
+					return "Libre";
+				}
+				
+				default : return null;
 				}
 			}
 			public void actualizarEstado(int rowIndex, boolean ocupado) {
 			   if(rowIndex!=-1) {
 				   Mesa c = datos.getListaComedor().get(rowIndex);
-				    c.setOcupado(ocupado);
+				   if(c.getReserva()==null||c.getReserva()==reserva||c.getReserva().getId()==-1) {
+					    c.setOcupado(ocupado);
+					    
+					    if(ocupado==true) {
+					    	c.setReserva(reserva);
+					    }else {
+					    	Reserva r = new Reserva();
+					    	r.setId(-1);
+					    	c.setReserva(r);
+					    }
+					    
+					    if(seleccionDatos=="Base de datos") {
+					    	try {
+								bdManager.actualizarMesa(c);
+							} catch (BDexception e) {
+								logger.log(Level.SEVERE, "Error actualizando la mesa en la bd");
+								e.printStackTrace();
+							}
+					    }
+				  }else {
+					  JOptionPane.showMessageDialog(VentanaHotel.this, "Esta mesa ya esta ocupada por otra reserva o cliente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+				  }
 				    
 			   }
 			    fireTableCellUpdated(rowIndex, 1);
@@ -423,6 +463,14 @@ public class VentanaHotel extends JFrame{
 		        modeloC.actualizarEstado(tablaC.getSelectedRow(), true);
 		        tablaC.repaint();
 		        //Tabla Comedor
+		        
+		        if(tablaComedor.getSelectedRow()!=-1) {
+		        	Mesa m = datos.getListaComedor().get(tablaComedor.getSelectedRow());
+		        	if(m.getReserva().equals(reserva)&&m.isOcupado()==true) { 
+		        		JOptionPane.showMessageDialog(VentanaHotel.this, "Esta mesa ya esta añadida", "Advertencia", JOptionPane.WARNING_MESSAGE);
+		        	}
+		        }
+		        
 		        MiModeloComedor modeloComedor = (MiModeloComedor) tablaComedor.getModel();
 		        modeloComedor.actualizarEstado(tablaComedor.getSelectedRow(), true);
 		        tablaComedor.repaint();
@@ -461,6 +509,7 @@ public class VentanaHotel extends JFrame{
 		        	}
 		        }
 		        
+		        
 		        listaReservas.setModel(modeloLista);
 		    }
 		});
@@ -497,6 +546,7 @@ public class VentanaHotel extends JFrame{
 		        	 tablaA.clearSelection();
 		        	 tablaB.clearSelection();
 		        	 tablaC.clearSelection();
+		        	 tablaComedor.clearSelection();
 		        }
 		        if(tablaB.getSelectedRow()!=-1) {		        	 
 		        	Habitacion h2 = datos.getMapaHabitaciones().get(1).get(tablaB.getSelectedRow());
@@ -508,6 +558,8 @@ public class VentanaHotel extends JFrame{
 		        	tablaA.clearSelection();
 		        	tablaB.clearSelection();
 		        	tablaC.clearSelection();
+		        	tablaComedor.clearSelection();
+
 		        }
 		        if(tablaC.getSelectedRow()!=-1) {
 		        	Habitacion h3 = datos.getMapaHabitaciones().get(2).get(tablaC.getSelectedRow());
@@ -519,7 +571,18 @@ public class VentanaHotel extends JFrame{
 		        	tablaA.clearSelection();
 		        	tablaB.clearSelection();
 		        	tablaC.clearSelection();
-		        }		
+		        	tablaComedor.clearSelection();
+
+		        }
+		        if(tablaComedor.getSelectedRow()!=-1) {
+		        	   
+		        	
+		        	tablaA.clearSelection();
+		        	tablaB.clearSelection();
+		        	tablaC.clearSelection();
+		        	tablaComedor.clearSelection();
+
+		        }
 		        listaReservas.setModel(modeloLista);
 		        listaReservas.repaint();
 			    
@@ -534,11 +597,9 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				JLabel l = new JLabel();
+				JLabel l = new JLabel(value.toString(), SwingConstants.CENTER);
 		        
-		        l.setOpaque(true);
-		        l.setText(value.toString());
-		       
+		        l.setOpaque(true);		       
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		        }
@@ -559,11 +620,9 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				JLabel l = new JLabel();
+				JLabel l = new JLabel(value.toString(), SwingConstants.CENTER);
 		        
-		        l.setOpaque(true);
-		        l.setText(value.toString());
-		        
+		        l.setOpaque(true);		        
 		       
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -585,11 +644,9 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				JLabel l = new JLabel();
+				JLabel l = new JLabel(value.toString(), SwingConstants.CENTER);
 		        
-		        l.setOpaque(true);
-		        l.setText(value.toString());
-		        
+		        l.setOpaque(true);		        
 		        
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -611,20 +668,20 @@ public class VentanaHotel extends JFrame{
 
 			@Override
 		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				JLabel l = new JLabel();
+				JLabel l = new JLabel(value.toString(), SwingConstants.CENTER);
 		        
 		        l.setOpaque(true);
-		        l.setText(value.toString());
 		        
-		        MiModeloComedor modelo = (MiModeloComedor) table.getModel();
-		        boolean ocupado = Boolean.parseBoolean(modelo.getValueAt(row, 1).toString());
+		        
 		        if (isSelected) {
 		        	l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		        }
-		        if (ocupado) {
+		        if (tablaComedor.getModel().getValueAt(row, 1)=="Reservado") {
 		            l.setBackground(Color.RED);
-		        } else {
+		        } else if(tablaComedor.getModel().getValueAt(row, 1)=="Libre"){
 		            l.setBackground(Color.GREEN);
+		        }else {
+		        	l.setBackground(Color.GRAY);
 		        }
 		        
 		        return l;
@@ -652,6 +709,7 @@ public class VentanaHotel extends JFrame{
 		            	 tablaA.clearSelection();
 			        	 tablaB.clearSelection();
 			        	 tablaC.clearSelection();
+			        	 tablaComedor.clearSelection();
 		            	
 		            } else if (nodo.equals("Planta A")) {
 		            	getContentPane().remove(scrollComedor);
@@ -662,6 +720,8 @@ public class VentanaHotel extends JFrame{
 		                tablaA.clearSelection();
 			        	 tablaB.clearSelection();
 			        	 tablaC.clearSelection();
+			        	 tablaComedor.clearSelection();
+
 		            } else if (nodo.equals("Planta B")) {
 		            	getContentPane().remove(scrollA);
 		            	getContentPane().remove(scrollC);
@@ -671,6 +731,8 @@ public class VentanaHotel extends JFrame{
 		                tablaA.clearSelection();
 			        	 tablaB.clearSelection();
 			        	 tablaC.clearSelection();
+			        	 tablaComedor.clearSelection();
+
 		            } else if (nodo.equals("Planta C")) {
 		            	getContentPane().remove(scrollA);
 		            	getContentPane().remove(scrollB);
@@ -680,15 +742,21 @@ public class VentanaHotel extends JFrame{
 		                tablaA.clearSelection();
 			        	 tablaB.clearSelection();
 			        	 tablaC.clearSelection();
+			        	 tablaComedor.clearSelection();
+
 		            }
 		            pack();
+		    		setLocationRelativeTo(null);
+
 		        }
+		       
 		    }
+		    
 		});
 		
-		
-		
 		pack();
+		
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}	
 	

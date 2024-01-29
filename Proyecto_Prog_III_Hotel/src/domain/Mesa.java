@@ -9,13 +9,27 @@ public class Mesa implements Serializable{
 	protected int id;
 	protected int numero;
 	protected boolean ocupado;
+	protected Reserva reserva;
 	
+	
+	public Reserva getReserva() {
+		return reserva;
+	}
+	public void setReserva(Reserva reserva) {
+		this.reserva = reserva;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public Mesa(int numero, boolean ocupado) {
 		super();
 		numId++;
 		this.id = numId;
 		this.numero = numero;
 		this.ocupado = ocupado;
+		Reserva r = new Reserva();
+		r.setId(-1);
+		this.reserva=r;
 	}
 	public Mesa() {
 		super();

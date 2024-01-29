@@ -3,13 +3,18 @@ package gui;
 import java.awt.BorderLayout;
 
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import org.jdatepicker.JDatePicker;
@@ -41,6 +47,16 @@ public class VentanaInicioCliente extends JFrame {
 	protected Datos datos;
 
 	public VentanaInicioCliente(Datos datos, String seleccionDatos, BDmanager bdManager) {
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,16 +73,16 @@ public class VentanaInicioCliente extends JFrame {
 		botonRegistro.setVisible(false);
 		botonIniSesion = new JButton("INICIO DE SESION");
 
-		lblNombre = new JLabel("Introduzca su Nombre: ");
-		lblContra = new JLabel("Introduzca su contraseña: ");
-		lblContra2 = new JLabel("Introduzca su contraseña: ");
-		lblDNI = new JLabel("Introduzca su DNI: ");
-		lblDNI2 = new JLabel("Introduzca su DNI");
-		lblApellido = new JLabel("Introdzca su apellido: ");
-		lblEmail = new JLabel("Introduzca su e-mail: ");
-		lblDireccion = new JLabel("Introduzca su direccion: ");
-		lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento(dd/mm/aaaa): ");
-		lblTelefono = new JLabel("Introduzca su teléfono: ");
+		lblNombre = new JLabel("Introduzca su Nombre: ",SwingConstants.CENTER);
+		lblContra = new JLabel("Introduzca su contraseña: ",SwingConstants.CENTER);
+		lblContra2 = new JLabel("Introduzca su contraseña: ",SwingConstants.CENTER);
+		lblDNI = new JLabel("Introduzca su DNI: ",SwingConstants.CENTER);
+		lblDNI2 = new JLabel("Introduzca su DNI",SwingConstants.CENTER);
+		lblApellido = new JLabel("Introdzca su apellido: ",SwingConstants.CENTER);
+		lblEmail = new JLabel("Introduzca su e-mail: ",SwingConstants.CENTER);
+		lblDireccion = new JLabel("Introduzca su direccion: ",SwingConstants.CENTER);
+		lblFechaNacimiento = new JLabel("Introduzca su fecha de nacimiento(dd/mm/aaaa): ",SwingConstants.CENTER);
+		lblTelefono = new JLabel("Introduzca su teléfono: ",SwingConstants.CENTER);
 		lblCliente = new JLabel(new ImageIcon("src\\Imagenes\\Clientes.jpeg"));
 
 		
@@ -173,6 +189,9 @@ public class VentanaInicioCliente extends JFrame {
 				JOptionPane.showMessageDialog(null, "El e-mail introducido ya esta en uso","Advertencia",JOptionPane.WARNING_MESSAGE);
 			}else if(date.getModel().getValue()==null) {
 				JOptionPane.showMessageDialog(null, "Introduzca una fecha de nacimiento","Advertencia",JOptionPane.WARNING_MESSAGE);
+			}else if(textoNombre.getText().length()== 0|| textoApellido.getText().length()== 0||textoDireccion.getText().length()== 0||textoDNI2.getText().length()== 0
+					||textoEmail.getText().length()== 0||textoTelefono.getText().length()== 0){
+				JOptionPane.showMessageDialog(null, "Rellene todos los campos","Advertencia",JOptionPane.WARNING_MESSAGE);
 			}else {
 				Cliente cliente = new Cliente();
 				cliente.setNombre(textoNombre.getText());
@@ -194,7 +213,7 @@ public class VentanaInicioCliente extends JFrame {
 					try {
 						bdManager.guardarCliente(cliente);
 					} catch (BDexception e1) {
-						System.err.println("Error guardando el cliente en la bd");
+						logger.log(Level.SEVERE, "Error guardando el cliente en la bd");
 						e1.printStackTrace();
 					}
 				}
@@ -228,6 +247,9 @@ public class VentanaInicioCliente extends JFrame {
 			}
 		});
 		
+		botonIniSesion.setMnemonic(KeyEvent.VK_ENTER);
+		botonIniSesion.setToolTipText("Alt+Enter");
+		
 		this.addWindowListener(new WindowAdapter() {
 			
 			@Override
@@ -239,7 +261,7 @@ public class VentanaInicioCliente extends JFrame {
 					try {
 						bdManager.disconnect();
 					} catch (BDexception e1) {
-						System.err.println("Error desconectando la BD");
+						logger.log(Level.SEVERE, "Error desconectando la bd");
 						e1.printStackTrace();
 					}
 			    }

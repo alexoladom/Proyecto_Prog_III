@@ -1,0 +1,2 @@
+ene 27, 2024 5:07:11 P. M. gui.VentanaDeCarga <init>
+INFORMACIÓN: Ventana de carga cargada

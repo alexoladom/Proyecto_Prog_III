@@ -5,7 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,9 +25,12 @@ import javax.swing.SwingWorker;
 import domain.BDexception;
 import domain.BDmanager;
 import domain.Datos;
+import domain.Reserva;
+import domain.Tarea;
 
 public class VentanaDeCarga extends JFrame{
 	private Logger logger = java.util.logging.Logger.getLogger("Logger");
+	
 	
 	private static final long serialVersionUID = 1L;
 	protected JButton botonCerrar, botonEntrar;
@@ -35,6 +42,17 @@ public class VentanaDeCarga extends JFrame{
 	protected BDmanager bdManager = new BDmanager();
 	
 	public VentanaDeCarga(Datos datos){
+		try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		
 		ImageIcon h = new ImageIcon("src/Imagenes/h.png");
 		setIconImage(h.getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +76,7 @@ public class VentanaDeCarga extends JFrame{
 		
 		panelFoto = new JPanel();
 		panelFoto.setLayout(new FlowLayout(FlowLayout.CENTER));
-		ImageIcon imHotel = new ImageIcon("src\\Imagenes\\hotel.jpeg");
+		ImageIcon imHotel = new ImageIcon("src/Imagenes/hotel.jpeg");
 		Image imagen = imHotel.getImage();
 		Image imagenRedimensionada = imagen.getScaledInstance(325, 350, Image.SCALE_SMOOTH);
 		ImageIcon imagenRedimensionadaIcon = new ImageIcon(imagenRedimensionada);
@@ -84,7 +102,7 @@ public class VentanaDeCarga extends JFrame{
 			 try {
 					bdManager.disconnect();
 				} catch (BDexception ex) {
-					System.err.println("Error desconectando la BD");
+					logger.log(Level.SEVERE, "Error desconectando la BD");
 					ex.printStackTrace();
 				}
 			logger.info("Se cierra la ventana");
@@ -114,10 +132,25 @@ public class VentanaDeCarga extends JFrame{
 							if(seleccion=="Fichero de datos") {
 							//	datos.inicializarDatos();
 								datos.cargarDatos();
-								
+								datos.cargarDatos();
+								int idR =0;
+								for (Reserva r : datos.getListaReservas()) {
+									if(r.getId()>idR) {
+										idR= r.getId();
+									}
+								}
+								Reserva.setNumId(idR);
+								int idT =0;
+								for (Tarea t : datos.getListaTareas()) {
+									if(t.getId()>idT) {
+										idT= t.getId();
+									}
+								}
+								Tarea.setNumId(idT);
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {
+									logger.log(Level.SEVERE, "Error desconectando la BD");
 									e.printStackTrace();
 								}
 							}else if(seleccion =="Datos de prueba"){
@@ -125,15 +158,17 @@ public class VentanaDeCarga extends JFrame{
 								try {
 									bdManager.disconnect();
 								} catch (BDexception e) {
+									logger.log(Level.SEVERE, "Error desconectando la BD");
 									e.printStackTrace();
 								}
 							}else {
 								//Conectar con la base de datos
 								
-								try {										
+								try {
+									
 									bdManager.rellenarDatos(datos);
 								} catch (BDexception e) {
-									System.err.println("Error en la ventana de carga al intentar conectar con la BD");
+									logger.log(Level.SEVERE, "Error rellenando datos a la BD");
 									e.printStackTrace();
 								}
 							}
@@ -157,7 +192,7 @@ public class VentanaDeCarga extends JFrame{
 				 try {
 						bdManager.disconnect();
 					} catch (BDexception ex) {
-						System.err.println("Error desconectando la BD");
+						logger.log(Level.SEVERE, "Error desconectando la BD");
 						ex.printStackTrace();
 					}
 			}
@@ -179,6 +214,7 @@ public class VentanaDeCarga extends JFrame{
 		if (seleccionDatos==JOptionPane.YES_OPTION) {
 			seleccion =(String) combo.getSelectedItem();
 		}
+		logger.log(Level.INFO, "Ventana de carga cargada");
 	}
 	
 

@@ -140,12 +140,17 @@ public class DatosTest {
 
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
-			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());
+			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking(LocalDate.now().plusDays(i),false,25));
 		}
 		
 		assertEquals(datos.getMapaParkingPorFecha(), mapaParkingFecha);
 		
 		Reserva.setNumId(0);
+		
+		Tarea t = datos.getListaTareas().get(0);
+		
+		assertEquals(t.descripcion, "Preparar menú especial");
+		assertEquals(t.getNumHoras(), 4);
 		
 
 		
@@ -392,7 +397,7 @@ public class DatosTest {
 
 		Map<LocalDate,Parking> mapaParkingFecha = new HashMap<>();
 		for (int i = 0; i < 15; i++) {
-			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking());
+			mapaParkingFecha.put(LocalDate.now().plusDays(i), new Parking(LocalDate.now().plusDays(i),false,25));
 		}
 		
 		
