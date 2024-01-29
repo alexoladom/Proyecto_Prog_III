@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,19 +11,36 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.JTextArea;
 
 public class VentanaInfo extends JFrame {
     private static final long serialVersionUID = 1L;
+
+    private JPanel panelSuperior;
+    private JTextArea textArea;
+    private JTextArea infoLabel;
 
     public VentanaInfo() {
         setTitle("Ayuda");
         setSize(600, 400);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
+        panelSuperior = new JPanel();
+        panelSuperior.setBackground(Color.WHITE);
+        panelSuperior.setLayout(new BorderLayout());
 
-        String texto = "Read Me Programacion 3\n"
+        infoLabel = new JTextArea("Información");
+        infoLabel.setEditable(false);
+        infoLabel.setBackground(Color.WHITE);
+        infoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        infoLabel.setLineWrap(true);
+        infoLabel.setWrapStyleWord(true);
+
+        textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setText("Read Me Programacion 3\n"
                 + "Proyecto de aplicación de gestión de un Hotel\n"
                 + "Nuestra aplicación comienza con una ventana que se activa y te ofrece si ejecutar la aplicación o cerrarla en su lugar junto a otra que se antepone a esta y te da como opción cargar los datos desde ficheros, desde la base de datos o desde los datos de prueba.\n"
                 + "Una vez escoges una de estas tres opciones y carga la aplicación te aparecerá de forma automática una nueva ventana donde deberás seleccionar si eres un trabajador perteneciente al Hotel, o si eres uno de sus clientes.\n"
@@ -31,7 +51,7 @@ public class VentanaInfo extends JFrame {
                 + "Después de todo esto podrás guardar y confirmar la reserva o cancelarla.\n"
                 + "En los apartados de reservar una habitación te llevará a una nueva ventana donde aparecerá un árbol que puede desglosarse y elegir ahí la habitación que precises siempre y cuando este libre.\n"
                 + "En el apartado de reservar una plaza de Parking te llevará a otra ventana donde deberás elegir primero la fecha en la que deseas reservarla y después podrás escoger tu plaza libremente a través de una tabla siempre y cuando esté libre.\n"
-                + "Una vez accedes a la Ventana Trabajador: Podrás ver que aparecen tres opciones, una a través de un icono que funciona igual que en la ventana Cliente donde puedes ver tus datos, poner o cambiar tu foto del perfil o cerrar sesión. Otra con la que puedes acceder a la información de los clientes pulsando el icono con una imagen de tres trabajadores y dos paréntesis, una vez lo hagas te saldrá una tabla con la información de estos, luego también se verá un icono con una imagen de una carpeta con tareas donde podremos hacer click y nos proporcionará una tabla con todas las tareas y por ultimo el botón de la izquierda que lo que haces es ejecutar una tabla con la información de los clientes que funciona igual que la de los trabajadores pero con otros datos.";
+                + "Una vez accedes a la Ventana Trabajador: Podrás ver que aparecen tres opciones, una a través de un icono que funciona igual que en la ventana Cliente donde puedes ver tus datos, poner o cambiar tu foto del perfil o cerrar sesión. Otra con la que puedes acceder a la información de los clientes pulsando el icono con una imagen de tres trabajadores y dos paréntesis, una vez lo hagas te saldrá una tabla con la información de estos, luego también se verá un icono con una imagen de una carpeta con tareas donde podremos hacer click y nos proporcionará una tabla con todas las tareas y por ultimo el botón de la izquierda que lo que haces es ejecutar una tabla con la información de los clientes que funciona igual que la de los trabajadores pero con otros datos.");
 
         JButton botonVolver = new JButton("Volver Atrás");
         botonVolver.addActionListener(new ActionListener() {
@@ -40,15 +60,46 @@ public class VentanaInfo extends JFrame {
                 dispose();
             }
         });
-        panel.add(botonVolver);
 
-        String[] columnas = { "Información" };
-        Object[][] datos = { { texto } };
-        JTable tabla = new JTable(datos, columnas);
-        JScrollPane scrollPane = new JScrollPane(tabla);
-        panel.add(scrollPane);
+        panelSuperior.add(infoLabel, BorderLayout.NORTH);
+        panelSuperior.add(textArea, BorderLayout.CENTER);
 
-        getContentPane().add(panel, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(panelSuperior);
+
+        JPanel panelMedio = new JPanel();
+        panelMedio.setPreferredSize(new Dimension(600, 200));
+        panelMedio.setLayout(new BorderLayout());
+        panelMedio.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel panelInferior = new JPanel();
+        panelInferior.add(botonVolver);
+
+        getContentPane().add(panelMedio, BorderLayout.CENTER);
+        getContentPane().add(panelInferior, BorderLayout.SOUTH);
         setVisible(true);
+        
+        panelSuperior.add(infoLabel, BorderLayout.NORTH);
+        
+        Thread colorThread = new Thread(new CambioColorHilo());
+        colorThread.start();
+    }
+
+    private class CambioColorHilo implements Runnable {
+        private final Color[] colores = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
+        private int indiceColor = 0;
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                infoLabel.setForeground(colores[indiceColor]);
+                indiceColor = (indiceColor + 1) % colores.length;
+            }
+        }
     }
 }
