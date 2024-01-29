@@ -9,7 +9,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 
@@ -79,7 +81,24 @@ public class BDmanager {
 		}
 	}
 	
-	
+	//Metodos añadidos a la BD
+	public Map<Cliente, List<Habitacion>> getHabitacionesReservadasPorCliente() throws BDexception {
+	    Map<Cliente, List<Habitacion>> habitacionesPorCliente = new HashMap<>();
+	    try (Statement stmt = conn.createStatement()) {
+	        ResultSet rs = stmt.executeQuery("SELECT id, DNICliente, idHabitacion FROM habitaciones_reservadas");
+
+	        while (rs.next()) {
+	            Cliente cliente = getCliente(rs.getString("DNICliente"));
+	            Habitacion habitacion = getHabitacion(rs.getInt("idHabitacion"));
+
+	            habitacionesPorCliente.computeIfAbsent(cliente, k -> new ArrayList<>()).add(habitacion);
+	        }
+
+	        return habitacionesPorCliente;
+	    } catch (SQLException e) {
+	        throw new BDexception("Error obteniendo habitaciones reservadas por cliente", e);
+	    }
+	}
 	//Metodo para obtener un cliente en concreto
 	
 	public Cliente getCliente(String dni) throws BDexception {

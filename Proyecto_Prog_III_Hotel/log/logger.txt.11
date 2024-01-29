@@ -1,0 +1,20 @@
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se han creado los botones
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se ha creado el modelo de la tabla A
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se ha creado el modelo de la tabla B
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se ha creado el modelo de la tabla C
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se ha creado el modelo de la tabla del comedor
+ene 29, 2024 12:56:04 P. M. gui.VentanaHotel <init>
+INFORMACIÓN: Se ha creado el arbol
+ene 29, 2024 12:56:15 P. M. gui.VentanaHotel lambda$0
+INFORMACIÓN: Se cierra la ventana del hotel
+ene 29, 2024 12:56:49 P. M. gui.VentanaInicioCliente$1 run
+INFORMACIÓN: Se vuelve a la anterior ventana
+ene 29, 2024 12:56:50 P. M. gui.VentanaSeleccion$1 run
+INFORMACIÓN: Se ha abierto la ventana de inicio del trabajador
+ene 29, 2024 12:57:07 P. M. gui.VentanaInicioTrabajador lambda$1
+INFORMACIÓN: El trabajador ha iniciado sesión
