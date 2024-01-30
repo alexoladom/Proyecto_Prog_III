@@ -1,10 +1,12 @@
-ene 29, 2024 6:46:02 P. M. gui.VentanaDeCarga <init>
+ene 30, 2024 3:48:26 P. M. gui.VentanaDeCarga <init>
 INFORMACIÓN: Ventana de carga cargada
-ene 29, 2024 6:46:08 P. M. domain.Datos inicializarDatos
-INFORMACIÓN: DATOS INICIALIZADOS
-ene 29, 2024 6:46:08 P. M. gui.VentanaDeCarga$3$1 run
-INFORMACIÓN: Se carga la Ventana de seleccion
-ene 29, 2024 6:46:10 P. M. gui.VentanaSeleccion$1 run
-INFORMACIÓN: Se ha abierto la ventana de inicio del trabajador
-ene 29, 2024 6:46:20 P. M. gui.VentanaInicioTrabajador lambda$1
-INFORMACIÓN: El trabajador ha iniciado sesión
+ene 30, 2024 3:48:27 P. M. gui.VentanaInfo <init>
+INFORMACIÓN: Se abre la ventana
+ene 30, 2024 3:48:27 P. M. gui.VentanaInfo$CambioColorHilo run
+INFORMACIÓN: Se activa el hilo de la ventana
+ene 30, 2024 3:48:29 P. M. gui.VentanaInfo$1 actionPerformed
+INFORMACIÓN: Se cierra la ventana
+ene 30, 2024 3:48:30 P. M. gui.VentanaValoracion <init>
+INFORMACIÓN: Se abre la ventana
+ene 30, 2024 3:48:32 P. M. gui.VentanaValoracion$7 actionPerformed
+INFORMACIÓN: Se cierra la ventana

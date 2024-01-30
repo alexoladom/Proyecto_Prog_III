@@ -5,6 +5,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.prefs.Preferences;
 
 public class VentanaValoracion extends JFrame {
@@ -14,11 +18,25 @@ public class VentanaValoracion extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
     private DefaultTableModel tableModel;
+    
+    private Logger logger = java.util.logging.Logger.getLogger("Logger");
 
     @SuppressWarnings("serial")
 	public VentanaValoracion() {
+    	try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+    	
+    	logger.info("Se abre la ventana");
         setTitle("Valoraciones");
-        setSize(600, 400);
+        setSize(680, 420);
         setLocationRelativeTo(null);
 
         tableModel = new DefaultTableModel();
@@ -86,6 +104,7 @@ public class VentanaValoracion extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 guardarValoraciones();
                 dispose();
+                logger.info("Se cierra la ventana");
             }
         });
 

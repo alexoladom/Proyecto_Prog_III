@@ -6,6 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,14 +19,27 @@ import javax.swing.JTextArea;
 
 public class VentanaInfo extends JFrame {
     private static final long serialVersionUID = 1L;
-
+    
+    private Logger logger = java.util.logging.Logger.getLogger("Logger");
+    
     private JPanel panelSuperior;
     private JTextArea textArea;
     private JTextArea infoLabel;
 
     public VentanaInfo() {
+    	try {
+			FileHandler fileTxt = new FileHandler("log/logger.txt");
+			SimpleFormatter formatterTxt = new SimpleFormatter();
+			fileTxt.setFormatter(formatterTxt);
+			logger.addHandler(fileTxt);
+		} catch (SecurityException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+    	logger.info("Se abre la ventana");
         setTitle("Ayuda");
-        setSize(600, 400);
+        setSize(680, 420);
         setLocationRelativeTo(null);
 
         panelSuperior = new JPanel();
@@ -58,6 +75,7 @@ public class VentanaInfo extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                logger.info("Se cierra la ventana");
             }
         });
 
@@ -90,6 +108,7 @@ public class VentanaInfo extends JFrame {
 
         @Override
         public void run() {
+        	logger.info("Se activa el hilo de la ventana");
             while (true) {
                 try {
                     Thread.sleep(1000);
